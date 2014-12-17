@@ -1,0 +1,12 @@
+index
+
+<div ng-repeat-start="widget in app.widgets"></div>
+
+<div class="widget">
+	<div class="title">
+		{{widget.title}}
+	</div>
+	<div class="content" ng-include="widget.templateURL"></div>
+</div>
+
+<div ng-repeat-end></div>
