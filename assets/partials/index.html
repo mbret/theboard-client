@@ -1,12 +1,13 @@
-index
 
-<div ng-repeat-start="widget in app.widgets"></div>
+<button name="refresh" ng-click="refreshWidgets()">Refresh widgets</button>
+<button name="stop" ng-click="stopWidgets()">Stop widgets</button>
+<button name="start" ng-click="startWidgets()">Start widgets</button>
 
+<div ng-repeat-start="widget in app.widgetsToLoad"></div>
 <div class="widget">
-	<div class="title">
-		{{widget.title}}
-	</div>
-	<div class="content" ng-include="widget.templateURL"></div>
+	<iframe id="{{widget.identityHTML}}" src="{{widget.url}}" width="300" height="300" plugin-iframe></iframe>
 </div>
-
 <div ng-repeat-end></div>
+
+
+

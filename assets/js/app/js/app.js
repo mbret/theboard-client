@@ -4,7 +4,8 @@ var app = angular.module('theboard',[
 	'ngRoute',
 
 	// modules
-	'theboardControllers'
+	'theboardControllers',
+	'theboardDirectives'
 ]);
 
 app.config(['$routeProvider',
