@@ -1,0 +1,83 @@
+<!--<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">-->
+	<!--<div class="container-fluid">-->
+		<!--<div class="navbar-header">-->
+			<!--<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">-->
+				<!--<span class="sr-only">Toggle navigation</span>-->
+				<!--<span class="icon-bar"></span>-->
+				<!--<span class="icon-bar"></span>-->
+				<!--<span class="icon-bar"></span>-->
+			<!--</button>-->
+			<!--<a class="navbar-brand" href="#">Project name</a>-->
+		<!--</div>-->
+		<!--<div id="navbar" class="navbar-collapse collapse">-->
+			<!--<ul class="nav navbar-nav navbar-right">-->
+				<!--<li><a href="#">Dashboard</a></li>-->
+				<!--<li><a href="#">Settings</a></li>-->
+				<!--<li><a href="#">Profile</a></li>-->
+				<!--<li><a href="#">Help</a></li>-->
+			<!--</ul>-->
+		<!--</div>-->
+	<!--</div>-->
+<!--</nav>-->
+
+<div class="container-fluid">
+
+	<div class="row">
+		<div class="col-md-1 sidebar">
+			<ul class="nav nav-sidebar">
+				<li><a href="" ng-click="sendWidgetSignal('refresh')">Refresh widgets</a></li>
+				<li><a href="" ng-click="sendWidgetSignal('stop')">Stop widgets</a></li>
+				<li><a href="" ng-click="sendWidgetSignal('start')">Start widgets</a></li>
+				<li><a href="">Browse</a></li>
+			</ul>
+		</div>
+		<div class="col-md-11 col-md-offset-1 main">
+
+			<div class="row placeholders">
+
+				<!--<div>-->
+					<!--<md-button ng-click="toggleMenu()" class="md-primary">-->
+						<!--<md-icon icon="icons/action/1x_web" style="width: 24px; height: 24px;" class="ng-scope"><object class="md-icon" data="/img/icons/ic_people_24px.svg"></object></md-icon>-->
+					<!--</md-button>-->
+
+					<!--<md-button class="md-primary" ng-click="showMore($event)">-->
+						<!--More options-->
+					<!--</md-button>-->
+				<!--</div>-->
+
+				<!--<div>-->
+					<!--<md-button ng-click="refreshWidgets()" class="md-primary">Refresh widgets</md-button>-->
+					<!--<md-button ng-click="stopWidgets()" class="md-primary">Stop widgets</md-button>-->
+					<!--<md-button ng-click="startWidgets()" class="md-primary">Start widgets</md-button>-->
+				<!--</div>-->
+
+				<!--<div class="widgets-iframes-container">-->
+					<!--<div class="widget-iframe-container" ng-repeat="widget in app.widgetsToLoad">-->
+						<!--<iframe id="{{widget.identityHTML}}" src="{{widget.url}}" class="widget-iframe {{widget.tile}}"  plugin-iframe ></iframe>-->
+					<!--</div>-->
+				<!--</div>-->
+
+			</div>
+
+			<div class="row">
+
+				<div gridster="gridsterOpts" class="widgets-iframes-container">
+					<ul>
+						<li
+							gridster-item="widget"
+							ng-repeat="widget in app.widgetsToLoad"
+							class="widget-iframe-container"
+							ng-style="{'background-color': widget.backgroundColor}">
+
+							<iframe id="{{widget.identityHTML}}" src="{{widget.url}}" class="widget-iframe {{widget.tile}}"  widget-iframe="widget" ></iframe>
+						</li>
+					</ul>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+

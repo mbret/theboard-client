@@ -1,0 +1,48 @@
+/* Widget Style*/
+html, body {
+    margin: 0 auto;
+    background: #34495e;
+}
+#weather {
+    border: 0px solid #dadfe3;
+    text-align: center;
+    text-transform: uppercase;
+}
+#weather h2 {
+    margin: 0 0 20px;
+    font-size: 36px;
+    font-weight: 300;
+    text-align: center;
+    color: #fff;
+    line-height: 1em;
+}
+#weather h3{
+    margin: 20px 0px 5px 0px;
+    font-size: 10px;
+    text-align: center;
+    color: #fff;
+}
+#weather ul {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+#weather li {
+    padding: 10px 20px;
+    display: inline-block;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    letter-spacing: 0.1em;
+    color: #fff;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin: 5px 0;
+    margin-left: 10px;
+}
+#weather #weather-icon{
+    width: 100px;
+    margin-right: -20px;
+    margin-left: -20px;
+    vertical-align: sub;
+    /*height: 40px;*/
+}
