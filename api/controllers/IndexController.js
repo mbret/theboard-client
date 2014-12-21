@@ -14,7 +14,10 @@ module.exports = {
 				icons: '/app/icons'
 			},
 			routes: {
-				widgets: '/widgets'
+				widgets: {
+					get: '/widgets',
+					update: '/widgets'
+				}
 			},
 			environment: sails.config.environment
 		};

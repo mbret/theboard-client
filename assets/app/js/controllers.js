@@ -12,6 +12,8 @@ angular
 		function($scope, $http, $window, settings, batchLog, $log, $mdSidenav, $mdToast, $animate, $mdDialog, widgetService){
 
 			//console.log($scope);
+			$scope.widgets = null;
+			var widgets = $scope.widgets;
 
 			// Get widgets from server
 			// Widgets will be relative to an account
@@ -31,6 +33,58 @@ angular
 
 
 			/*
+			 * Gridster handling
+			 */
+			// When the window change and gridster has been resized in order to be displayed
+			$scope.$on('gridster-resized', function(size){
+				$log.debug('salut');
+			});
+			// Watch item changes
+			// @todo this event is triggered at startup, I suspect its due to the page building which make gridster change during process
+			// @todo maybe use a queue here to store change and call server less times
+			$scope.$watch('widgets', function(newWidgets){
+				// Update widgets on server
+				if( ! angular.equals(widgets, newWidgets )){
+					return widgetService.update( widgets )
+						.then(function(){
+							$log.debug('Widgets new organisation has been saved');
+						})
+						.catch(function(error){
+							// ...
+						});
+				}
+				else{
+					// widgets are not different so don't make useless call
+					return;
+				}
+			}, true);
+			$scope.gridsterOpts.draggable = {
+				start: function(event, $element, widget) {
+					// optional callback fired when drag is started,
+				},
+				drag: function(event, $element, widget) {
+					// optional callback fired when item is moved,
+				},
+				stop: function(event, $element, widget) {
+					// optional callback fired when item is finished dragging
+					$log.debug('Widget ', widget, ' has been dragged!');
+				}
+			};
+			$scope.gridsterOpts.resizable = {
+				start: function(event, $element, widget) {
+					// optional callback fired when resize is started,
+				},
+				resize: function(event, $element, widget) {
+					// optional callback fired when item is resized,
+				},
+				stop: function(event, $element, widget) {
+					// optional callback fired when item is finished resizing
+					$log.debug('Widget ', widget, ' has been resized!');
+					widgetService.sendSignal( widget, 'resized');
+				}
+			},
+
+			/*
 			 * Menu left part
 			 */
 			$scope.refreshWidgets = function(){
@@ -48,11 +102,6 @@ angular
 					return;
 				});
 			};
-
-
-			/*
-			 * Control UI
-			 */
 			$scope.toggleMenu = function(){
 				$mdSidenav('menu').toggle().then(function(){
 					$log.debug("toggle Menu is done");

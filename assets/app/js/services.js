@@ -27,7 +27,19 @@ angular
 
         return {
             get: function(){
-                return $http.get(settings.routes.widgets)
+                return $http.get(settings.routes.widgets.get)
+                    .then(function(data) {
+                        $log.debug('Widgets loaded successfully!');
+                        return data.data;
+                    })
+                    .catch(function(error) {
+                        $log.error('Failure loading widgets');
+                        return error;
+                    });
+            },
+
+            update: function( widgets ){
+                return $http.put(settings.routes.widgets.update)
                     .then(function(data) {
                         $log.debug('Widgets loaded successfully!');
                         return data.data;

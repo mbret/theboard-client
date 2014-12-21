@@ -17,7 +17,7 @@ angular
      *
      * This new directive is about the widget iframe container
      */
-    .directive('widgetIframe', ['$rootScope', function ($rootScope) {
+    .directive('widgetIframe', ['$rootScope', '$log', function ($rootScope, $log) {
 
         return {
             link: function(scope, element, attrs) {
@@ -46,7 +46,7 @@ angular
                 /**
                  * When user send
                  */
-                $rootScope.$on('widget-signal', function(ev, widget, signal){
+                scope.$on('widget-signal', function(ev, widget, signal){
                     var iframeWidgetElement = element[0];
 
                     // event to specific widget
@@ -61,6 +61,8 @@ angular
                         // not for me
                     }
                 });
+
+
             }
         }
 
