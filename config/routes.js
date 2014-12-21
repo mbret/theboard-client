@@ -33,7 +33,9 @@ module.exports.routes = {
   ***************************************************************************/
 
   'GET /meteo': 'MeteoController.getWeather',
-
+  'GET /settings.js': 'IndexController.settings',
+  'GET /widgets': 'IndexController.getWidgets',
+  'PUT /widgets': 'IndexController.updateWidgets',
   'GET /home*': {view: 'index' },
   'GET /': { view: 'index' }
 

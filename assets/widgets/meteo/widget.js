@@ -42,7 +42,7 @@ var widget = {
     },
 
     refreshProcess : {
-        interval: 10000, // 3s
+        interval: 20000, // 20s
         process: 0,
 
         start: function(){
