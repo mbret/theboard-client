@@ -3,6 +3,8 @@
 
 	<head>
 
+		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0;" />
+
 		<!-- Include the possible widget default style -->
 		<link rel="stylesheet" href="/widgets/default.css">
 
@@ -10,22 +12,41 @@
 
 	</head>
 
-	<body>
+	<body class="widget-theme-green">
 
-		<!-- Widget start -->
+		<!--
+			Widget declaration
+			You can make everything you want but you can also follow basic pattern
+			A predefined style is possible when using special class.
+			It's advised to design a default widget with empty element and fill it later with .js
+		-->
 		<div class="widget-wrapper">
-			<div class="widget" >
-				<div id="sample" >
+			<div class="widget" id="widget-sample">
+
+				<header class="widget-header">
+					<h1></h1>
+				</header>
+
+				<div class="widget-content">
 
 				</div>
+
+				<footer class="widget-footer">
+
+					<!-- May be useful to indicate the last widget refresh -->
+					<div class="widget-updated"></div>
+				</footer>
 			</div>
 		</div>
 
-		<!-- Include the required widget library -->
-		<script src="/widgets/library.js"></script>
 
 		<!-- Here is the widget part -->
+		<!-- We use jquery to make it more simple -->
+		<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
 		<script src="widget.js"></script>
+
+		<!-- Include the required widget library -->
+		<script src="/widgets/library.js"></script>
 
 
 	</body>

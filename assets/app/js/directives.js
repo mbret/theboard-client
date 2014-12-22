@@ -17,9 +17,13 @@ angular
      *
      * This new directive is about the widget iframe container
      */
-    .directive('widgetIframe', ['$rootScope', '$log', function ($rootScope, $log) {
+    .directive('widgetIframe', ['$rootScope', '$log', '$window', function ($rootScope, $log, $window) {
 
         return {
+            restrict: 'A', // attribute name
+            scope: {
+                widget: '=widget'
+            },
             link: function(scope, element, attrs) {
 
                 /**
@@ -28,19 +32,16 @@ angular
                  */
                 element.bind("load" , function(e){
 
-                    // success, "onload" catched
-                    // now we can do specific stuff:
-                    //var widget = document.getElementById(this.id).contentWindow.widget;
-                    //scope.app.widgets[widget.identity] = widget;
-                    //console.log('Widget [' + widget.identity + '] loaded!');
-                    //widget.commonLib = scope.app.commonLib;
-                    //widget.init();
+                    // This version use the iframeURL wich is linked directly to ng-src
+                    // It cause a reload of all widget, then it's not nice
+                    //var iframeURL = new $window.URI( scope.widget.iframeURL );
+                    //iframeURL.hash( JSON.stringify({signal:"init"}) ); // set hash
+                    //$log.debug('Widget ' + scope.widget.identity + ' has been initalized with URL ' + iframeURL.toString());
+                    //scope.widget.iframeURL = iframeURL.toString();
 
-                    document.getElementById(this.id).contentWindow.window.location.hash = 'init';
-                    //scope.widgets[ this.id ] = document.getElementById(this.id);
+                    // This version use primary javascript but at least it does not refresh element
+                    document.getElementById(element[0].id).contentWindow.window.location.hash = JSON.stringify({signal:"init"});
 
-                    //scope.showSimpleToast( 'Widget loaded' );
-                    //console.log(document.getElementById(this.id).contentWindow);
                 });
 
                 /**
@@ -50,12 +51,12 @@ angular
                     var iframeWidgetElement = element[0];
 
                     // event to specific widget
-                    if(widget && widget.identityHTML == iframeWidgetElement.id){
-                        document.getElementById(iframeWidgetElement.id).contentWindow.window.location.hash = signal ;
+                    if( angular.equals(widget, scope.widget) /* widget && widget.identityHTML == scope.widget.identityHTML*/ ){
+                        document.getElementById(iframeWidgetElement.id).contentWindow.window.location.hash =  JSON.stringify({signal:signal});
                     }
                     // event to everyone
                     else if(widget == null){
-                        document.getElementById(iframeWidgetElement.id).contentWindow.window.location.hash = signal ;
+                        document.getElementById(iframeWidgetElement.id).contentWindow.window.location.hash = JSON.stringify({signal:signal});
                     }
                     else{
                         // not for me
@@ -68,28 +69,3 @@ angular
 
     }]);
 
-    //.directive('resizeWidgetContent', function () {
-    //
-    //    return {
-    //        link: function(scope, element, attrs) {
-    //
-    //            element.bind("load" , function(e){
-    //
-    //                // success, "onload" catched
-    //                // now we can do specific stuff:
-    //                //var widget = document.getElementById(this.id).contentWindow.widget;
-    //                //scope.app.widgets[widget.identity] = widget;
-    //                //console.log('Widget [' + widget.identity + '] loaded!');
-    //                //widget.commonLib = scope.app.commonLib;
-    //                //widget.init();
-    //
-    //                //document.getElementById(this.id).contentWindow.window.location.hash = 'init';
-    //                //scope.app.widgets[ this.id ] = document.getElementById(this.id);
-    //
-    //                //scope.showSimpleToast( 'Widget loaded' );
-    //                //console.log(document.getElementById(this.id).contentWindow);
-    //            });
-    //        }
-    //    }
-    //
-    //});

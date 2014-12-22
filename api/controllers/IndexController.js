@@ -35,6 +35,12 @@ module.exports = {
 				identity: 'Widget meteo',
 				identityHTML: 'widget-meteo',
 				url: 'widgets/meteo/widget.html',
+				baseURL: 'widgets/meteo/widget.html',
+				permissions: [
+					'mail',
+					'location'
+				],
+				defaultLocation: 'New York',
 				sizeX: 2,
 				sizeY: 1,
 				row: 0,
@@ -44,6 +50,7 @@ module.exports = {
 				identity: 'Widget clock',
 				identityHTML: 'widget-clock',
 				url: 'widgets/clock/widget.html',
+				baseURL: 'widgets/clock/widget.html',
 				backgroundColor: '#202020',
 				sizeX: 2,
 				sizeY: 1,
@@ -54,7 +61,12 @@ module.exports = {
 				identity: 'Widget sample',
 				identityHTML: 'widget-sample',
 				url: 'widgets/sample/widget.html',
+				baseURL: 'widgets/sample/widget.html',
 				backgroundColor: '#57aae1',
+				grant_access:[
+					'user_mail',
+					'location'
+				],
 				sizeX: 1,
 				sizeY: 1,
 				row: 0,
@@ -64,6 +76,8 @@ module.exports = {
 				identity: 'Widget meteo 4',
 				identityHTML: 'widget-meteo4',
 				url: 'widgets/meteo/widget.html',
+				baseURL: 'widgets/meteo/widget.html',
+				defaultLocation: 'New York',
 				sizeX: 1,
 				sizeY: 1,
 				row: 0,
@@ -73,19 +87,12 @@ module.exports = {
 				identity: 'Widget meteo 5',
 				identityHTML: 'widget-meteo5',
 				url: 'widgets/meteo/widget.html',
+				baseURL: 'widgets/meteo/widget.html',
+				defaultLocation: 'New York',
 				sizeX: 2,
 				sizeY: 1,
 				row: 1,
 				col: 0
-			},
-			{
-				identity: 'Widget meteo 2',
-				identityHTML: 'widget-meteo2',
-				url: 'widgets/meteo/widget.html',
-				sizeX: 2,
-				sizeY: 2,
-				row: 1,
-				col: 2
 			},
 		]);
 	},

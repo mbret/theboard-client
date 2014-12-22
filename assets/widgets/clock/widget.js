@@ -1,3 +1,11 @@
+
+window.Widget = {
+    init: function(){
+
+    }
+};
+
+
 $(document).ready(function() {
 // Create two variable with the names of the months and days in an array
     var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
@@ -30,4 +38,6 @@ $(document).ready(function() {
         // Add a leading zero to the hours value
         $("#hours").html(( hours < 10 ? "0" : "" ) + hours);
     }, 1000);
+
+
 });

@@ -3,11 +3,8 @@
 
 
 
-var widget = {
+window.Widget = {
 
-    identity: 'Widget meteo',
-
-    location: 'Toul, FR',
     woeid: '',
     unit: 'c',
 
@@ -15,21 +12,25 @@ var widget = {
         Cloudy: 'Cloud.svg'
     },
 
-    init: function(){
-        console.log(this.identity + ' is initializing');
+    configuration: null,
+
+    init: function( configuration ){
+        this.configuration = configuration;
+        //console.log(this.configuration.identity + ' is initializing');
+
         this.start();
     },
     start: function(){
-        console.log(this.identity + ' is running');
+        //console.log(this.configuration.identity + ' is running');
         this.refreshProcess.start();
     },
     stop: function(){
-        console.log(this.identity + ' is stopped');
+        //console.log(this.configuration.identity + ' is stopped');
         $("#weather").html('<span class="waiting">Widget is stopped</span>');
         this.refreshProcess.stop();
     },
     refresh: function(){
-        console.log(this.identity + ' is refreshing');
+        //console.log(this.configuration.identity + ' is refreshing');
         this.refreshProcess.refresh();
     },
 
@@ -37,7 +38,7 @@ var widget = {
      * Custom function related to the plugin
      */
     getIconURL: function( state ){
-        console.log(state);
+        //console.log(state);
         return 'climacons/SVG/' + this.iconsMapper[state]
     },
 
@@ -47,8 +48,8 @@ var widget = {
 
         start: function(){
             if(this.process == 0){
-                widget.refreshWeather(); // run directly
-                this.process = setInterval( widget.refreshWeather, this.interval);
+                Widget.refreshWeather(); // run directly
+                this.process = setInterval( Widget.refreshWeather, this.interval);
             }
         },
         stop: function(){
@@ -61,13 +62,23 @@ var widget = {
         }
     },
 
+    /**
+     * Warning: We cannot use 'this' as Widget because of the refreshProcess that add a new scope layer
+     */
     refreshWeather: function(){
+        //var vthis = this;
+
         $("#weather").html('<span class="waiting">Widget is refreshing</span>');
+
         $(document).ready(function() {
+
+            var location = Widget.configuration.defaultLocation;
+            if(Widget.configuration.permissions.location) location = Widget.configuration.permissions.location.latitude + ',' + Widget.configuration.permissions.location.longitude;
+
             $.simpleWeather({
-                location: widget.location,
-                woeid: widget.woeid,
-                unit: widget.unit,
+                location: location,
+                woeid: Widget.woeid,
+                unit: Widget.unit,
                 success: function(weather) {
                     //console.log(weather);
                     html = '<h2><canvas id="weather-icon"></canvas> '+weather.temp+'&deg;'+weather.units.temp+'</h2>';
@@ -82,7 +93,7 @@ var widget = {
                     var skycons = new Skycons({"color": "white"});
                     var icon = null;
                     // It's the day if now() is before the sunset date
-                    var day = moment().isBefore( widget.createDateFromSunset( weather.sunset ) ) && moment().isAfter( widget.createDateFromSunset( weather.sunrise ) );
+                    var day = moment().isBefore( Widget.createDateFromSunset( weather.sunset ) ) && moment().isAfter( Widget.createDateFromSunset( weather.sunrise ) );
 
                     switch( weather.currently ){
                         case 'Cloudy':
@@ -91,6 +102,14 @@ var widget = {
                         case 'Mostly Cloudy':
                             if( day ) icon = Skycons.PARTLY_CLOUDY_DAY;
                             else icon = Skycons.PARTLY_CLOUDY_NIGHT;
+                            break;
+                        case 'Partly Cloudy':
+                            if( day ) icon = Skycons.PARTLY_CLOUDY_DAY;
+                            else icon = Skycons.PARTLY_CLOUDY_NIGHT;
+                            break;
+                        case 'Fair':
+                            if( day ) icon = Skycons.CLEAR_DAY;
+                            else icon = Skycons.CLEAR_NIGHT;
                             break;
                         default:
                             icon = Skycons.CLEAR_DAY;
@@ -122,21 +141,25 @@ var widget = {
         sunsetDate.setHours(hours);
         sunsetDate.setMinutes(minutes);
         return sunsetDate;
-    }
-}
+    },
 
-window.addEventListener('widget-init', function (e) {
-    widget.init();
-}, false);
+    displayError: function(){
+        $('.widget-content').html(
+            '<p>Widget on error</p>'
+        );
+        $('.widget-updated').html('');
+    }
+};
+
 
 window.addEventListener('widget-refresh', function (e) {
-    widget.refresh();
+    Widget.refresh();
 }, false);
 
 window.addEventListener('widget-stop', function (e) {
-    widget.stop();
+    Widget.stop();
 }, false);
 
 window.addEventListener('widget-start', function (e) {
-    widget.start();
+    Widget.start();
 }, false);

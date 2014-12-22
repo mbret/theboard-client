@@ -41,7 +41,11 @@ window.settings.gridsterOpts = {
 		drag: function(event, $element, widget) {}, // optional callback fired when item is moved,
 		stop: function(event, $element, widget) {} // optional callback fired when item is finished dragging
 	}
-}
+};
+
+// Attache extern module
+//if()
+
 
 angular
 	.module('app',[
@@ -54,12 +58,22 @@ angular
 		'app.services',
 		'app.controllers',
 		'app.directives',
-
 	])
 
 	// Here are definition of application constant
 	// We get the settings from the server
 	.constant('settings', window.settings)
+	.constant('messages', {
+		errors: {
+			geolocation: {
+				unsupportedBrowser:'Browser does not support location services',
+				permissionDenied:'You have rejected access to your location',
+				positionUnavailable:'Unable to determine your location',
+				timeout:'Service timeout has been reached'
+			}
+		}
+
+	})
 
 	// ...
 	.config(['$routeProvider',
@@ -72,5 +86,11 @@ angular
 			otherwise({
 				redirectTo: '/'
 			});
-	}
-]);
+	}])
+
+	.config(['$mdThemingProvider', function($mdThemingProvider) {
+		$mdThemingProvider.theme('default')
+			.primaryColor('pink')
+			.accentColor('orange')
+			.backgroundColor('grey');
+	}]);

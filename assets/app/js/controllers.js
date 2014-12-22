@@ -8,8 +8,8 @@ angular
 	 *
 	 */
 	.controller("indexController", [
-		'$scope', '$http', '$window', 'settings', 'batchLog', '$log', '$mdSidenav', '$mdSidenav', '$animate', '$mdDialog', 'widgetService',
-		function($scope, $http, $window, settings, batchLog, $log, $mdSidenav, $mdToast, $animate, $mdDialog, widgetService){
+		'$scope', '$http', '$window', 'settings', '$log', '$mdSidenav', '$mdToast', '$animate', '$mdDialog', 'widgetService', 'geolocationService',
+		function($scope, $http, $window, settings, $log, $mdSidenav, $mdToast, $animate, $mdDialog, widgetService, geolocationService){
 
 			//console.log($scope);
 			$scope.widgets = null;
@@ -20,7 +20,40 @@ angular
 			// This is just a list of widgets informations
 			widgetService.get()
 				.then(function(widgets){
-					console.log(widgets);
+
+					// Loop over all widget and set required values
+					angular.forEach(widgets, function(widget){
+
+						// Check for permissions
+						var permissionsWithValues = {};
+
+						if( widget.permissions &&  widget.permissions.indexOf('mail') !== -1  ) permissionsWithValues.mail = 'user@user.com';
+						// async
+						if( widget.permissions &&  widget.permissions.indexOf('location') !== -1 ){
+							geolocationService.getLocation()
+								.then(function(data){
+									permissionsWithValues.location = data.coords;
+
+									next();
+								})
+								.catch(function(err){
+									$mdToast.show($mdToast.simple().content(err).position('top right'));
+								});
+						}
+						else{
+							next();
+						}
+
+						function next(){
+							widget.permissions = permissionsWithValues;
+
+							// Init the iframe url
+							widget.iframeURL = $window.URI(widget.baseURL).search({test: "sqd + ",widget:JSON.stringify(widget)}).toString();
+						}
+
+					});
+
+
 					$scope.widgets = widgets;
 				})
 				.catch(function(error){
@@ -31,6 +64,23 @@ angular
 			// Inject to view the gridster configuration
 			$scope.gridsterOpts = settings.gridsterOpts;
 
+
+			//setInterval( function(){
+			//	console.log('dsfsdfds');
+			//	$scope.$apply(function(){
+			//		$scope.widgets.push({
+			//			identity: 'Widget QSDQSDSQDSD',
+			//			identityHTML: 'widget-meteo',
+			//			url: 'widgets/meteo/widget.html',
+			//			baseURL: 'widgets/meteo/widget.html',
+			//			sizeX: 2,
+			//			sizeY: 1,
+			//			row: 3,
+			//			col: 0
+			//		});
+			//	})
+            //
+			//}, 3000);
 
 			/*
 			 * Gridster handling
@@ -130,7 +180,7 @@ angular
 			//console.log(widgetID);
 			$mdDialog.show({
 				targetEvent: $event,
-				parent: angular.element("#" + widget.identityHTML + "-container"),
+				//parent: angular.element("#" + widget.identityHTML + "-container"),
 				templateUrl: 'app/templates/widget_options.tmpl.html',
 				controller: dialogController,
 				locals: { widget: widget }
