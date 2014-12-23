@@ -11,6 +11,10 @@ angular
 		'$scope', '$http', '$window', 'settings', '$log', '$mdSidenav', '$mdToast', '$animate', '$mdDialog', 'widgetService', 'geolocationService',
 		function($scope, $http, $window, settings, $log, $mdSidenav, $mdToast, $animate, $mdDialog, widgetService, geolocationService){
 
+			$scope.bodyStyle = {
+				'background': 'url(../img/board_bg.jpg) no-repeat center center fixed'
+			}
+
 			//console.log($scope);
 			$scope.widgets = null;
 			var widgets = $scope.widgets;
@@ -65,23 +69,6 @@ angular
 			$scope.gridsterOpts = settings.gridsterOpts;
 
 
-			//setInterval( function(){
-			//	console.log('dsfsdfds');
-			//	$scope.$apply(function(){
-			//		$scope.widgets.push({
-			//			identity: 'Widget QSDQSDSQDSD',
-			//			identityHTML: 'widget-meteo',
-			//			url: 'widgets/meteo/widget.html',
-			//			baseURL: 'widgets/meteo/widget.html',
-			//			sizeX: 2,
-			//			sizeY: 1,
-			//			row: 3,
-			//			col: 0
-			//		});
-			//	})
-            //
-			//}, 3000);
-
 			/*
 			 * Gridster handling
 			 */
@@ -132,28 +119,10 @@ angular
 					$log.debug('Widget ', widget, ' has been resized!');
 					widgetService.sendSignal( widget, 'resized');
 				}
-			},
+			};
 
-			/*
-			 * Menu left part
-			 */
-			$scope.refreshWidgets = function(){
-				widgetService.sendSignal( null, 'refresh' );
-			};
-			$scope.stopWidgets = function(){
-				widgetService.sendSignal( null, 'stop' );
-			};
-			$scope.startWidgets = function(){
-				widgetService.sendSignal( null, 'start' );
-			};
-			$scope.closeMenu = function() {
-				$mdSidenav('menu').close().then(function(){
-					// ...
-					return;
-				});
-			};
 			$scope.toggleMenu = function(){
-				$mdSidenav('menu').toggle().then(function(){
+				$mdSidenav('sidebar').toggle().then(function(){
 					$log.debug("toggle Menu is done");
 					//$scope.showSimpleToast( 'Menu opened' );
 				});
@@ -161,6 +130,47 @@ angular
 
 		}
 	])
+
+	.controller("SidebarController", ['$scope', '$mdSidenav', '$log', 'widgetService', function($scope, $mdSidenav, $log, widgetService){
+		$scope.close = function(){
+			$mdSidenav('sidebar').close()
+				.then(function(){
+
+				});
+		}
+		$scope.refreshWidgets = function(){
+			widgetService.sendSignal( null, 'refresh' );
+		};
+		$scope.stopWidgets = function(){
+			widgetService.sendSignal( null, 'stop' );
+		};
+		$scope.startWidgets = function(){
+			widgetService.sendSignal( null, 'start' );
+		};
+
+		$scope.changeBackground = function($event){
+			$mdDialog.show({
+				targetEvent: $event,
+				//parent: angular.element("#" + widget.identityHTML + "-container"),
+				templateUrl: 'app/templates/widget_options.tmpl.html',
+				controller: changeBackgroundController,
+				//locals: { widget: widget }
+			});
+		}
+
+
+		var changeBackgroundController = [ '$scope', '$mdDialog', 'widgetService', 'widget', function($scope, $mdDialog, widgetService, widget){
+
+			// ...
+
+			$scope.closeDialog = function() {
+				// Easily hides most recent dialog shown...
+				// no specific instance reference is needed.
+				$mdDialog.hide();
+			};
+		}];
+
+	}])
 
 	/**
 	 * Widget controller
@@ -181,7 +191,7 @@ angular
 			$mdDialog.show({
 				targetEvent: $event,
 				//parent: angular.element("#" + widget.identityHTML + "-container"),
-				templateUrl: 'app/templates/widget_options.tmpl.html',
+				templateUrl: 'app/templates/change_bg.tmpl.html',
 				controller: dialogController,
 				locals: { widget: widget }
 			});

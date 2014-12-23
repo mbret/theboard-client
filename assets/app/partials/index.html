@@ -1,28 +1,40 @@
+
+
 <div layout="column" layout-fill>
 
 
 	<section layout="row" flex>
 
-			<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="menu">
-				<md-toolbar class="md-theme-light">
-					<h1 class="md-toolbar-tools">Menu</h1>
-				</md-toolbar>
-				<md-content  class="md-padding">
+		<!--
+			Sidenav component
+			This component is handle by a specific controller
+		-->
+		<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="sidebar">
+			<md-toolbar class="md-theme-light">
+				<h1 class="md-toolbar-tools">Menu</h1>
+			</md-toolbar>
+			<!--
+				Start of content
+				handle by a controller
+			-->
+			<md-content  class="md-padding" ng-controller="SidebarController">
 
-					<div class="md-actions" layout="column">
-						<md-button ng-click="refreshWidgets()" class="md-primary">Refresh</md-button>
-						<md-button ng-click="stopWidgets()" class="md-accent">Stop</md-button>
-						<md-button ng-click="startWidgets()" class="md-warn">Start</md-button>
-						<md-button ng-click="closeMenu()" class="md-primary">
-							Close Sidenav left
-						</md-button>
-					</div>
+				<div class="md-actions" layout="column">
+					<md-button ng-click="refreshWidgets()" class="md-primary">Refresh</md-button>
+					<md-button ng-click="stopWidgets()" class="md-accent">Stop</md-button>
+					<md-button ng-click="startWidgets()" class="md-warn">Start</md-button>
+					<md-button ng-click="close()" class="md-primary">
+						Close Sidenav left
+					</md-button>
 
-				</md-content>
-			</md-sidenav>
+					<md-button ng-click="changeBackgroud($event)" class="md-primary">Change backgroud</md-button>
+				</div>
+
+			</md-content>
+		</md-sidenav>
 
 
-			<md-content flex class="md-padding">
+			<md-content flex class="md-padding board-content">
 
 
 

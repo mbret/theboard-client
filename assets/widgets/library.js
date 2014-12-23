@@ -4,6 +4,48 @@
 
 
 
+    var Utils = {
+
+        messages:{
+            error: {
+
+            }
+        },
+
+        handleError: function( err ){
+            document.body.innerHTML = '<div class="widget-error">Widget on error!</div>';
+            console.error( err );
+        },
+
+        /**
+         * Be careful to not refresh page when removing hash
+         */
+        resetSignal: function(){
+            window.location.hash = '#';
+        },
+
+        getUrlVars: function(){
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for(var i = 0; i < hashes.length; i++)
+            {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                // URI.js use encodeURIComponent
+                // I don't know why but (+) are not decoded in ' ' as it should ?
+                vars[hash[0]] = decodeURIComponent(hash[1].replace('+', ' '));
+            }
+            // remove hash for last if there is
+            var hashToRemove = window.location.hash;
+            if(hashToRemove){
+                for( var i = 0 ; i<vars.length ; i++){
+                    vars[vars[i]] = vars[vars[i]].replace( window.location.hash, '');
+                }
+            }
+            return vars;
+        }
+    };
+
     //var widget = {
     //    identity: 'Widget Sample',
     //    settings: {
@@ -14,16 +56,6 @@
     //var other = {test:'foo'};
     //console.log('?widget='+JSON.stringify(widget) + '&other=' + JSON.stringify(other));
 
-    /**
-     * Be careful to not refresh page when removing hash
-     */
-    function resetSignal(){
-        window.location.hash = '#';
-    }
-
-    function initControlForStandalone(){
-
-    }
 
     //function readSignal(){
     //    var hash = window.location.hash.substring(1);
@@ -31,28 +63,6 @@
     //    console.log(obj);
     //    return obj.signal;
     //}
-
-    function getUrlVars()
-    {
-        var vars = [], hash;
-        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-        for(var i = 0; i < hashes.length; i++)
-        {
-            hash = hashes[i].split('=');
-            vars.push(hash[0]);
-            // URI.js use encodeURIComponent
-            // I don't know why but (+) are not decoded in ' ' as it should ?
-            vars[hash[0]] = decodeURIComponent(hash[1].replace('+', ' '));
-        }
-        // remove hash for last if there is
-        var hashToRemove = window.location.hash;
-        if(hashToRemove){
-            for( var i = 0 ; i<vars.length ; i++){
-                vars[vars[i]] = vars[vars[i]].replace( window.location.hash, '');
-            }
-        }
-        return vars;
-    }
 
     var WidgetAdapter = {
         signal: null,
@@ -87,28 +97,38 @@
 
                 // Fire event refresh when signal received
                 if( hashObject.signal === vthis.signals.refresh  ){
-                    resetSignal();
+                    Utils.resetSignal();
+
                     WidgetAdapter.signal = hashObject.signal;
-                    window.dispatchEvent(
-                        new Event('widget-refresh')
-                    );
+                    try{
+                        Widget.refresh();
+                    }
+                    catch(err){
+                        Utils.handleError( new Error('Please add a method (refresh) to your widget!') );
+                    }
                 }
 
                 // Fire event refresh when signal received
                 if( hashObject.signal === vthis.signals.stop  ){
-                    resetSignal();
+                    Utils.resetSignal();
                     WidgetAdapter.signal = hashObject.signal;
-                    window.dispatchEvent(
-                        new Event('widget-stop')
-                    );
+                    try{
+                        Widget.stop();
+                    }
+                    catch(err){
+                        Utils.handleError( new Error('Please add a method (refresh) to your widget!') );
+                    }
                 }
 
                 if( hashObject.signal === vthis.signals.start  ){
-                    resetSignal();
+                    Utils.resetSignal();
                     WidgetAdapter.signal = hashObject.signal;
-                    window.dispatchEvent(
-                        new Event('widget-start')
-                    );
+                    try{
+                        Widget.start();
+                    }
+                    catch(err){
+                        Utils.handleError( new Error('Please add a method (refresh) to your widget!') );
+                    }
                 }
             }, false);
             return;
@@ -119,7 +139,7 @@
 
     // Get eventual settings from application
     // The first run a settings object may be passed by application
-    var tmp = getUrlVars();
+    var tmp = Utils.getUrlVars();
     try{
         WidgetAdapter.widget = JSON.parse(tmp.widget);
     }

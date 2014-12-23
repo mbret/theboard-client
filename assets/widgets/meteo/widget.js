@@ -1,8 +1,6 @@
 // Weather - http://simpleweatherjs.com
 
 
-
-
 window.Widget = {
 
     woeid: '',
@@ -18,7 +16,8 @@ window.Widget = {
         this.configuration = configuration;
         //console.log(this.configuration.identity + ' is initializing');
 
-        this.start();
+        Widget.refreshWeather();
+        //this.start();
     },
     start: function(){
         //console.log(this.configuration.identity + ' is running');
@@ -68,11 +67,12 @@ window.Widget = {
     refreshWeather: function(){
         //var vthis = this;
 
-        $("#weather").html('<span class="waiting">Widget is refreshing</span>');
+        $(".widget-content").html('<span class="waiting widget-component-highlighted">Widget is refreshing</span>');
+        $('.widget-updated').html();
 
         $(document).ready(function() {
 
-            var location = Widget.configuration.defaultLocation;
+            var location = Widget.configuration.options.defaultLocation;
             if(Widget.configuration.permissions.location) location = Widget.configuration.permissions.location.latitude + ',' + Widget.configuration.permissions.location.longitude;
 
             $.simpleWeather({
@@ -80,14 +80,15 @@ window.Widget = {
                 woeid: Widget.woeid,
                 unit: Widget.unit,
                 success: function(weather) {
-                    //console.log(weather);
-                    html = '<h2><canvas id="weather-icon"></canvas> '+weather.temp+'&deg;'+weather.units.temp+'</h2>';
-                    html += '<ul><li><span class="glyphicon glyphicon-map-marker" ></span> '+weather.city+', '+weather.country+'</li>';
-                    html += '<li class="currently">'+weather.currently+'</li>';
-                    html += '</ul>';
-                    html += '<h3>Updated: ' + weather.updated + '</h3>';
 
-                    $("#weather").html(html);
+                    $('.widget-header').html('<h2><canvas id="weather-icon"></canvas> '+weather.temp+'&deg;'+weather.units.temp+'</h2>');
+                    $('.widget-content').html(
+                        '<ul>' +
+                        '<li class="widget-component-highlighted"><span class="glyphicon glyphicon-map-marker" ></span> '+weather.city+', '+weather.country+'</li>'+
+                        '<li class="currently widget-component-highlighted">'+weather.currently+'</li>'+
+                        '</ul>'
+                    );
+                    $('.widget-updated').html('Updated: ' + new Date(weather.updated).toDateString() );
 
                     // Set icon with skycons addon
                     var skycons = new Skycons({"color": "white"});
@@ -110,6 +111,9 @@ window.Widget = {
                         case 'Fair':
                             if( day ) icon = Skycons.CLEAR_DAY;
                             else icon = Skycons.CLEAR_NIGHT;
+                            break;
+                        case 'Fog':
+                            icon = Skycons.FOG;
                             break;
                         default:
                             icon = Skycons.CLEAR_DAY;
@@ -150,16 +154,3 @@ window.Widget = {
         $('.widget-updated').html('');
     }
 };
-
-
-window.addEventListener('widget-refresh', function (e) {
-    Widget.refresh();
-}, false);
-
-window.addEventListener('widget-stop', function (e) {
-    Widget.stop();
-}, false);
-
-window.addEventListener('widget-start', function (e) {
-    Widget.start();
-}, false);

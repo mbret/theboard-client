@@ -93,4 +93,26 @@ angular
 			.primaryColor('pink')
 			.accentColor('orange')
 			.backgroundColor('grey');
-	}]);
+	}])
+
+
+	.run(function($rootScope){
+
+		console.log(window.settings);
+
+		// Get Jquery element
+		var $body = angular.element('body');
+
+		var stack = window.settings.user.backgroundImages;
+
+		changeBG();
+		setInterval(changeBG, 10000);
+
+		function changeBG(){
+			var current = stack.shift();
+			$body.css({backgroundImage: 'url("' + window.settings.paths.images + '/' + current + '")'});
+			stack.push(current);
+		}
+
+	});
+

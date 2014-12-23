@@ -11,13 +11,17 @@ module.exports = {
 		var settings = {
 			paths: {
 				server: '/',
-				icons: '/app/icons'
+				icons: '/app/icons',
+				images: '/app/img'
 			},
 			routes: {
 				widgets: {
 					get: '/widgets',
 					update: '/widgets'
 				}
+			},
+			user: {
+				backgroundImages: ['board (2).jpg', 'board (3).jpg', 'board (4).jpg', 'board (5).jpg', 'board (6).jpg', 'board (7).jpg', 'board (8).jpg', 'board (9).jpg']
 			},
 			environment: sails.config.environment
 		};
@@ -29,72 +33,11 @@ module.exports = {
 	},
 
 	getWidgets: function(req, res){
-		return res.ok([
 
-			{
-				identity: 'Widget meteo',
-				identityHTML: 'widget-meteo',
-				url: 'widgets/meteo/widget.html',
-				baseURL: 'widgets/meteo/widget.html',
-				permissions: [
-					'mail',
-					'location'
-				],
-				defaultLocation: 'New York',
-				sizeX: 2,
-				sizeY: 1,
-				row: 0,
-				col: 0
-			},
-			{
-				identity: 'Widget clock',
-				identityHTML: 'widget-clock',
-				url: 'widgets/clock/widget.html',
-				baseURL: 'widgets/clock/widget.html',
-				backgroundColor: '#202020',
-				sizeX: 2,
-				sizeY: 1,
-				row: 0,
-				col: 2
-			},
-			{
-				identity: 'Widget sample',
-				identityHTML: 'widget-sample',
-				url: 'widgets/sample/widget.html',
-				baseURL: 'widgets/sample/widget.html',
-				backgroundColor: '#57aae1',
-				grant_access:[
-					'user_mail',
-					'location'
-				],
-				sizeX: 1,
-				sizeY: 1,
-				row: 0,
-				col: 4
-			},
-			{
-				identity: 'Widget meteo 4',
-				identityHTML: 'widget-meteo4',
-				url: 'widgets/meteo/widget.html',
-				baseURL: 'widgets/meteo/widget.html',
-				defaultLocation: 'New York',
-				sizeX: 1,
-				sizeY: 1,
-				row: 0,
-				col: 5
-			},
-			{
-				identity: 'Widget meteo 5',
-				identityHTML: 'widget-meteo5',
-				url: 'widgets/meteo/widget.html',
-				baseURL: 'widgets/meteo/widget.html',
-				defaultLocation: 'New York',
-				sizeX: 2,
-				sizeY: 1,
-				row: 1,
-				col: 0
-			},
-		]);
+		Widget.find().then(function(widgets){
+			return res.ok(widgets);
+		})
+
 	},
 
 	updateWidgets: function(req, res){

@@ -130,26 +130,5 @@
         }
     };
 
-
-    /*
-     * Here is a list of listener you can use to intercept signal from application
-     * The application may send to the widget many signal like (stop/start/...)
-     * The library will act as a bridge between you and the application
-     * These are the available listeners:
-     */
-    // You can just simply link these listener to your widget methods start/stop/...
-    // It's a good way to allow user to control a bit your widget
-    window.addEventListener('widget-refresh', function (e) {
-        Widget.refresh();
-    }, false);
-
-    window.addEventListener('widget-stop', function (e) {
-        Widget.stop();
-    }, false);
-
-    window.addEventListener('widget-start', function (e) {
-        Widget.start();
-    }, false);
-
 })();
 
