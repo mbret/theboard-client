@@ -6,6 +6,9 @@ angular
 	/**
 	 * IndexController
 	 *
+	 * IMPORTANT !!!!
+	 * Controllers should never do DOM manipulation or hold DOM selectors; that's where directives and using ng-model come in. Likewise business logic should live in services, not controllers.
+	 * Data should also be stored in services, except where it is being bound to the $scope
 	 */
 	.controller("indexController", [
 		'$scope', '$http', '$window', 'settings', '$log', '$mdSidenav', '$mdToast', '$animate', '$mdDialog', 'widgetService', 'geolocationService',
@@ -17,13 +20,17 @@ angular
 
 			//console.log($scope);
 			$scope.widgets = null;
-			var widgets = $scope.widgets;
+			var widgetsPreviousState = null;
 
+			/*
+			 * Widget part
+			 *
+			 *
+			 */
 			// Get widgets from server
 			// Widgets will be relative to an account
 			// This is just a list of widgets informations
-			widgetService.get()
-				.then(function(widgets){
+			widgetService.get().then(function(widgets){
 
 					// Loop over all widget and set required values
 					angular.forEach(widgets, function(widget){
@@ -58,21 +65,23 @@ angular
 
 					});
 
-
 					$scope.widgets = widgets;
+					widgetsPreviousState = angular.copy(widgets);
 				})
 				.catch(function(error){
 					// ...
 				});
 
 
+
+			/*
+			 * Gridster part
+			 *
+			 *
+			 */
 			// Inject to view the gridster configuration
 			$scope.gridsterOpts = settings.gridsterOpts;
 
-
-			/*
-			 * Gridster handling
-			 */
 			// When the window change and gridster has been resized in order to be displayed
 			$scope.$on('gridster-resized', function(size){
 
@@ -81,15 +90,20 @@ angular
 			// @todo this event is triggered at startup, I suspect its due to the page building which make gridster change during process
 			// @todo maybe use a queue here to store change and call server less times
 			$scope.$watch('widgets', function(newWidgets){
-				// Update widgets on server
-				if( ! angular.equals(widgets, newWidgets )){
-					return widgetService.update( widgets )
-						.then(function(){
-							$log.debug('Widgets new organisation has been saved');
-						})
-						.catch(function(error){
-							// ...
-						});
+
+				//$log.warn('salut', widgetsPreviousState, newWidgets);
+				// Update widgets on server (only when widgets has been loaded first time)
+				if( widgetsPreviousState != null && ! angular.equals(widgetsPreviousState, newWidgets )){
+
+					//$log.warn('salut', widgetsPreviousState, newWidgets);
+					//return widgetService.update( newWidgets )
+					//	.then(function(){
+					//		$mdToast.show($mdToast.simple().content( settings.messages.widgets.updated ).position('top right'));
+					//	})
+					//	.catch(function(err){
+					//		// ...
+					//		$mdToast.show($mdToast.simple().content(err.message).position('top right'));
+					//	});
 				}
 				else{
 					// widgets are not different so don't make useless call
@@ -97,31 +111,67 @@ angular
 				}
 			}, true);
 			$scope.gridsterOpts.draggable = {
-				start: function(event, $element, widget) {
-					// optional callback fired when drag is started,
-				},
-				drag: function(event, $element, widget) {
-					// optional callback fired when item is moved,
-				},
+				/**
+				 * When a widget has been dragged
+				 *
+				 */
 				stop: function(event, $element, widget) {
-					// optional callback fired when item is finished dragging
-					$log.debug('Widget ', widget, ' has been dragged!');
+					return updateWidgetIfNecessary( widget, widgetsPreviousState);
 				}
 			};
 			$scope.gridsterOpts.resizable = {
-				start: function(event, $element, widget) {
-					// optional callback fired when resize is started,
-				},
-				resize: function(event, $element, widget) {
-					// optional callback fired when item is resized,
-				},
+				/**
+				 * When a widget has been resized
+				 *
+				 */
 				stop: function(event, $element, widget) {
-					// optional callback fired when item is finished resizing
-					$log.debug('Widget ', widget, ' has been resized!');
-					widgetService.sendSignal( widget, 'resized');
+					return updateWidgetIfNecessary( widget, widgetsPreviousState);
 				}
 			};
 
+			/**
+			 * Function that handle the widget update on action
+			 * - Get the new widget
+			 * - Compare this widget to all other widgets
+			 * - Check the equality between this widget and the list of previous widget
+			 * 	if one eq found 	=> this widget has not been dragged or resized (the old is equal to the new)
+			 *	if no eq found 		=> this widget is new so update it
+			 *
+			 * - When success we also update the widget in previous state etc
+			 */
+			function updateWidgetIfNecessary(widgetToUpdate, widgetsPreviousState){
+				// loop over all widget, if there are one equality, it means that the widget is still at the same place
+				var widgetHasNewPlace = true;
+				var key = null;
+				angular.forEach(widgetsPreviousState, function(obj, objKey){
+
+					if(obj.id == widgetToUpdate.id){
+						key = objKey; // keep reference to update previous widgets
+						if(angular.equals(obj, widgetToUpdate )){
+							widgetHasNewPlace = false;
+						}
+					}
+
+				});
+				// If there are different then update widget
+				if( widgetHasNewPlace ){
+					return widgetService.update( widgetToUpdate )
+						.then(function( widgetUpdated ){
+							$mdToast.show($mdToast.simple().content( settings.messages.widgets.updated ).position('top right'));
+							widgetsPreviousState[key] = angular.copy(widgetToUpdate);
+						})
+						.catch(function(err){
+							// ...
+							$mdToast.show($mdToast.simple().content(err.message).position('top right'));
+						});
+				}
+			}
+
+			/*
+			 * Sidebar part
+			 *
+			 *
+			 */
 			$scope.toggleMenu = function(){
 				$mdSidenav('sidebar').toggle().then(function(){
 					$log.debug("toggle Menu is done");

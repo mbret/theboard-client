@@ -33,24 +33,24 @@ angular
             get: function(){
                 return $http.get(settings.routes.widgets.get)
                     .then(function(data) {
-                        $log.debug('Widgets loaded successfully!');
+                        $log.debug('Widgets loaded successfully!', data.data);
                         return data.data;
                     })
                     .catch(function(error) {
                         $log.error('Failure loading widgets');
-                        return error;
+                        throw new Error(settings.messages.errors.widgets.unableToLoad);
                     });
             },
 
-            update: function( widgets ){
-                return $http.put(settings.routes.widgets.update)
+            update: function( widget ){
+                return $http.put(settings.routes.widgets.update, {widget: widget})
                     .then(function(data) {
-                        $log.debug('Widgets updated successfully!');
+                        $log.debug('Widget updated successfully!', data.data);
                         return data.data;
                     })
-                    .catch(function(error) {
-                        $log.error('Failure loading widgets');
-                        return error;
+                    .catch(function(err) {
+                        $log.error('Failure while updating widget', err);
+                        throw new Error(settings.messages.errors.widgets.unableToUpdate);
                     });
             },
 
@@ -65,7 +65,7 @@ angular
 
     }])
 
-    .factory('geolocationService', ['$q','$rootScope','$window','messages',function ($q,$rootScope,$window,messages) {
+    .factory('geolocationService', ['$q','$rootScope','$window','settings',function ($q,$rootScope,$window,settings) {
         return {
             getLocation: function (opts) {
 
@@ -81,19 +81,19 @@ angular
                             case 1:
                                 //$rootScope.$broadcast('error',geolocation_msgs['errors.location.permissionDenied']);
                                 //$rootScope.$apply(function() {
-                                    deferred.reject(messages.errors.geolocation.permissionDenied);
+                                    deferred.reject(settings.messages.errors.geolocation.permissionDenied);
                                 //});
                                 break;
                             case 2:
                                 //$rootScope.$broadcast('error',geolocation_msgs['errors.location.positionUnavailable']);
                                 //$rootScope.$apply(function() {
-                                    deferred.reject(messages.errors.geolocation.positionUnavailable);
+                                    deferred.reject(settings.messages.errors.geolocation.positionUnavailable);
                                 //});
                                 break;
                             case 3:
                                 //$rootScope.$broadcast('error',geolocation_msgs.errors.geolocation.timeout);
                                 //$rootScope.$apply(function() {
-                                    deferred.reject(messages.errors.geolocation.timeout);
+                                    deferred.reject(settings.messages.errors.geolocation.timeout);
                                 //});
                                 break;
                         }
@@ -103,7 +103,7 @@ angular
                 {
                     //$rootScope.$broadcast('error',messages.errors.geolocation.unsupportedBrowser);
                     //$rootScope.$apply(function(){deferred.reject(messages.errors.geolocation.unsupportedBrowser);});
-                    deferred.reject(messages.errors.geolocation.unsupportedBrowser);
+                    deferred.reject(settings.messages.errors.geolocation.unsupportedBrowser);
                 }
                 return deferred.promise;
             }

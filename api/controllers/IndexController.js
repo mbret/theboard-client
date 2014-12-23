@@ -14,6 +14,23 @@ module.exports = {
 				icons: '/app/icons',
 				images: '/app/img'
 			},
+			messages: {
+				errors: {
+					geolocation: {
+						unsupportedBrowser:'Browser does not support location services',
+						permissionDenied:'You have rejected access to your location',
+						positionUnavailable:'Unable to determine your location',
+						timeout:'Service timeout has been reached'
+					},
+					widgets: {
+						unableToUpdate: 'Sorry but we were unable to save your new widget organization!',
+						unableToLoad: 'Sorry but we were unable to load your widgets!'
+					}
+				},
+				widgets: {
+					updated: 'Widgets updated!'
+				}
+			},
 			routes: {
 				widgets: {
 					get: '/widgets',
@@ -41,7 +58,31 @@ module.exports = {
 
 	},
 
-	updateWidgets: function(req, res){
-		return res.ok();
+	/**
+	 * Update a widget
+	 * @param req
+	 * @param res
+	 */
+	updateWidget: function(req, res){
+
+		var widget = req.param('widget');
+		var widgetsToUpdate = {
+			sizeX: widget.sizeX,
+			sizeY: widget.sizeY,
+			row: widget.row,
+			col: widget.col
+		};
+
+		console.log('widget',widget);
+
+		Widget.update( {id:widget.id}, widgetsToUpdate, function(err, widgets){
+			if(err){
+				return res.serverError(err);
+			}
+
+			if(!widgets || widgets.length < 1) return res.notFound();
+
+			return res.ok(widgets);
+		});
 	}
 };
