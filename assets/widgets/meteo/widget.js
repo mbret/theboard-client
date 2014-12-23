@@ -16,8 +16,7 @@ window.Widget = {
         this.configuration = configuration;
         //console.log(this.configuration.identity + ' is initializing');
 
-        Widget.refreshWeather();
-        //this.start();
+        this.start();
     },
     start: function(){
         //console.log(this.configuration.identity + ' is running');
@@ -25,7 +24,7 @@ window.Widget = {
     },
     stop: function(){
         //console.log(this.configuration.identity + ' is stopped');
-        $("#weather").html('<span class="waiting">Widget is stopped</span>');
+        $(".widget-content").html('<span class="waiting">Widget is stopped</span>');
         this.refreshProcess.stop();
     },
     refresh: function(){
@@ -73,7 +72,8 @@ window.Widget = {
         $(document).ready(function() {
 
             var location = Widget.configuration.options.defaultLocation;
-            if(Widget.configuration.permissions.location) location = Widget.configuration.permissions.location.latitude + ',' + Widget.configuration.permissions.location.longitude;
+            // != check for null & undefined
+            if(Widget.configuration.permissions.location != null) location = Widget.configuration.permissions.location.latitude + ',' + Widget.configuration.permissions.location.longitude;
 
             $.simpleWeather({
                 location: location,

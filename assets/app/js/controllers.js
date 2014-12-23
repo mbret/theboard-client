@@ -37,10 +37,10 @@ angular
 							geolocationService.getLocation()
 								.then(function(data){
 									permissionsWithValues.location = data.coords;
-
 									next();
 								})
 								.catch(function(err){
+									permissionsWithValues.location = null;
 									$mdToast.show($mdToast.simple().content(err).position('top right'));
 								});
 						}
@@ -191,7 +191,7 @@ angular
 			$mdDialog.show({
 				targetEvent: $event,
 				//parent: angular.element("#" + widget.identityHTML + "-container"),
-				templateUrl: 'app/templates/change_bg.tmpl.html',
+				templateUrl: 'app/templates/widget_options.tmpl.html',
 				controller: dialogController,
 				locals: { widget: widget }
 			});
@@ -205,7 +205,6 @@ angular
 			$scope.widget = widget;
 
 			$scope.refresh = function(){
-				console.log($scope);
 				widgetService.sendSignal( widget, 'refresh' );
 			};
 			$scope.stop = function(){
