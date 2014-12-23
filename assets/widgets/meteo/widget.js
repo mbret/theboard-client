@@ -81,6 +81,7 @@ window.Widget = {
                 unit: Widget.unit,
                 success: function(weather) {
 
+                    console.log('DATE', weather);
                     $('.widget-header').html('<h2><canvas id="weather-icon"></canvas> '+weather.temp+'&deg;'+weather.units.temp+'</h2>');
                     $('.widget-content').html(
                         '<ul>' +
@@ -88,7 +89,7 @@ window.Widget = {
                         '<li class="currently widget-component-highlighted">'+weather.currently+'</li>'+
                         '</ul>'
                     );
-                    $('.widget-updated').html('Updated: ' + new Date(weather.updated).toDateString() );
+                    $('.widget-updated').html('Updated: ' + weather.updated );
 
                     // Set icon with skycons addon
                     var skycons = new Skycons({"color": "white"});
