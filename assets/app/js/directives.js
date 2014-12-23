@@ -67,5 +67,49 @@ angular
             }
         }
 
-    }]);
+    }])
+
+    /**
+     * http://srobbin.com/jquery-plugins/backstretch/
+     */
+    .directive('ngBackstretch', ['settings', function(settings) {
+
+            if (typeof $.fn.backstretch !== 'function')
+                throw new Error('ngBackstretch | Please make sure the jquery backstretch plugin is included before this directive is added.');
+
+            return {
+                restrict: 'A',
+                link: function(scope, element, attr) {
+
+                    //if (attr.ngBackstretch === '' || typeof attr.ngBackstretch === 'undefined')
+                    //    throw new Error('ngBackstretch | You have not declared an image to be stretched.')
+
+                    // backstretch take an array of url so we take settings
+                    // and create an array with image and url
+                    var urls = [];
+                    angular.forEach(settings.user.backgroundImages, function(image){
+                        urls.push(settings.paths.images + '/' + image );
+                    });
+                    // Instead of doing that we could have pass url directly or also use ng-backstrench=[...] in the html
+                    // Thi sline is still here to keep in mind possibilities
+                    attr.ngBackstretch = urls;
+
+
+                    if (element.context.toString().match(/HTMLBodyElement/gi))
+                        return $.backstretch( attr.ngBackstretch , {
+                                duration: settings.user.backgroundImagesInterval,
+                                fade: 750
+                            });
+
+                    $(element).backstretch(attr.ngBackstretch , {
+                        duration: settings.user.backgroundImagesInterval,
+                        fade: 750
+                    });
+
+                }
+            }
+
+        }
+
+    ]);
 

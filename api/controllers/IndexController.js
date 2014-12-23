@@ -21,6 +21,7 @@ module.exports = {
 				}
 			},
 			user: {
+				backgroundImagesInterval: 5000,
 				backgroundImages: ['board (2).jpg', 'board (3).jpg', 'board (4).jpg', 'board (5).jpg', 'board (6).jpg', 'board (7).jpg', 'board (8).jpg', 'board (9).jpg']
 			},
 			environment: sails.config.environment

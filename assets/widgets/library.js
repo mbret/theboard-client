@@ -89,7 +89,7 @@
             // Needed to fire widget important events
             window.addEventListener('hash-received', function (e) {
 
-                console.log('New hash received ', window.location.hash);
+                //console.log('New hash received ', window.location.hash);
 
                 // Received hash is an stringified object
                 var hash = window.location.hash.substring(1);
@@ -165,7 +165,7 @@
         );
     };
 
-    console.log(WidgetAdapter);
+    //console.log(WidgetAdapter);
 
     // Export module
     window.WidgetAdapter = WidgetAdapter;

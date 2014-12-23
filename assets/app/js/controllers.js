@@ -42,6 +42,7 @@ angular
 								.catch(function(err){
 									permissionsWithValues.location = null;
 									$mdToast.show($mdToast.simple().content(err).position('top right'));
+									next();
 								});
 						}
 						else{
@@ -74,7 +75,7 @@ angular
 			 */
 			// When the window change and gridster has been resized in order to be displayed
 			$scope.$on('gridster-resized', function(size){
-				$log.debug('salut');
+
 			});
 			// Watch item changes
 			// @todo this event is triggered at startup, I suspect its due to the page building which make gridster change during process

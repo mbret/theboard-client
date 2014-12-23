@@ -1,11 +1,12 @@
 
 
 body{
-    background: url("../img/board_default.jpg") no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    /*background: url("../img/board_default.jpg") no-repeat center center fixed;*/
+    /*-webkit-background-size: cover;*/
+    /*-moz-background-size: cover;*/
+    /*-o-background-size: cover;*/
+    /*background-size: cover;*/
+    background: none;
 }
 md-content.board-content{
     background: none;

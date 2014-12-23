@@ -45,7 +45,7 @@ angular
             update: function( widgets ){
                 return $http.put(settings.routes.widgets.update)
                     .then(function(data) {
-                        $log.debug('Widgets loaded successfully!');
+                        $log.debug('Widgets updated successfully!');
                         return data.data;
                     })
                     .catch(function(error) {
@@ -55,7 +55,7 @@ angular
             },
 
             sendSignal: function( widget, signal ){
-                console.log(widget);
+                //console.log(widget);
                 if(widget) $log.debug('Signal ' + signal + ' sent to widget ' + widget.identity);
                 else $log.debug('Signal ' + signal + ' sent to everyone');
                 $rootScope.$broadcast('widget-signal', widget, signal);
