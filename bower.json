@@ -1,0 +1,27 @@
+{
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.3",
+    "angular": "1.3.8",
+    "angular-material": "master",
+    "angular-route": "~1.3.8",
+    "angular-animate": "~1.3.8",
+    "angular-aria": "~1.3.8",
+    "angular-hammer": "monospaced/angular-hammer#~1.2.4",
+    "hammerjs": "~2.0.4",
+    "angular-gridster": "~0.11.1",
+    "javascript-detect-element-resize": "~0.5.3",
+    "jquery-backstretch": "~2.0.4",
+    "sails.io.js": "~0.11.4"
+  },
+  "name": "p",
+  "version": "0.0.0",
+  "author": "maxime",
+  "private": true
+}
