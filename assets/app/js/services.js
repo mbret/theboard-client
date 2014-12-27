@@ -60,6 +60,20 @@ angular
                 else $log.debug('Signal ' + signal + ' sent to everyone');
                 $rootScope.$broadcast('widget-signal', widget, signal);
                 return;
+            },
+
+            /**
+             * Check if two widget have the same position.
+             * Check row, col, size etc
+             * @param widget
+             * @param widgetToCompare
+             * @returns {boolean}
+             */
+            hasSamePosition: function( widget, widgetToCompare){
+                return (widget.col == widgetToCompare.row
+                && widget.row == widgetToCompare.row
+                && widget.sizeX == widgetToCompare.sizeX
+                && widget.sizeY == widgetToCompare.sizeY);
             }
         }
 

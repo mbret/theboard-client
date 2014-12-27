@@ -11,66 +11,79 @@ angular
 	 * Data should also be stored in services, except where it is being bound to the $scope
 	 */
 	.controller("indexController", [
-		'$scope', '$http', '$window', 'settings', '$log', '$mdSidenav', '$mdToast', '$animate', '$mdDialog', 'widgetService', 'geolocationService',
-		function($scope, $http, $window, settings, $log, $mdSidenav, $mdToast, $animate, $mdDialog, widgetService, geolocationService){
+		'$scope', '$http', '$window', '$q', 'settings', '$log', '$mdSidenav', '$mdToast', '$animate', '$mdDialog', 'widgetService', 'geolocationService',
+		function($scope, $http, $window, $q, settings, $log, $mdSidenav, $mdToast, $animate, $mdDialog, widgetService, geolocationService){
 
-			$scope.bodyStyle = {
-				'background': 'url(../img/board_bg.jpg) no-repeat center center fixed'
-			}
 
-			//console.log($scope);
+			// This var will contain all widget element
+			// These widgets will be placed inside iframe and get from server
 			$scope.widgets = null;
+
+			// This var save the previous widget state.
+			// If widgets are moved then this var contain all widgets before this move
 			var widgetsPreviousState = null;
 
 			/*
 			 * Widget part
 			 *
-			 *
+			 * Get widgets from server
+			 * Widgets will be relative to an account
+			 * This is just a list of widgets informations
 			 */
-			// Get widgets from server
-			// Widgets will be relative to an account
-			// This is just a list of widgets informations
 			widgetService.get().then(function(widgets){
 
-					// Loop over all widget and set required values
-					angular.forEach(widgets, function(widget){
+				// Loop over all widget and set required values
+				//@todo use .each of async here
+				var promises = [];
+				angular.forEach(widgets, function(widget){
 
-						// Check for permissions
-						var permissionsWithValues = {};
+					$log.debug('toto');
+					var deferred = $q.defer();
 
-						if( widget.permissions &&  widget.permissions.indexOf('mail') !== -1  ) permissionsWithValues.mail = 'user@user.com';
-						// async
-						if( widget.permissions &&  widget.permissions.indexOf('location') !== -1 ){
-							geolocationService.getLocation()
-								.then(function(data){
-									permissionsWithValues.location = data.coords;
-									next();
-								})
-								.catch(function(err){
-									permissionsWithValues.location = null;
-									$mdToast.show($mdToast.simple().content(err).position('top right'));
-									next();
-								});
-						}
-						else{
-							next();
-						}
+					// Check for permissions
+					var permissionsWithValues = {};
 
-						function next(){
-							widget.permissions = permissionsWithValues;
+					if( widget.permissions &&  widget.permissions.indexOf('mail') !== -1  ) permissionsWithValues.mail = 'user@user.com';
+					// async
+					if( widget.permissions &&  widget.permissions.indexOf('location') !== -1 ){
+						geolocationService.getLocation()
+							.then(function(data){
+								permissionsWithValues.location = data.coords;
+								return next();
+							})
+							.catch(function(err){
+								permissionsWithValues.location = null;
+								$mdToast.show($mdToast.simple().content(err).position('top right'));
+								return next();
+							});
+					}
+					else{
+						return next();
+					}
 
-							// Init the iframe url
-							widget.iframeURL = $window.URI(widget.baseURL).search({test: "sqd + ",widget:JSON.stringify(widget)}).toString();
-						}
+					function next(){
+						widget.permissions = permissionsWithValues;
 
-					});
+						// Init the iframe url
+						widget.iframeURL = $window.URI(widget.baseURL).search({test: "sqd + ",widget:JSON.stringify(widget)}).toString();
 
+						return deferred.resolve();
+					}
+
+					promises.push(deferred);
+
+				});
+
+				$q.all(promises).then(function(){
+					$log.debug('tata');
 					$scope.widgets = widgets;
 					widgetsPreviousState = angular.copy(widgets);
-				})
-				.catch(function(error){
-					// ...
 				});
+
+			})
+			.catch(function(error){
+				// ...
+			});
 
 
 
@@ -147,7 +160,8 @@ angular
 
 					if(obj.id == widgetToUpdate.id){
 						key = objKey; // keep reference to update previous widgets
-						if(angular.equals(obj, widgetToUpdate )){
+						$log.debug(obj, widgetToUpdate);
+						if( widgetService.hasSamePosition(obj, widgetToUpdate) ){
 							widgetHasNewPlace = false;
 						}
 					}
