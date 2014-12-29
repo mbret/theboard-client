@@ -16,6 +16,9 @@
 //  to change `assets/styles/importer.less` instead.)
 var cssFilesToInject = [
 
+  'styles/**/angular*.css',
+  'styles/**/*.css',
+
   'app/css/**/*.css'
 ];
 
@@ -23,12 +26,24 @@ var cssFilesToInject = [
 // Client-side javascript files to inject in order
 // (uses Grunt-style wildcard/glob/splat expressions)
 var jsFilesToInject = [
-  
-  // Load sails.io before everything else
-  'app/js/dependencies/sails.io.js',
 
-  // Dependencies like jQuery, or Angular are brought in here
-  'app/js/dependencies/**/*.js',
+  // Load sails.io before everything else
+  'js/dependencies/**/sails.io.js',
+
+  // Dependencies like sails.io.js, jQuery, or Angular
+  // are brought in here
+  'js/dependencies/dist/jquery.js',
+  'js/dependencies/hammer.js',
+  'js/dependencies/detect-element-resize.js',
+  'js/dependencies/jquery.backstretch.js',
+  'js/dependencies/URI.js',
+  'js/dependencies/angular.js',
+  'js/dependencies/angular*.js',
+  'js/dependencies/**/*.js',
+
+  // All of the rest of your client-side js files
+  // will be injected here in no particular order.
+  'js/**/*.js',
 
   // All of the rest of your client-side js files
   // will be injected here in no particular order.

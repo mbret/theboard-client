@@ -116,6 +116,9 @@ window.Widget = {
                         case 'Fog':
                             icon = Skycons.FOG;
                             break;
+                        case 'Snow':
+                            icon = Skycons.SNOW;
+                            break;
                         default:
                             icon = Skycons.CLEAR_DAY;
                             console.log(weather.currently);
