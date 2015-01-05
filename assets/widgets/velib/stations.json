@@ -1,0 +1,31 @@
+{
+  "Nancy, France": {
+    "name": "Nancy, France",
+    "ws": "http://www.velostanlib.fr/service/stationdetails/nancy",
+    "stations": {
+      "Boulevard d'Haussonville": {
+        "number": 28,
+        "name": "Boulevard d'Haussonville"
+      },
+      "Rue des 3 Epis Baudricourt": {
+        "number": 26,
+        "name": "Rue des 3 Epis Baudricourt"
+      }
+    }
+  },
+  "Paris, France": {
+    "name": "Paris, France",
+    "ws": "http://www.velib.paris/service/stationdetails/paris",
+    "stations": {
+      "22 RUE DE LA PERLE": {
+        "number": 4003,
+        "name": "22 RUE DE LA PERLE"
+      },
+      "32 RUE ETIENNE MARCEL": {
+        "number": 2002,
+        "name": "32 RUE ETIENNE MARCEL"
+      }
+    }
+  }
+
+}

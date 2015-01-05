@@ -301,4 +301,28 @@ angular
 
 		};
 
+	}])
+
+	/**
+	 * Lib used: https://github.com/TalAter/annyang
+	 * Google test speech recognition: http://www.google.com/intl/fr/chrome/demos/speech.html
+	 *
+	 * On http site the authorization will pop every time, not on https
+	 */
+	.controller("VoiceController", ['$scope', function($scope){
+
+
+		var commands = {
+			'Widgets* refresh': function() {
+				alert('Widgets are refreshing');
+			},
+			'Widgets* stop': function() {
+				alert('Widgets are stopped!');
+			}
+		};
+
+		annyang.debug();
+		annyang.addCommands(commands);
+		annyang.start();
+
 	}]);

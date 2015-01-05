@@ -15,6 +15,22 @@ module.exports.bootstrap = function(cb) {
   Promise.all([
 
       Widget.create({
+          identity: 'Velib',
+          identityHTML: 'widget-velib',
+          url: 'widgets/velib/widget.html',
+          baseURL: 'widgets/velib/widget.html',
+          permissions: [
+              'location'
+          ],
+          options: {
+              defaultLocation: 'New York'
+          },
+          sizeX: 1,
+          sizeY: 1,
+          row: 0,
+          col: 1
+      }),
+      Widget.create({
             identity: 'Widget meteo',
             identityHTML: 'widget-meteo',
             url: 'widgets/meteo/widget.html',
@@ -48,7 +64,7 @@ module.exports.bootstrap = function(cb) {
           url: 'widgets/sample/widget.html',
           baseURL: 'widgets/sample/widget.html',
           backgroundColor: '#57aae1',
-          grant_access:[
+          permissions:[
               'user_mail',
               'location'
           ],

@@ -32,12 +32,15 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  'GET /meteo': 'MeteoController.getWeather',
-  'GET /settings.js': 'IndexController.settings',
-  'GET /widgets': 'IndexController.getWidgets',
-  'PUT /widgets': 'IndexController.updateWidget',
-  'GET /home*': {view: 'index' },
-  'GET /': { view: 'index' }
+      // Helpers
+      'GET /helpers/cor/:url': 'HelperController.pipeCOR', // THIS ROUTE MUST BE DISABLED FOR PRODUCTION
+
+      'GET /meteo': 'MeteoController.getWeather',
+      'GET /settings.js': 'IndexController.settings',
+      'GET /widgets': 'IndexController.getWidgets',
+      'PUT /widgets': 'IndexController.updateWidget',
+      'GET /home*': {view: 'index' },
+      'GET /': { view: 'index' }
 
 
 

@@ -1,10 +1,40 @@
 // #{"signal":"init","settings":{}}
 
+
 (function(){
 
+    // Define if the user provide a widget conf for testing (instead of URL)
+    var isTestWidgetProvided = false;
 
+    var testWidgetProvided = null;
 
+    var logLvl = 'warn';
+
+    var serverURL = 'http://localhost:1337';
+
+    function WidgetError() {
+        var tmp = Error.apply(this, arguments);
+        tmp.name = this.name = 'WidgetError'
+
+        this.message = tmp.message
+        /*this.stack = */Object.defineProperty(this, 'stack', { // getter for more optimizy goodness
+            get: function() {
+                return tmp.stack
+            }
+        })
+
+        return this
+    }
+    var IntermediateInheritor = function() {}
+    IntermediateInheritor.prototype = Error.prototype;
+    WidgetError.prototype = new IntermediateInheritor();
+
+    /**
+     * This is util for library and widget
+     */
     var Utils = {
+
+        serverURL: serverURL,
 
         messages:{
             error: {
@@ -29,11 +59,14 @@
             var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
             for(var i = 0; i < hashes.length; i++)
             {
-                hash = hashes[i].split('=');
-                vars.push(hash[0]);
-                // URI.js use encodeURIComponent
-                // I don't know why but (+) are not decoded in ' ' as it should ?
-                vars[hash[0]] = decodeURIComponent(hash[1].replace('+', ' '));
+                hash = hashes[i].split('='); // get var name and its value into array
+                // only continue if a var has a value
+                if( hash.length > 1 ){
+                    vars.push(hash[0]);
+                    // URI.js use encodeURIComponent
+                    // I don't know why but (+) are not decoded in ' ' as it should ?
+                    vars[hash[0]] = decodeURIComponent(hash[1].replace('+', ' '));
+                }
             }
             // remove hash for last if there is
             var hashToRemove = window.location.hash;
@@ -43,7 +76,33 @@
                 }
             }
             return vars;
+        },
+
+        checkValidityOfJsonFromUrl: function(jsonToParse){
+            try{
+                return JSON.parse(jsonToParse);
+            }
+            catch(e){
+                return false;
+            }
+        },
+
+        log: {
+            debug: function(message, obj){
+                if(logLvl == 'debug' || logLvl == 'all'){
+                    if(obj) console.debug('Widget ' + window.location.pathname + ' -> ' + message, obj);
+                    else console.debug('Widget ' + window.location.pathname + ' -> ' + message);
+                }
+            }
+        },
+
+        convertUnixTsToDate: function( unixTS ){
+            // create a new javascript Date object based on the timestamp
+            // multiplied by 1000 so that the argument is in milliseconds, not seconds
+            var date = new Date(unixTS*1000);
+            return date;
         }
+
     };
 
     //var widget = {
@@ -66,7 +125,7 @@
 
     var WidgetAdapter = {
         signal: null,
-        widget: null // will be fill from url
+        configuration: null // will be fill from url
 
         // maybe some futures useful method here
         // ...
@@ -137,46 +196,89 @@
     };
     w.init();
 
-    // Get eventual settings from application
-    // The first run a settings object may be passed by application
-    var tmp = Utils.getUrlVars();
-    try{
-        WidgetAdapter.widget = JSON.parse(tmp.widget);
-    }
-    catch(e){
-        console.error(new Error('A problem occurred when trying to extract widget information from URL! Please verify that widget is present and well formed'));
-    }
 
-    // Intercept first window load
-    // Send the first signal event
-    if(window.location.hash) {
-        window.dispatchEvent(
-            new Event('hash-received')
-        );
-    }
-    // Set the handler listener for future hash change
-    window.onhashchange = function() {
-        // Check hash
-        if(window.location.hash == null || window.location.hash == ''){
-            return;
+    // ===============
+    // Some init
+    // ===============
+    if( typeof widgetConfiguration !== 'undefined' ){
+        if( widgetConfiguration.widget && widgetConfiguration.widget.configuration){
+            isTestWidgetProvided = true;
+            testWidgetProvided = widgetConfiguration.widget;
         }
-        window.dispatchEvent(
-            new Event('hash-received')
-        );
-    };
+        if( widgetConfiguration.log ){
+            logLvl = widgetConfiguration.log;
+        }
+    }
 
-    //console.log(WidgetAdapter);
 
-    // Export module
-    window.WidgetAdapter = WidgetAdapter;
-
-    // Run The widget
     try{
-        Widget.init( WidgetAdapter.widget );
+        // ===============
+        // STEP 1
+        // ===============
+        // Get eventual settings from application
+        // The first run a settings object may be passed by application
+        var tmp = Utils.getUrlVars();
+
+        // Get and build widget configuration into adapter
+        if( testWidgetProvided ){
+            WidgetAdapter.configuration = testWidgetProvided.configuration;
+        }
+        else{
+            if( !tmp.widget){
+                throw new WidgetError("No widget configuration specified into URL");
+            }
+            if( ! Utils.checkValidityOfJsonFromUrl( tmp.widget )){
+                throw new WidgetError("Please specify a valid widget configuration");
+            }
+            WidgetAdapter.configuration = JSON.parse(tmp.widget);
+        }
+        Utils.log.debug('Widget configuration has been loaded ', WidgetAdapter.configuration);
+
+        // ===============
+        // STEP 2
+        // ===============
+        // Intercept first window load
+        // Send the first signal event
+        if(window.location.hash) {
+            window.dispatchEvent(
+                new Event('hash-received')
+            );
+        }
+        // Set the handler listener for future hash change
+        window.onhashchange = function() {
+            // Check hash
+            if(window.location.hash == null || window.location.hash == ''){
+                return;
+            }
+            window.dispatchEvent(
+                new Event('hash-received')
+            );
+        };
+
+        // ===============
+        // STEP 3
+        // ===============
+        // Export module
+        window.WidgetAdapter = WidgetAdapter;
+        window.WidgetUtils = Utils;
+
+        // ===============
+        // STEP 4
+        // ===============
+        // Run The widget
+        Widget.identity = WidgetAdapter.configuration.identity;
+        //Widget.configuration = WidgetAdapter.configuration;
+        Utils.log.debug('Widget has been prepared by library and is calling with init() method');
+        Widget.init( WidgetAdapter.configuration );
     }
     catch(e){
-        document.body.innerHTML = '<div class="widget-error">Widget on error!</div>';
-        console.error(new Error('Unable to call .init() method of the widget ('+ WidgetAdapter.widget.identity + '). Be sure the library is loaded after your widget and your widget contain .init() method'));
+        if(e instanceof WidgetError){
+            console.error('A problem occurred when initialising library!', e.message);
+        }else{
+            throw e;
+        }
+
     }
+
 
 }).call(this);
