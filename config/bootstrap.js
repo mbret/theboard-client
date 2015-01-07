@@ -12,6 +12,9 @@ var Promise = require('bluebird');
 
 module.exports.bootstrap = function(cb) {
 
+    // Load passport providers on startup
+    sails.services.passport.loadStrategies();
+
   Promise.all([
 
       Widget.create({

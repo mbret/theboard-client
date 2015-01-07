@@ -35,14 +35,27 @@ module.exports.routes = {
     // Helpers
     'GET /helpers/cor/:url': 'HelperController.pipeCOR', // THIS ROUTE MUST BE DISABLED FOR PRODUCTION
 
+    // Authentication
+    'get /register': 'AuthController.register',
+    'post /auth/local': 'AuthController.callback',
+    'post /auth/local/:action': 'AuthController.callback',
+    'get /auth/:provider': 'AuthController.provider',
+    'get /auth/:provider/callback': 'AuthController.callback',
+    'get /auth/:provider/:action': 'AuthController.callback',
+
     'GET /meteo': 'MeteoController.getWeather',
     'GET /settings.js': 'IndexController.settings',
     'GET /widgets': 'IndexController.getWidgets',
     'PUT /widgets': 'IndexController.updateWidget',
     'get /account': 'IndexController.getAccountData',
     'put /account': 'IndexController.updateAccountData',
-    'GET /home*': {view: 'index' },
-    'GET /': { view: 'index' }
+
+    // Login & register (different point than front end app)
+    'get /login': 'AuthController.login', // login form
+    'get /logout': 'AuthController.logout',
+
+    // Home (start point of front end app)
+    'get /': 'IndexController.index'
 
 
 

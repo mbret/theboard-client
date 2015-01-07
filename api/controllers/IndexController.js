@@ -1,10 +1,7 @@
 module.exports = {
   	
-  	home: function (req, res) {
-    	return res.ok(
-    		null,
-    		'index'
-    	);
+  	index: function (req, res) {
+    	return res.view('index');
   	},
 
 	settings: function(req, res){

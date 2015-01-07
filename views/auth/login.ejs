@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <title>Board</title>
+
+  <!-- Viewport mobile tag for sensible mobile support -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+  <link rel="stylesheet" href="/styles/angular-material.css">
+
+</head>
+
+<body>
+
+
+<% if (errors) {%>
+<% errors.forEach(function (error) { %>
+<%= __(error) %>
+<% }) %>
+<% } %>
+
+<form role="form" action="/auth/local" method="post">
+  <input type="text" name="identifier" placeholder="Username or Email">
+  <input type="password" name="password" placeholder="Password">
+  <button type="submit">Sign in</button>
+</form>
+
+<% if (providers) {%>
+<h4>You can also use one of these...</h4>
+
+<% Object.keys(providers).forEach(function (key) { %>
+<a href="/auth/<%= providers[key].slug %>" role="button"><%= providers[key].name %></a>
+<% }) %>
+<% } %>
+
+<script src="/js/dependencies/sails.io.js"></script>
+<script src="/js/dependencies/dist/jquery.js"></script>
+<script src="/js/dependencies/angular.js"></script>
+<script src="/js/dependencies/angular-animate.js"></script>
+<script src="/js/dependencies/angular-aria.js"></script>
+<script src="/js/dependencies/angular-hammer.js"></script>
+<script src="/js/dependencies/angular-material.js"></script>
+<script src="/js/dependencies/angular-route.js"></script>
+
+</body>
+
+</html>
