@@ -69,8 +69,12 @@ angular
 	function($routeProvider) {
 		$routeProvider.
 			when('/', {
-				templateUrl: 'app/partials/index.html',
-				controller: 'indexController'
+				templateUrl: 'app/partials/board.html',
+				controller: 'IndexController'
+			}).
+			when('/settings', {
+				templateUrl: 'app/partials/settings.html',
+				controller: 'SettingsController'
 			}).
 			otherwise({
 				redirectTo: '/'

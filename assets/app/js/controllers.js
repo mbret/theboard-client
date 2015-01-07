@@ -3,6 +3,22 @@
 angular
 	.module('app.controllers', [])
 
+	.controller("MainController", [
+		'$scope', '$http', '$window', '$q', 'settings', '$log', '$mdSidenav', '$mdToast', '$animate', '$mdDialog', 'widgetService', 'geolocationService',
+		function($scope, $http, $window, $q, settings, $log, $mdSidenav, $mdToast, $animate, $mdDialog, widgetService, geolocationService){
+
+			/*
+			 * Sidebar part
+			 */
+			$scope.toggleMenu = function(){
+				$mdSidenav('sidebar').toggle().then(function(){
+					$log.debug("toggle Menu is done");
+				});
+			};
+
+		}
+	])
+
 	/**
 	 * IndexController
 	 *
@@ -10,10 +26,12 @@ angular
 	 * Controllers should never do DOM manipulation or hold DOM selectors; that's where directives and using ng-model come in. Likewise business logic should live in services, not controllers.
 	 * Data should also be stored in services, except where it is being bound to the $scope
 	 */
-	.controller("indexController", [
+	.controller("IndexController", [
 		'$scope', '$http', '$window', '$q', 'settings', '$log', '$mdSidenav', '$mdToast', '$animate', '$mdDialog', 'widgetService', 'geolocationService',
 		function($scope, $http, $window, $q, settings, $log, $mdSidenav, $mdToast, $animate, $mdDialog, widgetService, geolocationService){
 
+
+			$scope.$broadcast('backstretch-start');
 
 			// This var will contain all widget element
 			// These widgets will be placed inside iframe and get from server
@@ -181,20 +199,49 @@ angular
 				}
 			}
 
-			/*
-			 * Sidebar part
-			 *
-			 *
-			 */
-			$scope.toggleMenu = function(){
-				$mdSidenav('sidebar').toggle().then(function(){
-					$log.debug("toggle Menu is done");
-					//$scope.showSimpleToast( 'Menu opened' );
-				});
-			};
-
 		}
 	])
+
+	/**
+	 * form validation: http://www.ng-newsletter.com/posts/validations.html
+	 */
+	.controller("SettingsController", ['$scope', '$http', '$log', 'accountService', 'dialogService', 'settings', function($scope, $http, $log, accountService, dialogService, settings){
+
+		// @todo Clean the div from backstretch
+
+		// Get account data and create a scope
+		accountService.get().then(function(account){
+			$scope.account = {
+				firstName: account.firstName,
+				lastName: account.lastName
+			}
+		}).catch(function(err){
+			dialogService.error(err.message);
+			// @todo get a return of dialog and put application on error
+		});
+
+		/*
+		 * Form submit
+		 */
+		$scope.updateAccountForm = function(){
+			if($scope.update_account_form.$valid){
+
+				// Update
+				accountService.update({
+					firstName: $scope.account.firstName,
+					lastName: $scope.account.lastName
+				}).then(function(){
+					dialogService.successToast( settings.messages.account.updated );
+				}).catch(function(err){
+					dialogService.error(err.message);
+				});
+			}
+			else{
+				dialogService.error('Form invalid');
+			}
+		}
+
+	}])
 
 	.controller("SidebarController", ['$scope', '$mdSidenav', '$log', 'widgetService', function($scope, $mdSidenav, $log, widgetService){
 		$scope.close = function(){
@@ -323,6 +370,6 @@ angular
 
 		annyang.debug();
 		annyang.addCommands(commands);
-		annyang.start();
+		//annyang.start();
 
 	}]);

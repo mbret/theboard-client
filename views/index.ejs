@@ -36,64 +36,67 @@
     <!--STYLES END-->
   </head>
 
-  <body ng-backstretch ng-controller="VoiceController">
+  <body  ng-controller="MainController">
 
 
 
-      <div class="view-container">
-        <div ng-view class="view-frame"></div>
+      <div layout="column" layout-fill>
+
+
+          <section layout="row" flex>
+
+              <!--
+                  Sidenav component
+                  This component is handle by a specific controller
+              -->
+              <div ng-controller="SidebarController">
+                  <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="sidebar">
+                      <md-toolbar class="md-theme-light">
+                          <h1 class="md-toolbar-tools">Menu</h1>
+                      </md-toolbar>
+
+                      <md-content  class="md-padding" >
+
+                          <div class="md-actions" layout="column">
+                              <md-button ng-href="#/settings" >Settings</md-button>
+                              <md-button ng-href="#/board" >Board</md-button>
+                          </div>
+
+                          <div class="md-actions" layout="column">
+                              <md-button ng-click="refreshWidgets()" class="md-primary">Refresh</md-button>
+                              <md-button ng-click="stopWidgets()" class="md-accent">Stop</md-button>
+                              <md-button ng-click="startWidgets()" class="md-warn">Start</md-button>
+                              <md-button ng-click="close()" class="md-primary">
+                                  Close Sidenav left
+                              </md-button>
+
+                              <md-button ng-click="changeBackgroud($event)" class="md-primary">Change backgroud</md-button>
+                          </div>
+
+                      </md-content>
+                  </md-sidenav>
+              </div>
+
+
+              <!-- Main content -->
+              <md-content flex class="md-padding board-content">
+
+                  <md-button ng-click="toggleMenu()" class="md-primary">
+                      <md-icon icon="/app/icons/material/navigation/1x_web/ic_menu_black_24dp.png"></md-icon>
+                  </md-button>
+
+                  <!--
+                        Start of dynamic content
+                    -->
+                  <div class="view-container">
+                      <div ng-view class="view-frame"></div>
+                  </div>
+
+              </md-content>
+
+          </section>
       </div>
 
-
-
-    <!--
-        Client-side Templates
-        ========================
-
-        HTML templates are important prerequisites of modern, rich client applications.
-        To work their magic, frameworks like Backbone, Angular, Ember, and Knockout require
-        that you load these templates client-side.
-
-        By default, your Gruntfile is configured to automatically load and precompile
-        client-side JST templates in your `assets/templates` folder, then
-        include them here automatically (between TEMPLATES and TEMPLATES END).
-        
-        To customize this behavior to fit your needs, just edit `tasks/pipeline.js`.
-        For example, here are a few things you could do:
-
-            + Import templates from other directories
-            + Use a different template engine (handlebars, jade, dust, etc.)
-            + Internationalize your client-side templates using a server-side
-              stringfile before they're served.
-    -->
-
-        <!--TEMPLATES-->
-        
-        <!--TEMPLATES END-->
-
-
-        <!--
-
-          Client-side Javascript
-          ========================
-
-          You can always bring in JS files manually with `script` tags, or asynchronously
-          on the client using a solution like AMD (RequireJS).  Or, if you like, you can
-          take advantage of Sails' conventional asset pipeline (boilerplate Gruntfile).
-
-          By default, files in your `assets/js` folder are included here
-          automatically (between SCRIPTS and SCRIPTS END).  Both JavaScript (.js) and
-          CoffeeScript (.coffee) are supported. In production, your scripts will be minified
-          and concatenated into a single file.
-
-          To customize any part of the built-in behavior, just edit `tasks/pipeline.js`.
-          For example, here are a few things you could do:
-
-              + Change the order of your scripts
-              + Import scripts from other directories
-              + Use a different preprocessor, like TypeScript
-
-        -->
 
         <!-- Load application config -->
         <script src="settings.js"></script>
@@ -135,5 +138,7 @@
         <script src="/app/js/filters.js"></script>
         <script src="/app/js/services.js"></script>
         <!--SCRIPTS END-->
-  </body>
+
+    </body>
+
 </html>

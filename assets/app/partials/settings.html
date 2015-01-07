@@ -1,0 +1,35 @@
+
+<md-content class="md-padding ng-scope md-default-theme">
+    <div layout="column" layout-fill="" class="doc-content" style="max-width: 800px; margin:auto;">
+        <div layout="column" >
+
+            <section class="md-whiteframe-z1" >
+
+                <md-toolbar class="md-default-theme">
+                    <div class="md-toolbar-tools">
+                        <span class="ng-binding">Settings</span>
+                    </div>
+                </md-toolbar>
+
+                <div class="demo-content textFieldDemo1 ng-scope">
+                    <div  layout="column">
+                        <md-content>
+                            <form style="padding: 20px;" name="update_account_form" ng-submit="updateAccountForm()">
+                                <!--<fieldset>-->
+                                    <div class="row">
+                                        <md-text-float label="FirstName" ng-model="account.firstName" > </md-text-float>
+                                        <md-text-float label="LastName" ng-model="account.lastName" > </md-text-float>
+                                    </div>
+                                    <div class="row">
+                                        <md-button class="md-raised md-primary" type="submit">Save</md-button>
+                                    </div>
+                                <!--</fieldset>-->
+                            </form>
+                        </md-content>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</md-content>

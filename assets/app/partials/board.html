@@ -1,0 +1,36 @@
+
+
+
+<ng-backstretch state="backstretch"/>
+
+
+
+
+<div gridster="gridsterOpts" class="widgets-iframes-container">
+	<ul>
+		<li
+			gridster-item="widget"
+			ng-repeat="widget in widgets"
+			ng-style="{'background-color': widget.backgroundColor}" ng-controller="WidgetController">
+
+			<div id="{{widget.identityHTML}}-container" class="widget-iframe-container" >
+
+				<div layout="row" layout-align="start center" class="widget-buttons">
+					<md-button class="md-primary widget-options-button"  aria-label="Options" ng-click="showOptions($event, widget.identityHTML)">
+						<img src="/app/icons/material/navigation/1x_web/ic_apps_white_18dp.png"/>
+					</md-button>
+					<md-button class="md-primary widget-dragger-button"  aria-label="Move">
+						<img src="/app/icons/material/action/1x_web/ic_open_with_white_18dp.png"/>
+					</md-button>
+				</div>
+
+				<iframe id="{{widget.identityHTML}}"
+						ng-src="{{widget.iframeURL}}"
+						class="widget-iframe {{widget.tile}}"
+						widget-iframe
+						widget="widget" ></iframe>
+			</div><!-- end: widget container -->
+		</li>
+	</ul>
+</div><!-- end: gridster -->
+

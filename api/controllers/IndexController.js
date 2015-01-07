@@ -16,6 +16,8 @@ module.exports = {
 			},
 			messages: {
 				errors: {
+					unableToUpdate: 'Sorry but we were unable to update',
+					unableToLoad: 'Sorry but we were unable to load',
 					geolocation: {
 						unsupportedBrowser:'Browser does not support location services',
 						permissionDenied:'You have rejected access to your location',
@@ -29,12 +31,19 @@ module.exports = {
 				},
 				widgets: {
 					updated: 'Widgets updated!'
+				},
+				account: {
+					updated: 'Account updated!'
 				}
 			},
 			routes: {
 				widgets: {
-					get: '/widgets',
-					update: '/widgets'
+					get: '/widgets', // get
+					update: '/widgets' // put
+				},
+				account: {
+					get: '/account', // get
+					update: '/account' // put
 				}
 			},
 			user: {
@@ -84,5 +93,17 @@ module.exports = {
 
 			return res.ok(widgets);
 		});
+	},
+
+	getAccountData: function(req, res){
+		return res.ok({
+			firstName: 'Maxime',
+			lastName: 'Bret'
+		});
+	},
+
+	updateAccountData: function(req, res){
+		console.log(req.param('firstName'), req.param('lastName'));
+		return res.ok();
 	}
 };

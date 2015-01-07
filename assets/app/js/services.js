@@ -24,6 +24,70 @@ angular
     }])
 
     /**
+     * Account service
+     */
+    .factory('accountService', ['$http', 'settings', '$log', function($http, settings, $log){
+
+        return {
+            update: function( data ){
+                return $http.put(settings.routes.account.update, data)
+                    .then(function(data) {
+                        $log.debug('Account updated successfully!', data.data);
+                        return data.data;
+                    })
+                    .catch(function(err) {
+                        $log.error('Failure while updating account', err);
+                        throw new Error(settings.messages.errors.unableToUpdate);
+                    });
+            },
+
+            get: function(){
+                return $http.get(settings.routes.account.get)
+                    .then(function(data) {
+                        $log.debug('Account loaded successfully!', data.data);
+                        return data.data;
+                    })
+                    .catch(function(error) {
+                        $log.error('Failure loading account', error);
+                        throw Error(settings.messages.errors.unableToLoad);
+                    });
+            }
+        }
+
+    }])
+
+    .factory('dialogService', ['$rootScope', '$http', 'settings', '$mdDialog', '$mdToast', function($rootScope, $http, settings, $mdDialog, $mdToast){
+        return {
+            error: function(message){
+                return $mdDialog.show($mdDialog.alert()
+                    .title('An error occured')
+                    .ok('Ok')
+                    .content(message));
+            },
+
+            success: function(message){
+                return $mdDialog.show($mdDialog.alert()
+                    .title('Success')
+                    .ok('Ok')
+                    .content(message));
+            },
+
+            successDialog: function(message){
+                return this.success(message);
+            },
+
+            successToast: function(message){
+                return $mdToast.show(
+                    $mdToast.simple()
+                        .content(message)
+                        .position('top right')
+                        //.hideDelay(0)
+                );
+            }
+        }
+    }])
+
+    /**
      * Widget service
      *
      */
