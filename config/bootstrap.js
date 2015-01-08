@@ -13,9 +13,12 @@ var Promise = require('bluebird');
 module.exports.bootstrap = function(cb) {
 
     // Load passport providers on startup
+    // Will add to passport.use() all the strategy
     sails.services.passport.loadStrategies();
 
+
   Promise.all([
+
 
       Widget.create({
           identity: 'Velib',
@@ -90,9 +93,23 @@ module.exports.bootstrap = function(cb) {
           col: 5
       }),
 
-
-
   ]).then(function(){
+
+      // Create user
+      return User.create({
+          username : 'pinkiepie',
+          email    : 'pinkiepie@gmail.com',
+          backgroundImagesInterval: 5000,
+          backgroundImages: ['board (2).jpg', 'board (3).jpg', 'board (4).jpg', 'board (5).jpg', 'board (6).jpg', 'board (7).jpg', 'board (8).jpg', 'board (9).jpg']
+      }).then(function(user){
+          return Passport.create({
+              protocol : 'local',
+              password : 'password',
+              user     : user.id
+          });
+      });
+
+  }).then(function(){
       return cb();
   }).catch(function(err){
       return cb(err);

@@ -7,42 +7,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
-  <link rel="stylesheet" href="/styles/angular-material.css">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+
+  <link rel="stylesheet" href="styles/login.css">
 </head>
 
-<body>
+  <body class="login">
 
 
-<% if (errors) {%>
-<% errors.forEach(function (error) { %>
-<%= __(error) %>
-<% }) %>
-<% } %>
+  <div class="container">
 
-<form role="form" action="/auth/local" method="post">
-  <input type="text" name="identifier" placeholder="Username or Email">
-  <input type="password" name="password" placeholder="Password">
-  <button type="submit">Sign in</button>
-</form>
+    <% if (errors) {%>
+    <% errors.forEach(function (error) { %>
+    <%= __(error) %>
+    <% }) %>
+    <% } %>
 
-<% if (providers) {%>
-<h4>You can also use one of these...</h4>
+    <% if (successes) {%>
+    <% successes.forEach(function (success) { %>
+    <%= __(success) %>
+    <% }) %>
+    <% } %>
 
-<% Object.keys(providers).forEach(function (key) { %>
-<a href="/auth/<%= providers[key].slug %>" role="button"><%= providers[key].name %></a>
-<% }) %>
-<% } %>
 
-<script src="/js/dependencies/sails.io.js"></script>
-<script src="/js/dependencies/dist/jquery.js"></script>
-<script src="/js/dependencies/angular.js"></script>
-<script src="/js/dependencies/angular-animate.js"></script>
-<script src="/js/dependencies/angular-aria.js"></script>
-<script src="/js/dependencies/angular-hammer.js"></script>
-<script src="/js/dependencies/angular-material.js"></script>
-<script src="/js/dependencies/angular-route.js"></script>
+    <form class="form-signin" action="/auth/local" method="post">
+      <h2 class="form-signin-heading">Please sign in</h2>
 
-</body>
+      <label for="inputEmail" class="sr-only">Email address</label>
+      <input type="text" name="identifier" id="inputEmail" class="form-control" placeholder="Username or email" required="" autofocus="">
+
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" value="remember-me"> Remember me
+        </label>
+      </div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      <a class="btn btn-lg btn-primary btn-block" href="/auth/facebook" id="sign-fb">Sign in with Facebook</a>
+      <a href="/register">Or register</a>
+    </form>
+
+  </div>
+
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+
+
+    </script>
+  </body>
 
 </html>

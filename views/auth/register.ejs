@@ -1,12 +1,58 @@
-<% if (errors) {%>
-  <% errors.forEach(function (error) { %>
-    <%= __(error) %>
-  <% }) %>
-<% } %>
+<!DOCTYPE html>
+<html >
+<head>
+  <title>Board</title>
 
-<form role="form" action="/auth/local/register" method="post">
-  <input type="text" name="username" placeholder="Username">
-  <input type="text" name="email" placeholder="Email">
-  <input type="password" name="password" placeholder="Password">
-  <button type="submit">Sign up</button>
-</form>
+  <!-- Viewport mobile tag for sensible mobile support -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+
+  <link rel="stylesheet" href="styles/login.css">
+</head>
+
+<body class="login">
+
+
+<div class="container">
+
+  <% if (errors) {%>
+  <% errors.forEach(function (error) { %>
+  <%= __(error) %>
+  <% }) %>
+  <% } %>
+
+  <form class="form-signin" action="/auth/local/register" method="post">
+    <h2 class="form-signin-heading">Please sign in</h2>
+
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input type="email" name="email" id="inputEmail" class="form-control" placeholder="email" required="" autofocus="">
+
+    <label for="inputUsername" class="sr-only">Username</label>
+    <input type="text" name="username" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus="">
+
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+    <a class="" href="/login" >Or login</a>
+  </form>
+
+</div>
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+<script>
+
+
+</script>
+</body>
+
+</html>

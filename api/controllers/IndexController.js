@@ -5,6 +5,7 @@ module.exports = {
   	},
 
 	settings: function(req, res){
+		console.log(req.user);
 		var settings = {
 			paths: {
 				server: '/',
@@ -44,8 +45,12 @@ module.exports = {
 				}
 			},
 			user: {
-				backgroundImagesInterval: 5000,
-				backgroundImages: ['board (2).jpg', 'board (3).jpg', 'board (4).jpg', 'board (5).jpg', 'board (6).jpg', 'board (7).jpg', 'board (8).jpg', 'board (9).jpg']
+				id: req.user.id,
+				username: req.user.username,
+				mail: req.user.mail,
+				avatar: req.user.avatar,
+				backgroundImagesInterval: req.user.backgroundImagesInterval,
+				backgroundImages: req.user.backgroundImages
 			},
 			environment: sails.config.environment
 		};

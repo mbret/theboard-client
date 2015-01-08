@@ -239,7 +239,9 @@ passport.callback = function (req, res, next) {
     else {
       next(new Error('Invalid action'));
     }
-  } else {
+  }
+  // Other strategy (fb, google, etc)
+  else {
     if (action === 'disconnect' && req.user) {
       this.disconnect(req, res, next) ;
     } else {
@@ -255,20 +257,9 @@ passport.callback = function (req, res, next) {
 /**
  * Load all strategies defined in the Passport configuration
  *
- * For example, we could add this to our config to use the GitHub strategy
- * with permission to access a users email address (even if it's marked as
- * private) as well as permission to add and update a user's Gists:
+ * Will use the passport.use( new Strategy ... ) for all registered strategies.
  *
-    github: {
-      name: 'GitHub',
-      protocol: 'oauth2',
-      strategy: require('passport-github').Strategy
-      scope: [ 'user', 'gist' ]
-      options: {
-        clientID: 'CLIENT_ID',
-        clientSecret: 'CLIENT_SECRET'
-      }
-    }
+ * For more information about each strategy refer to their website
  *
  * For more information on the providers supported by Passport.js, check out:
  * http://passportjs.org/guide/providers/
@@ -281,6 +272,7 @@ passport.loadStrategies = function () {
   Object.keys(strategies).forEach(function (key) {
     var options = { passReqToCallback: true }, Strategy;
 
+    // Local strategy
     if (key === 'local') {
       // Since we need to allow users to login using both usernames as well as
       // emails, we'll set the username field to something more generic.
@@ -292,12 +284,14 @@ passport.loadStrategies = function () {
 
         self.use(new Strategy(options, self.protocols.local.login));
       }
-    } else {
-      var protocol = strategies[key].protocol
+    }
+    // FB , Google, etc
+    else {
+      var protocol = strategies[key].protocol // auth protocol
         , callback = strategies[key].callback;
 
       if (!callback) {
-        callback = path.join('auth', key, 'callback');
+        throw Error('No callback specified');
       }
 
       Strategy = strategies[key].strategy;
@@ -318,7 +312,7 @@ passport.loadStrategies = function () {
       }
 
       // Merge the default options with any options defined in the config. All
-      // defaults can be overriden, but I don't see a reason why you'd want to
+      // defaults can be overridden, but I don't see a reason why you'd want to
       // do that.
       _.extend(options, strategies[key].options);
 

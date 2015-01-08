@@ -32,82 +32,78 @@
     <link rel="stylesheet" href="/styles/angular-material.css">
     <link rel="stylesheet" href="/styles/dist/angular-gridster.min.css">
     <link rel="stylesheet" href="/styles/importer.css">
+    <link rel="stylesheet" href="/styles/login.css">
     <link rel="stylesheet" href="/styles/main.css">
     <!--STYLES END-->
   </head>
 
   <body  ng-controller="MainController">
 
+    <ng-backstretch state="backstretch"/>
+
+      <section>
+
+          <div ng-controller="SidebarController">
+              <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="sidebar">
+                  <md-toolbar class="md-theme-light">
+                      <span>
+                            <img alt="image" class="img-circle" src="{{user.avatar}}">
+                     </span>
+                      <h2 class="md-toolbar-tools">{{user.displayName}}</h2>
+                      <h3>{{user.mail}}</h3>
+                  </md-toolbar>
+
+                  <md-content  class="md-padding" >
+
+                      <div class="md-actions" layout="column">
+                          <md-button ng-href="#/settings" >Settings</md-button>
+                          <md-button ng-href="#/board" >Board</md-button>
+                      </div>
+
+                      <div class="md-actions" layout="column">
+                          <md-button ng-click="refreshWidgets()" class="md-primary">Refresh</md-button>
+                          <md-button ng-click="stopWidgets()" class="md-accent">Stop</md-button>
+                          <md-button ng-click="startWidgets()" class="md-warn">Start</md-button>
+                          <md-button ng-click="close()" class="md-primary">
+                              Close Sidenav left
+                          </md-button>
+
+                          <md-button ng-click="changeBackgroud($event)" class="md-primary">Change backgroud</md-button>
+                      </div>
+
+                  </md-content>
+              </md-sidenav>
+          </div>
 
 
-      <div layout="column" layout-fill>
+          <!-- Main content -->
+          <md-content class="board-content">
+
+              <md-content layout="row"  layout-algn="start center" class="topbar">
+                  <div>
+                      <md-button ng-click="toggleMenu()" class="md-primary ">
+                          <md-icon icon="/app/icons/material/navigation/1x_web/ic_menu_black_24dp.png"></md-icon>
+                      </md-button>
+                  </div>
+                  <div class="logo">Board</div>
+              </md-content>
 
 
-          <section layout="row" flex>
-
-              <!--
-                  Sidenav component
-                  This component is handle by a specific controller
-              -->
-              <div ng-controller="SidebarController">
-                  <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="sidebar">
-                      <md-toolbar class="md-theme-light">
-                          <h1 class="md-toolbar-tools">Menu</h1>
-                      </md-toolbar>
-
-                      <md-content  class="md-padding" >
-
-                          <div class="md-actions" layout="column">
-                              <md-button ng-href="#/settings" >Settings</md-button>
-                              <md-button ng-href="#/board" >Board</md-button>
-                          </div>
-
-                          <div class="md-actions" layout="column">
-                              <md-button ng-click="refreshWidgets()" class="md-primary">Refresh</md-button>
-                              <md-button ng-click="stopWidgets()" class="md-accent">Stop</md-button>
-                              <md-button ng-click="startWidgets()" class="md-warn">Start</md-button>
-                              <md-button ng-click="close()" class="md-primary">
-                                  Close Sidenav left
-                              </md-button>
-
-                              <md-button ng-click="changeBackgroud($event)" class="md-primary">Change backgroud</md-button>
-                          </div>
-
-                      </md-content>
-                  </md-sidenav>
-              </div>
-
-
-              <!-- Main content -->
-              <md-content flex class="md-padding board-content">
-
-                  <md-button ng-click="toggleMenu()" class="md-primary">
-                      <md-icon icon="/app/icons/material/navigation/1x_web/ic_menu_black_24dp.png"></md-icon>
-                  </md-button>
-
-                  <!--
-                        Start of dynamic content
-                    -->
+              <div layout="column" layout-align="left left" class="md-padding">
                   <div class="view-container">
                       <div ng-view class="view-frame"></div>
                   </div>
+              </div>
 
-              </md-content>
 
-          </section>
-      </div>
+          </md-content>
+
+      </section>
 
 
         <!-- Load application config -->
         <script src="settings.js"></script>
 
-        <script>
-        //! annyang
-            //! version : 1.5.0
-            //! author  : Tal Ater @TalAter
-            //! license : MIT
-            //! https://www.TalAter.com/annyang/
-            (function(a){"use strict";var b=this,c=b.SpeechRecognition||b.webkitSpeechRecognition||b.mozSpeechRecognition||b.msSpeechRecognition||b.oSpeechRecognition;if(!c)return b.annyang=null,a;var d,e,f=[],g={start:[],error:[],end:[],result:[],resultMatch:[],resultNoMatch:[],errorNetwork:[],errorPermissionBlocked:[],errorPermissionDenied:[]},h=0,i=!1,j="font-weight: bold; color: #00f;",k=/\s*\((.*?)\)\s*/g,l=/(\(\?:[^)]+\))\?/g,m=/(\(\?)?:\w+/g,n=/\*\w+/g,o=/[\-{}\[\]+?.,\\\^$|#]/g,p=function(a){return a=a.replace(o,"\\$&").replace(k,"(?:$1)?").replace(m,function(a,b){return b?a:"([^\\s]+)"}).replace(n,"(.*?)").replace(l,"\\s*$1?\\s*"),new RegExp("^"+a+"$","i")},q=function(a){a.forEach(function(a){a.callback.apply(a.context)})},r=function(){s()||b.annyang.init({},!1)},s=function(){return d!==a};b.annyang={init:function(k,l){l=l===a?!0:!!l,d&&d.abort&&d.abort(),d=new c,d.maxAlternatives=5,d.continuous="http:"===b.location.protocol,d.lang="en-US",d.onstart=function(){q(g.start)},d.onerror=function(a){switch(q(g.error),a.error){case"network":q(g.errorNetwork);break;case"not-allowed":case"service-not-allowed":e=!1,q((new Date).getTime()-h<200?g.errorPermissionBlocked:g.errorPermissionDenied)}},d.onend=function(){if(q(g.end),e){var a=(new Date).getTime()-h;1e3>a?setTimeout(b.annyang.start,1e3-a):b.annyang.start()}},d.onresult=function(a){q(g.result);for(var c,d=a.results[a.resultIndex],e=0;e<d.length;e++){c=d[e].transcript.trim(),i&&b.console.log("Speech recognized: %c"+c,j);for(var h=0,k=f.length;k>h;h++){var l=f[h].command.exec(c);if(l){var m=l.slice(1);return i&&(b.console.log("command matched: %c"+f[h].originalPhrase,j),m.length&&b.console.log("with parameters",m)),f[h].callback.apply(this,m),q(g.resultMatch),!0}}}return q(g.resultNoMatch),!1},l&&(f=[]),k.length&&this.addCommands(k)},start:function(b){r(),b=b||{},e=b.autoRestart!==a?!!b.autoRestart:!0,b.continuous!==a&&(d.continuous=!!b.continuous),h=(new Date).getTime(),d.start()},abort:function(){e=!1,s&&d.abort()},debug:function(a){i=arguments.length>0?!!a:!0},setLanguage:function(a){r(),d.lang=a},addCommands:function(a){var c,d;r();for(var e in a)if(a.hasOwnProperty(e)){if(c=b[a[e]]||a[e],"function"!=typeof c)continue;d=p(e),f.push({command:d,callback:c,originalPhrase:e})}i&&b.console.log("Commands successfully loaded: %c"+f.length,j)},removeCommands:function(b){return b===a?void(f=[]):(b=Array.isArray(b)?b:[b],void(f=f.filter(function(a){for(var c=0;c<b.length;c++)if(b[c]===a.originalPhrase)return!1;return!0})))},addCallback:function(c,d,e){if(g[c]!==a){var f=b[d]||d;"function"==typeof f&&g[c].push({callback:f,context:e||this})}}}}).call(this);</script>
         <!--SCRIPTS-->
         <script src="/js/dependencies/sails.io.js"></script>
         <script src="/js/dependencies/dist/jquery.js"></script>

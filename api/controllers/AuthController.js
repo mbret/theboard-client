@@ -6,51 +6,28 @@
  * the basics of Passport.js to work.
  */
 var AuthController = {
+
   /**
    * Render the login page
    *
-   * The login form itself is just a simple HTML form:
-   *
-      <form role="form" action="/auth/local" method="post">
-        <input type="text" name="identifier" placeholder="Username or Email">
-        <input type="password" name="password" placeholder="Password">
-        <button type="submit">Sign in</button>
-      </form>
-   *
-   * You could optionally add CSRF-protection as outlined in the documentation:
+   * We could optionally add CSRF-protection as outlined in the documentation:
    * http://sailsjs.org/#!documentation/config.csrf
-   *
-   * A simple example of automatically listing all available providers in a
-   * Handlebars template would look like this:
-   *
-      {{#each providers}}
-        <a href="/auth/{{slug}}" role="button">{{name}}</a>
-      {{/each}}
    *
    * @param {Object} req
    * @param {Object} res
    */
   login: function (req, res) {
-    var strategies = sails.config.passport
-      , providers  = {};
+      var strategies = sails.config.passport;
+      var providers  = {};
 
-    // Get a list of available providers for use in your templates.
-    Object.keys(strategies).forEach(function (key) {
-      if (key === 'local') {
-        return;
-      }
+      var form = req.flash('form')[0]; // get previous posted form
 
-      providers[key] = {
-        name: strategies[key].name
-      , slug: key
-      };
-    });
-
-    // Render the `auth/login.ext` view
-    res.view({
-      providers : providers
-    , errors    : req.flash('error')
-    });
+      // Render the `auth/login.ext` view
+      res.view({
+          errors    : req.flash('error'),
+          successes : req.flash('success'),
+          identifier: (form && form.identifier) ? form.identifier : null
+      });
   },
 
   /**
@@ -69,6 +46,7 @@ var AuthController = {
    */
   logout: function (req, res) {
     req.logout();
+    req.flash('success', 'You have been logout!');
     res.redirect('/');
   },
 
@@ -121,7 +99,16 @@ var AuthController = {
    */
   callback: function (req, res) {
 
-    function tryAgain (err) {
+    var action = req.param('action');
+
+    function handleError (err) {
+
+      if( !err.code == 'E_VALIDATION' ){
+          sails.log.error('An error occured when authenticate', err);
+      }
+      else{
+        sails.log.debug('An error occured during register form', err);
+      }
 
       // Only certain error messages are returned via req.flash('error', someError)
       // because we shouldn't expose internal authorization errors to the user.
@@ -138,8 +125,6 @@ var AuthController = {
       // If an error was thrown, redirect the user to the
       // login, register or disconnect action initiator view.
       // These views should take care of rendering the error messages.
-      var action = req.param('action');
-
       switch (action) {
         case 'register':
           res.redirect('/register');
@@ -152,16 +137,20 @@ var AuthController = {
       }
     }
 
+    // Authenticate
     passport.callback(req, res, function (err, user) {
       if (err) {
-        return tryAgain();
+        return handleError(err);
       }
 
+      // Create login session
       req.login(user, function (err) {
         if (err) {
-          return tryAgain();
+          return handleError(err);
         }
 
+        req.flash('success', 'You have been logged');
+        sails.log.debug('User ', user, ' logged!');
         // Upon successful login, send the user to the homepage were req.user
         // will available.
         res.redirect('/');

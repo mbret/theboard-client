@@ -213,7 +213,7 @@ angular
 		accountService.get().then(function(account){
 			$scope.account = {
 				firstName: account.firstName,
-				lastName: account.lastName
+				lastName: account.lastName,
 			}
 		}).catch(function(err){
 			dialogService.error(err.message);
@@ -243,7 +243,14 @@ angular
 
 	}])
 
-	.controller("SidebarController", ['$scope', '$mdSidenav', '$log', 'widgetService', function($scope, $mdSidenav, $log, widgetService){
+	.controller("SidebarController", ['$scope', '$mdSidenav', '$log', 'widgetService', 'settings', function($scope, $mdSidenav, $log, widgetService, settings){
+
+		$scope.user = {
+			avatar: settings.user.avatar,
+			displayName: settings.user.username,
+			mail: settings.user.mail
+		};
+
 		$scope.close = function(){
 			$mdSidenav('sidebar').close()
 				.then(function(){

@@ -29,17 +29,23 @@ exports.register = function (req, res, next) {
 
   if (!email) {
     req.flash('error', 'Error.Passport.Email.Missing');
-    return next(new Error('No email was entered.'));
+    var err = new Error('No email was entered.');
+    err.code = 'E_VALIDATION';
+    return next(err);
   }
 
   if (!username) {
     req.flash('error', 'Error.Passport.Username.Missing');
-    return next(new Error('No username was entered.'));
+    var err = new Error('No username was entered.');
+    err.code = 'E_VALIDATION';
+    return next(err);
   }
 
   if (!password) {
     req.flash('error', 'Error.Passport.Password.Missing');
-    return next(new Error('No password was entered.'));
+    var err = new Error('No password was entered.');
+    err.code = 'E_VALIDATION';
+    return next(err);
   }
 
   User.create({
@@ -49,6 +55,7 @@ exports.register = function (req, res, next) {
     if (err) {
       if (err.code === 'E_VALIDATION') {
         if (err.invalidAttributes.email) {
+          // This error could be something else but as we validate before we should only get an error because emeail already taken here
           req.flash('error', 'Error.Passport.Email.Exists');
         } else {
           req.flash('error', 'Error.Passport.User.Exists');

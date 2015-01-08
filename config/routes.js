@@ -36,7 +36,6 @@ module.exports.routes = {
     'GET /helpers/cor/:url': 'HelperController.pipeCOR', // THIS ROUTE MUST BE DISABLED FOR PRODUCTION
 
     // Authentication
-    'get /register': 'AuthController.register',
     'post /auth/local': 'AuthController.callback',
     'post /auth/local/:action': 'AuthController.callback',
     'get /auth/:provider': 'AuthController.provider',
@@ -52,6 +51,7 @@ module.exports.routes = {
 
     // Login & register (different point than front end app)
     'get /login': 'AuthController.login', // login form
+    'get /register': 'AuthController.register',
     'get /logout': 'AuthController.logout',
 
     // Home (start point of front end app)

@@ -1,3 +1,5 @@
+var path = require('path');
+
 /**
  * Passport configuration
  *
@@ -13,8 +15,8 @@
  * For more information on the available providers, check out:
  * http://passportjs.org/guide/providers/
  */
-
 module.exports.passport = {
+
   local: {
     strategy: require('passport-local').Strategy
   },
@@ -42,10 +44,11 @@ module.exports.passport = {
   facebook: {
     name: 'Facebook',
     protocol: 'oauth2',
+    callback: path.join('auth', 'facebook', 'callback'),
     strategy: require('passport-facebook').Strategy,
     options: {
-      clientID: 'your-client-id',
-      clientSecret: 'your-client-secret'
+      clientID: 'foo',
+      clientSecret: 'foo'
     }
   }
 
