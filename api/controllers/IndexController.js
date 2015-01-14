@@ -1,7 +1,7 @@
 module.exports = {
   	
   	index: function (req, res) {
-    	return res.view('index');
+    	return res.view('app');
   	},
 
 	settings: function(req, res){

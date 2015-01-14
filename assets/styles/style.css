@@ -1,12 +1,14 @@
 
-
+.hidden{
+    display: none;
+}
 body{
     /*background: url("../img/board_default.jpg") no-repeat center center fixed;*/
     /*-webkit-background-size: cover;*/
     /*-moz-background-size: cover;*/
     /*-o-background-size: cover;*/
     /*background-size: cover;*/
-    background: none;
+    /*background: none;*/
 }
 md-content.board-content{
     background: none;
@@ -52,4 +54,18 @@ md-content.board-content{
 
 .settings{
     padding-top: 20px;
+}
+
+/* Login container
+   - change some values from the theme */
+.loginscreen.middle-box {
+    width: 300px;
+    margin: 50px auto 0 auto;
+    position:relative;
+    left: 0;
+    top:0;
+}
+/* Logo name in login form */
+h1.logo-name{
+    font-size: 70px;
 }

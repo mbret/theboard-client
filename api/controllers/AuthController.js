@@ -1,3 +1,6 @@
+var validator = require('validator');
+var async = require('async');
+
 /**
  * Authentication Controller
  *
@@ -23,10 +26,13 @@ var AuthController = {
       var form = req.flash('form')[0]; // get previous posted form
 
       // Render the `auth/login.ext` view
-      res.view({
-          errors    : req.flash('error'),
-          successes : req.flash('success'),
-          identifier: (form && form.identifier) ? form.identifier : null
+      res.view('auth/login',{
+            title: 'Board | Login',
+            layout: 'layout-auth',
+            errors    : req.flash('error'),
+            successes : req.flash('success'),
+            identifier: (form && form.identifier) ? form.identifier : null,
+            copy: 'The Board &copy; 2014'
       });
   },
 
@@ -44,32 +50,88 @@ var AuthController = {
    * @param {Object} req
    * @param {Object} res
    */
-  logout: function (req, res) {
-    req.logout();
-    req.flash('success', 'You have been logout!');
-    res.redirect('/');
-  },
+    logout: function (req, res) {
+        req.logout();
+        req.flash('success', 'You have been logout!');
+        res.redirect('/');
+    },
 
   /**
    * Render the registration page
    *
-   * Just like the login form, the registration form is just simple HTML:
-   *
-      <form role="form" action="/auth/local/register" method="post">
-        <input type="text" name="username" placeholder="Username">
-        <input type="text" name="email" placeholder="Email">
-        <input type="password" name="password" placeholder="Password">
-        <button type="submit">Sign up</button>
-      </form>
+   * In case of error a simple message is sent to the view.
+   * Indeed it's for the view to handle error in front-side
    *
    * @param {Object} req
    * @param {Object} res
    */
-  register: function (req, res) {
-    res.view({
-      errors: req.flash('error')
-    });
-  },
+    register: function (req, res) {
+
+        if( req.param('email') ){
+            var email = req.param('email');
+            var password = req.param('password');
+
+            // Email
+            if( !validator.isEmail(email) ){
+                send( 'Form invalid' );
+            }
+
+            // Password must have at least 3 char
+            if ( !validator.isLength(password, 3)) {
+                send( 'Form invalid' );
+            }
+
+            User.create({
+                email    : email
+            }, function (err, user) {
+                if (err) {
+                    if (err.code === 'E_VALIDATION') {
+                        if (err.invalidAttributes.email) {
+                            // This error could be something else but as we validate before we should only get an error because emeail already taken here
+                            send( 'Error.Passport.Email.Exists' );
+                        } else {
+                            send( 'Error.Passport.User.Exists' );
+                        }
+                    }
+                    sails.log.error(err);
+                    send( 'An unexpected error happened, try again' );
+                }
+                Passport.create({
+                    protocol : 'local'
+                    , password : password
+                    , user     : user.id
+                }, function (err, passport) {
+                    if (err) {
+                        sails.log.error(err);
+                        // It could be invalid password here but we check before with validator
+                        return user.destroy(function (destroyErr) {
+                            if(destroyErr){
+                                sails.log.error(err);
+                            }
+                            send('An unexpected error happened, try again');
+                        });
+                    }
+                    req.flash('success', 'Account created');
+                    res.redirect('/');
+                });
+            });
+        }
+        else{
+            send();
+        }
+
+        function send(err){
+            if(err){
+                req.flash('error', err);
+            }
+            res.view('auth/register',{
+                title: 'Board | Register',
+                layout: 'layout-auth',
+                errors: req.flash('error'),
+                copy: 'The Board &copy; 2014'
+            });
+        }
+    },
 
   /**
    * Create a third-party authentication endpoint
