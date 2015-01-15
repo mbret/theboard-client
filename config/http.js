@@ -43,7 +43,8 @@ module.exports.http = {
        'compress',
        'methodOverride',
        'poweredBy',
-       '$custom',
+       '$custom',   // backward compatibilities
+       'custom',    // app middleware
        'router',
        'www',
        'favicon',
@@ -56,6 +57,30 @@ module.exports.http = {
   * Example custom middleware; logs each request to the console.              *
   *                                                                           *
   ****************************************************************************/
+
+    /**
+    * Custom middleware that do some job.
+    * @param req
+    * @param res
+    * @param next
+    */
+    custom: function(req, res, next){
+        // Auto log user if asked
+        if(sails.config.autoLogin && !req.isAuthenticated()){
+            User.findOne({email:'user@gmail.com'}, function(err, user){
+                if(err){
+                    return next(err);
+                }
+                req.login(user, function (err) {
+                    if (err){
+                        return next(err);
+                    }
+                    sails.log.debug('User autologged by middleware!');
+                });
+            });
+        }
+        return next();
+    },
 
     //Passport middleware
     passport: function (req, res, next) {

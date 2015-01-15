@@ -10,61 +10,104 @@ var async = require('async');
  */
 var AuthController = {
 
-  /**
-   * Render the login page
-   *
-   * We could optionally add CSRF-protection as outlined in the documentation:
-   * http://sailsjs.org/#!documentation/config.csrf
-   *
-   * @param {Object} req
-   * @param {Object} res
-   */
-  login: function (req, res) {
-      var strategies = sails.config.passport;
-      var providers  = {};
+    /**
+    * Render the login page
+    *
+    * We could optionally add CSRF-protection as outlined in the documentation:
+    * http://sailsjs.org/#!documentation/config.csrf
+    *
+    * Looks up a user using the supplied identifier (email or username) and then
+    * attempts to find a local Passport associated with the user. If a Passport is
+    * found, its password is checked against the password supplied in the form.
+    *
+    * @param {Object} req
+    * @param {Object} res
+    */
+    login: function (req, res) {
+        var strategies = sails.config.passport
+            , providers  = {};
 
-      var form = req.flash('form')[0]; // get previous posted form
+        // Get a list of available providers for use in your templates.
+        Object.keys(strategies).forEach(function (key) {
+            if (key === 'local') {
+                return;
+            }
+            providers[key] = {
+                name: strategies[key].name,
+                token: key
+            };
+        });
 
-      // Render the `auth/login.ext` view
-      res.view('auth/login',{
-            title: 'Board | Login',
-            layout: 'layout-auth',
-            errors    : req.flash('error'),
-            successes : req.flash('success'),
-            identifier: (form && form.identifier) ? form.identifier : null,
-            copy: 'The Board &copy; 2014'
-      });
-  },
+        // Form submitted
+        if( req.param('email') ){
+            passport.authenticate('local', function(err, user, info){
+                if (err){
+                    sails.log.error(err);
+                    return send('Error.Application.Generic');
+                }
+                if(!user){
+                    return send(info.error);
+                }
+                // Create login session
+                req.login(user, function (err) {
+                    if (err){
+                        sails.log.error(err);
+                        return send('Error.Application.Generic');
+                    }
+                    req.flash('success', 'Success.Auth.Login');
+                    res.redirect('/');
+                });
+            })(req, res);
+        }
+        else{
+            return send();
+        }
 
-  /**
-   * Log out a user and return them to the homepage
-   *
-   * Passport exposes a logout() function on req (also aliased as logOut()) that
-   * can be called from any route handler which needs to terminate a login
-   * session. Invoking logout() will remove the req.user property and clear the
-   * login session (if any).
-   *
-   * For more information on logging out users in Passport.js, check out:
-   * http://passportjs.org/guide/logout/
-   *
-   * @param {Object} req
-   * @param {Object} res
-   */
+        function send(err){
+            if(err){
+                req.flash('error', err);
+            }
+            // Render the `auth/login.ext` view
+            res.view('auth/login',{
+                title: 'Board | Login',
+                layout: 'layout-auth',
+                errors    : req.flash('error'),
+                successes : req.flash('success'),
+                copy: sails.config.general.copy,
+                providers: providers
+            });
+        }
+    },
+
+    /**
+    * Log out a user and return them to the homepage
+    *
+    * Passport exposes a logout() function on req (also aliased as logOut()) that
+    * can be called from any route handler which needs to terminate a login
+    * session. Invoking logout() will remove the req.user property and clear the
+    * login session (if any).
+    *
+    * For more information on logging out users in Passport.js, check out:
+    * http://passportjs.org/guide/logout/
+    *
+    * @param {Object} req
+    * @param {Object} res
+    */
     logout: function (req, res) {
         req.logout();
-        req.flash('success', 'You have been logout!');
+        req.flash('success', 'Success.Auth.Logout');
         res.redirect('/');
     },
 
-  /**
-   * Render the registration page
-   *
-   * In case of error a simple message is sent to the view.
-   * Indeed it's for the view to handle error in front-side
-   *
-   * @param {Object} req
-   * @param {Object} res
-   */
+    /**
+    * Render the registration page
+    *
+    * In case of error a simple message is sent to the view.
+    * Indeed it's for the view to handle error in front-side
+    *
+    * @param {Object} req
+    * @param {Object} res
+    */
     register: function (req, res) {
 
         if( req.param('email') ){
@@ -73,12 +116,12 @@ var AuthController = {
 
             // Email
             if( !validator.isEmail(email) ){
-                send( 'Form invalid' );
+                send( 'Error.Form.Invalid' );
             }
 
             // Password must have at least 3 char
             if ( !validator.isLength(password, 3)) {
-                send( 'Form invalid' );
+                send( 'Error.Form.Invalid' );
             }
 
             User.create({
@@ -94,7 +137,7 @@ var AuthController = {
                         }
                     }
                     sails.log.error(err);
-                    send( 'An unexpected error happened, try again' );
+                    send( 'Error.Application.Generic' );
                 }
                 Passport.create({
                     protocol : 'local'
@@ -108,10 +151,10 @@ var AuthController = {
                             if(destroyErr){
                                 sails.log.error(err);
                             }
-                            send('An unexpected error happened, try again');
+                            send('Error.Application.Generic');
                         });
                     }
-                    req.flash('success', 'Account created');
+                    req.flash('success', 'Success.Auth.Register&Login');
                     res.redirect('/');
                 });
             });
@@ -128,20 +171,20 @@ var AuthController = {
                 title: 'Board | Register',
                 layout: 'layout-auth',
                 errors: req.flash('error'),
-                copy: 'The Board &copy; 2014'
+                copy: sails.config.general.copy
             });
         }
     },
 
-  /**
-   * Create a third-party authentication endpoint
-   *
-   * @param {Object} req
-   * @param {Object} res
-   */
-  provider: function (req, res) {
-    passport.endpoint(req, res);
-  },
+    /**
+    * Create a third-party authentication endpoint
+    *
+    * @param {Object} req
+    * @param {Object} res
+    */
+    provider: function (req, res) {
+        passport.endpoint(req, res);
+    },
 
   /**
    * Create a authentication callback endpoint
@@ -232,3 +275,41 @@ var AuthController = {
 };
 
 module.exports = AuthController;
+
+/**
+ * Assign local Passport to user
+ *
+ * This function can be used to assign a local Passport to a user who doens't
+ * have one already. This would be the case if the user registered using a
+ * third-party service and therefore never set a password.
+ *
+ * @param {Object}   req
+ * @param {Object}   res
+ * @param {Function} next
+ */
+//exports.connect = function (req, res, next) {
+//    var user     = req.user
+//        , password = req.param('password');
+//
+//    Passport.findOne({
+//        protocol : 'local'
+//        , user     : user.id
+//    }, function (err, passport) {
+//        if (err) {
+//            return next(err);
+//        }
+//
+//        if (!passport) {
+//            Passport.create({
+//                protocol : 'local'
+//                , password : password
+//                , user     : user.id
+//            }, function (err, passport) {
+//                next(err, user);
+//            });
+//        }
+//        else {
+//            next(null, user);
+//        }
+//    });
+//};

@@ -221,27 +221,27 @@ passport.endpoint = function (req, res) {
  * @param {Function} next
  */
 passport.callback = function (req, res, next) {
-  var provider = req.param('provider', 'local')
+  var provider = req.param('provider')
     , action   = req.param('action');
 
   // Passport.js wasn't really built for local user registration, but it's nice
   // having it tied into everything else.
-  if (provider === 'local' && action !== undefined) {
-    if (action === 'register' && !req.user) {
-      this.protocols.local.register(req, res, next);
-    }
-    else if (action === 'connect' && req.user) {
-      this.protocols.local.connect(req, res, next);
-    }
-    else if (action === 'disconnect' && req.user) {
-      this.protocols.local.disconnect(req, res, next);
-    }
-    else {
-      next(new Error('Invalid action'));
-    }
-  }
-  // Other strategy (fb, google, etc)
-  else {
+  //if (provider === 'local' && action !== undefined) {
+  //  if (action === 'register' && !req.user) {
+  //    this.protocols.local.register(req, res, next);
+  //  }
+  //  else if (action === 'connect' && req.user) {
+  //    this.protocols.local.connect(req, res, next);
+  //  }
+  //  else if (action === 'disconnect' && req.user) {
+  //    this.protocols.local.disconnect(req, res, next);
+  //  }
+  //  else {
+  //    next(new Error('Invalid action'));
+  //  }
+  //}
+  //Other strategy (fb, google, etc)
+  //else {
     if (action === 'disconnect' && req.user) {
       this.disconnect(req, res, next) ;
     } else {
@@ -251,7 +251,7 @@ passport.callback = function (req, res, next) {
       // has failed.
       this.authenticate(provider, next)(req, res, req.next);
     }
-  }
+  //}
 };
 
 /**
@@ -276,13 +276,16 @@ passport.loadStrategies = function () {
     if (key === 'local') {
       // Since we need to allow users to login using both usernames as well as
       // emails, we'll set the username field to something more generic.
-      _.extend(options, { usernameField: 'identifier' });
+      _.extend(options, {
+            usernameField: 'email',
+            passwordField: 'password'
+      });
 
       // Only load the local strategy if it's enabled in the config
       if (strategies.local) {
         Strategy = strategies[key].strategy;
 
-        self.use(new Strategy(options, self.protocols.local.login));
+        self.use(new Strategy(options, self.protocols.local));
       }
     }
     // FB , Google, etc
@@ -291,7 +294,8 @@ passport.loadStrategies = function () {
         , callback = strategies[key].callback;
 
       if (!callback) {
-        throw Error('No callback specified');
+        callback = path.join('auth', key, 'callback');
+        //throw Error('No callback specified');
       }
 
       Strategy = strategies[key].strategy;

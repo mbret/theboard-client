@@ -5,7 +5,7 @@ var path = require('path');
  */
 module.exports.general = {
 
-  code: {
+    // Web site copy
+    copy: 'The Board &copy; 2014'
 
-  }
 };

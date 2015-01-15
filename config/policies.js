@@ -35,6 +35,8 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
     'auth':{
-        '*': true
+        '*': true,
+        'login': ['notAuthenticated'],
+        'register': ['notAuthenticated']
     }
 };

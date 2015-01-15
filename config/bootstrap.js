@@ -17,7 +17,7 @@ module.exports.bootstrap = function(cb) {
     sails.services.passport.loadStrategies();
 
 
-  Promise.all([
+    Promise.all([
 
 
       Widget.create({
@@ -95,19 +95,23 @@ module.exports.bootstrap = function(cb) {
 
   ]).then(function(){
 
-      // Create user
-      return User.create({
-          username : 'pinkiepie',
-          email    : 'pinkiepie@gmail.com',
-          backgroundImagesInterval: 5000,
-          backgroundImages: ['board (2).jpg', 'board (3).jpg', 'board (4).jpg', 'board (5).jpg', 'board (6).jpg', 'board (7).jpg', 'board (8).jpg', 'board (9).jpg']
-      }).then(function(user){
-          return Passport.create({
-              protocol : 'local',
-              password : 'password',
-              user     : user.id
+      // Create user for test
+      if( sails.config.environment == 'development' ){
+          return User.create({
+              email    : 'user@gmail.com',
+              backgroundImagesInterval: 5000,
+              backgroundImages: ['board (2).jpg', 'board (3).jpg', 'board (4).jpg', 'board (5).jpg', 'board (6).jpg', 'board (7).jpg', 'board (8).jpg', 'board (9).jpg']
+          }).then(function(user){
+              return Passport.create({
+                  protocol : 'local',
+                  password : 'password',
+                  user     : user.id
+              });
           });
-      });
+      }
+      else{
+          return;
+      }
 
   }).then(function(){
       return cb();

@@ -1,129 +1,6 @@
 var validator = require('validator');
 
 /**
- * Local Authentication Protocol
- *
- * The most widely used way for websites to authenticate users is via a username
- * and/or email as well as a password. This module provides functions both for
- * registering entirely new users, assigning passwords to already registered
- * users and validating login requesting.
- *
- * For more information on local authentication in Passport.js, check out:
- * http://passportjs.org/guide/username-password/
- */
-
-/**
- * Register a new user
- *
- * This method creates a new user from a specified email, username and password
- * and assign the newly created user a local Passport.
- *
- * @param {Object}   req
- * @param {Object}   res
- * @param {Function} next
- */
-exports.register = function (req, res, next) {
-  var email    = req.param('email')
-    , username = req.param('username')
-    , password = req.param('password');
-
-  if (!email) {
-    req.flash('error', 'Error.Passport.Email.Missing');
-    var err = new Error('No email was entered.');
-    err.code = 'E_VALIDATION';
-    return next(err);
-  }
-
-  if (!username) {
-    req.flash('error', 'Error.Passport.Username.Missing');
-    var err = new Error('No username was entered.');
-    err.code = 'E_VALIDATION';
-    return next(err);
-  }
-
-  if (!password) {
-    req.flash('error', 'Error.Passport.Password.Missing');
-    var err = new Error('No password was entered.');
-    err.code = 'E_VALIDATION';
-    return next(err);
-  }
-
-  User.create({
-    username : username
-  , email    : email
-  }, function (err, user) {
-    if (err) {
-      if (err.code === 'E_VALIDATION') {
-        if (err.invalidAttributes.email) {
-          // This error could be something else but as we validate before we should only get an error because emeail already taken here
-          req.flash('error', 'Error.Passport.Email.Exists');
-        } else {
-          req.flash('error', 'Error.Passport.User.Exists');
-        }
-      }
-
-      return next(err);
-    }
-
-    Passport.create({
-      protocol : 'local'
-    , password : password
-    , user     : user.id
-    }, function (err, passport) {
-      if (err) {
-        if (err.code === 'E_VALIDATION') {
-          req.flash('error', 'Error.Passport.Password.Invalid');
-        }
-
-        return user.destroy(function (destroyErr) {
-          next(destroyErr || err);
-        });
-      }
-
-      next(null, user);
-    });
-  });
-};
-
-/**
- * Assign local Passport to user
- *
- * This function can be used to assign a local Passport to a user who doens't
- * have one already. This would be the case if the user registered using a
- * third-party service and therefore never set a password.
- *
- * @param {Object}   req
- * @param {Object}   res
- * @param {Function} next
- */
-exports.connect = function (req, res, next) {
-  var user     = req.user
-    , password = req.param('password');
-
-  Passport.findOne({
-    protocol : 'local'
-  , user     : user.id
-  }, function (err, passport) {
-    if (err) {
-      return next(err);
-    }
-
-    if (!passport) {
-      Passport.create({
-        protocol : 'local'
-      , password : password
-      , user     : user.id
-      }, function (err, passport) {
-        next(err, user);
-      });
-    }
-    else {
-      next(null, user);
-    }
-  });
-};
-
-/**
  * Validate a login request
  *
  * Looks up a user using the supplied identifier (email or username) and then
@@ -135,16 +12,10 @@ exports.connect = function (req, res, next) {
  * @param {string}   password
  * @param {Function} next
  */
-exports.login = function (req, identifier, password, next) {
-  var isEmail = validator.isEmail(identifier)
-    , query   = {};
+module.exports = function (req, identifier, password, next) {
+    var query   = {};
 
-  if (isEmail) {
     query.email = identifier;
-  }
-  else {
-    query.username = identifier;
-  }
 
   User.findOne(query, function (err, user) {
     if (err) {
@@ -152,13 +23,7 @@ exports.login = function (req, identifier, password, next) {
     }
 
     if (!user) {
-      if (isEmail) {
-        req.flash('error', 'Error.Passport.Email.NotFound');
-      } else {
-        req.flash('error', 'Error.Passport.Username.NotFound');
-      }
-
-      return next(null, false);
+      return next(null, false, {error: "Error.Passport.Email.NotFound"});
     }
 
     Passport.findOne({
@@ -172,16 +37,14 @@ exports.login = function (req, identifier, password, next) {
           }
 
           if (!res) {
-            req.flash('error', 'Error.Passport.Password.Wrong');
-            return next(null, false);
+            return next(null, false, {error: 'Error.Passport.Password.Wrong'});
           } else {
             return next(null, user);
           }
         });
       }
       else {
-        req.flash('error', 'Error.Passport.Password.NotSet');
-        return next(null, false);
+        return next(null, false, {error: 'Error.Passport.Password.NotSet'});
       }
     });
   });
