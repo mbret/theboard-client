@@ -35,10 +35,10 @@ module.exports.routes = {
     // Helpers
     'GET /helpers/cor/:url': 'HelperController.pipeCOR', // THIS ROUTE MUST BE DISABLED FOR PRODUCTION
 
-    'GET /meteo': 'MeteoController.getWeather',
-    'GET /settings.js': 'IndexController.settings',
-    'GET /widgets': 'IndexController.getWidgets',
-    'PUT /widgets': 'IndexController.updateWidget',
+    'get /meteo': 'MeteoController.getWeather',
+    'get /settings.js': 'IndexController.settings',
+    'get /widgets': 'IndexController.getWidgets',
+    'put /widgets': 'IndexController.updateWidget',
     'get /account': 'IndexController.getAccountData',
     'put /account': 'IndexController.updateAccountData',
 

@@ -1,4 +1,5 @@
 var passport = require('passport');
+var express = require('express');
 
 /**
  * HTTP Server Settings
@@ -43,8 +44,11 @@ module.exports.http = {
        'compress',
        'methodOverride',
        'poweredBy',
+       // own middleware start
+       'staticData',
        '$custom',   // backward compatibilities
        'custom',    // app middleware
+       // own middleware end
        'router',
        'www',
        'favicon',
@@ -57,6 +61,12 @@ module.exports.http = {
   * Example custom middleware; logs each request to the console.              *
   *                                                                           *
   ****************************************************************************/
+
+    // Add the /data folder to the static asset
+    // This path is used to serve content that come from users (this content is not inside assets folder)
+    staticData: express.static(__dirname + '/../data/statics', {
+        // here is possible options for the static path
+    }),
 
     /**
     * Custom middleware that do some job.

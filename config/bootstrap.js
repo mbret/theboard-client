@@ -9,6 +9,7 @@
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.bootstrap.html
  */
 var Promise = require('bluebird');
+var fs = require('fs');
 
 module.exports.bootstrap = function(cb) {
 
@@ -114,7 +115,10 @@ module.exports.bootstrap = function(cb) {
       }
 
   }).then(function(){
-      return cb();
+
+        // Create data dir if it doesnt exist (with app rights)
+        return FileService.createDataDir(cb);
+
   }).catch(function(err){
       return cb(err);
   });

@@ -3,9 +3,13 @@ var path = require('path');
 /**
  *
  */
-module.exports.general = {
+module.exports = {
 
-    // Web site copy
-    copy: 'The Board &copy; 2014'
+    dataPath: __dirname + '/../data',
+
+    general: {
+        // Web site copy
+        copy: 'The Board &copy; 2014'
+    }
 
 };
