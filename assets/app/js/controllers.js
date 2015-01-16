@@ -241,6 +241,22 @@ angular
 
 	}])
 
+
+	.controller("ProfileController", ['$scope', '$http', '$log', 'accountService', 'modalService', 'settings', 'notifService', function($scope, $http, $log, accountService, modalService, settings, notifService){
+
+		$scope.user = {
+			avatar: settings.user.avatar,
+			job: 'Developer',
+			address: 'Nancy, France',
+			phone: '(+33) 6 06 65 87 55',
+			email: settings.user.email,
+			firstName: settings.user.firstName,
+			lastName: settings.user.lastName,
+			displayName: settings.user.firstName ? settings.user.firstName : settings.user.email
+		};
+
+	}])
+
 	.controller("SidebarController", ['$scope', /*'$mdSidenav', */'$log', 'widgetService', 'settings', function($scope, /*$mdSidenav,*/ $log, widgetService, settings){
 
 		$scope.user = {
