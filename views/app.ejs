@@ -1,143 +1,121 @@
 <!DOCTYPE html>
 <html ng-app="app">
-  <head>
-    <title>Board</title>
+<head>
+
+    <title page-title></title>
+
+    <meta charset="utf-8">
 
     <!-- Viewport mobile tag for sensible mobile support -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-
-    <!--
-        Stylesheets and Preprocessors
-        ==============================
-
-        You can always bring in CSS files manually with `<link>` tags, or asynchronously
-        using a solution like AMD (RequireJS).  Or, if you like, you can take advantage
-        of Sails' conventional asset pipeline (boilerplate Gruntfile).
-
-        By default, stylesheets from your `assets/styles` folder are included
-        here automatically (between STYLES and STYLES END). Both CSS (.css) and LESS (.less)
-        are supported. In production, your styles will be minified and concatenated into
-        a single file.
-
-        To customize any part of the built-in behavior, just edit `tasks/pipeline.js`.
-        For example, here are a few things you could do:
-
-            + Change the order of your CSS files
-            + Import stylesheets from other directories
-            + Use a different or additional preprocessor, like SASS, SCSS or Stylus
-    -->
-
-    <!--STYLES-->
-    <link rel="stylesheet" href="/styles/angular-material.css">
     <link rel="stylesheet" href="/styles/dist/angular-gridster.min.css">
-    <link rel="stylesheet" href="/styles/importer.css">
-    <link rel="stylesheet" href="/styles/plugins/animate.css">
+
+    <!-- Bootstrap and fonts -->
     <link rel="stylesheet" href="/styles/plugins/bootstrap.min.css">
-    <link rel="stylesheet" href="/styles/plugins/font-awesome/css/font-awesome.css">
     <link rel="stylesheet" href="/styles/plugins/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/styles/plugins/iCheck/custom.css">
-    <link rel="stylesheet" href="/styles/plugins/toastr/toastr.min.css">
-    <link rel="stylesheet" href="/styles/style.css">
+
+    <!-- Theme + own css -->
+    <link rel="stylesheet" href="/styles/plugins/animate.css">
     <link rel="stylesheet" href="/styles/style.theme.css">
-    <!--STYLES END-->
-  </head>
+    <link rel="stylesheet" href="/styles/style.css">
 
-  <body  ng-controller="MainController">
+</head>
 
-    <ng-backstretch state="backstretch"/>
+<body  ng-controller="MainController">
 
-      <section>
+    <!--<ng-backstretch state="backstretch"></ng-backstretch>-->
 
-          <div ng-controller="SidebarController">
-              <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="sidebar">
-                  <md-toolbar class="md-theme-light">
-                      <span>
-                            <img alt="image" class="img-circle" src="{{user.avatar}}">
-                     </span>
-                      <h2 class="md-toolbar-tools">{{user.displayName}}</h2>
-                      <h3>{{user.mail}}</h3>
-                  </md-toolbar>
+    <!-- Wrapper-->
+    <div id="wrapper">
 
-                  <md-content  class="md-padding" >
+        <!-- Navigation -->
+        <div ng-include="'app/partials/sidebar.html'"></div>
 
-                      <div class="md-actions" layout="column">
-                          <md-button ng-href="#/settings" >Settings</md-button>
-                          <md-button ng-href="#/board" >Board</md-button>
-                      </div>
+        <!-- Page wraper -->
+        <!-- ng-class with current state name give you the ability to extended customization your view -->
+        <div id="page-wrapper" class="gray-bg {{$state.current.name}}">
 
-                      <div class="md-actions" layout="column">
-                          <md-button ng-click="refreshWidgets()" class="md-primary">Refresh</md-button>
-                          <md-button ng-click="stopWidgets()" class="md-accent">Stop</md-button>
-                          <md-button ng-click="startWidgets()" class="md-warn">Start</md-button>
-                          <md-button ng-click="close()" class="md-primary">
-                              Close Sidenav left
-                          </md-button>
+            <!-- Page wrapper -->
+            <!--<div ng-include="'views/common/topnavbar.html'"></div>-->
 
-                          <md-button ng-click="changeBackgroud($event)" class="md-primary">Change backgroud</md-button>
-                      </div>
+            <!-- Main view  -->
+            <div ui-view></div>
 
-                  </md-content>
-              </md-sidenav>
-          </div>
+            <!-- Footer -->
+            <div ng-include="'app/partials/footer.html'"></div>
 
+        </div>
+        <!-- End page wrapper-->
+
+    </div>
+    <!-- End wrapper-->
 
           <!-- Main content -->
-          <md-content class="board-content">
+          <!--<md-content class="board-content">-->
 
-              <md-content layout="row"  layout-algn="start center" class="topbar">
-                  <div>
-                      <md-button ng-click="toggleMenu()" class="md-primary ">
-                          <md-icon icon="/app/icons/material/navigation/1x_web/ic_menu_black_24dp.png"></md-icon>
-                      </md-button>
-                  </div>
-                  <div class="logo">Board</div>
-              </md-content>
-
-
-              <div layout="column" layout-align="left left" class="md-padding">
-                  <div class="view-container">
-                      <div ng-view class="view-frame"></div>
-                  </div>
-              </div>
+              <!--<md-content layout="row"  layout-algn="start center" class="topbar">-->
+                  <!--<div>-->
+                      <!--<md-button ng-click="toggleMenu()" class="md-primary ">-->
+                          <!--<md-icon icon="/app/icons/material/navigation/1x_web/ic_menu_black_24dp.png"></md-icon>-->
+                      <!--</md-button>-->
+                  <!--</div>-->
+                  <!--<div class="logo">Board</div>-->
+              <!--</md-content>-->
 
 
-          </md-content>
+              <!--<div layout="column" layout-align="left left" class="md-padding">-->
+                  <!--<div class="view-container">-->
+                      <!--<div ng-view class="view-frame"></div>-->
+                  <!--</div>-->
+              <!--</div>-->
 
-      </section>
+
+          <!--</md-content>-->
 
 
-        <!-- Load application config -->
-        <script src="settings.js"></script>
 
-        <script src="/js/dependencies/sails.io.js"></script>
-        <script src="/js/dependencies/jquery/jquery-2.1.1.min.js"></script>
-        <script src="/js/dependencies/hammer.js"></script>
-        <script src="/js/dependencies/detect-element-resize.js"></script>
-        <script src="/js/dependencies/jquery.backstretch.js"></script>
-        <script src="/js/dependencies/URI.js"></script>
-        <script src="/js/dependencies/angular.js"></script>
-        <script src="/js/dependencies/angular-animate.js"></script>
-        <script src="/js/dependencies/angular-aria.js"></script>
-        <script src="/js/dependencies/angular-hammer.js"></script>
-        <script src="/js/dependencies/angular-material.js"></script>
-        <script src="/js/dependencies/angular-route.js"></script>
-        <script src="/js/dependencies/bootstrap/angular-bootstrap-checkbox.js"></script>
-        <script src="/js/dependencies/bootstrap/bootstrap.js"></script>
-        <script src="/js/dependencies/bootstrap/bootstrap.min.js"></script>
-        <script src="/js/dependencies/bootstrap/ui-bootstrap-tpls-0.11.0.min.js"></script>
-        <script src="/js/dependencies/iCheck/icheck.min.js"></script>
-        <script src="/js/dependencies/jquery-ui/jquery-ui.min.js"></script>
-        <script src="/js/dependencies/jquery/moment.min.js"></script>
-        <script src="/js/dependencies/src/angular-gridster.js"></script>
-        <script src="/js/dependencies/toastr/toastr.min.js"></script>
-        <script src="/js/dependencies/validate/jquery.validate.min.js"></script>
-        <script src="/app/js/app.module.js"></script>
-        <script src="/app/js/controllers.js"></script>
-        <script src="/app/js/directives.js"></script>
-        <script src="/app/js/filters.js"></script>
-        <script src="/app/js/services.js"></script>
+    <!-- Load application config -->
+    <script src="settings.js"></script>
 
-    </body>
+    <script src="/js/dependencies/sails.io.js"></script>
+    <script src="/js/dependencies/moment.min.js"></script>
+    <script src="/js/dependencies/hammer.js"></script>
 
+    <!-- Jquery and Bootstrap -->
+    <script src="/js/dependencies/jquery/jquery-2.1.1.min.js"></script>
+    <script src="/js/dependencies/jquery/jquery-ui.min.js"></script>
+    <script src="/js/dependencies/bootstrap/bootstrap.min.js"></script>
+
+    <!-- Jquery plugins -->
+    <!-- Metis menu -->
+    <script src="/js/dependencies/metisMenu/jquery.metisMenu.js"></script>
+
+    <!-- Pace js (automatic page load progress bar -->
+    <script src="/js/dependencies/pace/pace.min.js"></script>
+
+    <script src="/js/dependencies/detect-element-resize.js"></script>
+    <script src="/js/dependencies/jquery.backstretch.js"></script>
+    <script src="/js/dependencies/URI.js"></script>
+
+    <!-- Angular dependencies -->
+    <script src="/js/dependencies/angular/angular.js"></script>
+    <script src="/js/dependencies/angular/angular-animate.js"></script>
+    <script src="/js/dependencies/angular/angular-aria.js"></script>
+    <script src="/js/dependencies/angular/angular-ui-router.js"></script>
+
+    <!-- Angular plugins -->
+    <script src="/js/dependencies/angular-hammer.js"></script>
+    <script src="/js/dependencies/bootstrap/ui-bootstrap-tpls-0.11.0.min.js"></script>
+    <script src="/js/dependencies/src/angular-gridster.js"></script>
+
+    <!-- App scripts -->
+    <script src="/app/js/app.module.js"></script>
+    <script src="/app/js/config.js"></script>
+    <script src="/app/js/controllers.js"></script>
+    <script src="/app/js/directives.js"></script>
+    <script src="/app/js/filters.js"></script>
+    <script src="/app/js/services.js"></script>
+
+</body>
 </html>

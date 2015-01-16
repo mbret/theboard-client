@@ -4,16 +4,16 @@ angular
 	.module('app.controllers', [])
 
 	.controller("MainController", [
-		'$scope', '$http', '$window', '$q', 'settings', '$log', '$mdSidenav', '$mdToast', '$animate', '$mdDialog', 'widgetService', 'geolocationService',
-		function($scope, $http, $window, $q, settings, $log, $mdSidenav, $mdToast, $animate, $mdDialog, widgetService, geolocationService){
+		'$scope', '$http', '$window', '$q', 'settings', '$log', /*'$mdSidenav', '$mdToast', */'$animate', /*'$mdDialog', */'widgetService', 'geolocationService',
+		function($scope, $http, $window, $q, settings, $log, /*$mdSidenav, $mdToast,*/ $animate, /*$mdDialog,*/ widgetService, geolocationService){
 
 			/*
 			 * Sidebar part
 			 */
 			$scope.toggleMenu = function(){
-				$mdSidenav('sidebar').toggle().then(function(){
-					$log.debug("toggle Menu is done");
-				});
+				//$mdSidenav('sidebar').toggle().then(function(){
+				//	$log.debug("toggle Menu is done");
+				//});
 			};
 
 		}
@@ -205,7 +205,7 @@ angular
 	/**
 	 * form validation: http://www.ng-newsletter.com/posts/validations.html
 	 */
-	.controller("SettingsController", ['$scope', '$http', '$log', 'accountService', 'dialogService', 'settings', function($scope, $http, $log, accountService, dialogService, settings){
+	.controller("SettingsController", ['$scope', '$http', '$log', 'accountService', /*'dialogService',*/ 'settings', function($scope, $http, $log, accountService, /*dialogService,*/ settings){
 
 		// @todo Clean the div from backstretch
 
@@ -213,7 +213,7 @@ angular
 		accountService.get().then(function(account){
 			$scope.account = {
 				firstName: account.firstName,
-				lastName: account.lastName,
+				lastName: account.lastName
 			}
 		}).catch(function(err){
 			dialogService.error(err.message);
@@ -223,39 +223,43 @@ angular
 		/*
 		 * Form submit
 		 */
-		$scope.updateAccountForm = function(){
-			if($scope.update_account_form.$valid){
-
+		$scope.submitted = false;
+		$scope.updateAccountFormSubmit = function(){
+			console.log('sdsd');
+			if($scope.updateAccountForm.$valid){
 				// Update
-				accountService.update({
-					firstName: $scope.account.firstName,
-					lastName: $scope.account.lastName
-				}).then(function(){
-					dialogService.successToast( settings.messages.account.updated );
-				}).catch(function(err){
-					dialogService.error(err.message);
-				});
+				//accountService.update({
+				//	firstName: $scope.account.firstName,
+				//	lastName: $scope.account.lastName
+				//}).then(function(){
+				//	dialogService.successToast( settings.messages.account.updated );
+				//}).catch(function(err){
+				//	dialogService.error(err.message);
+				//});
 			}
 			else{
-				dialogService.error('Form invalid');
+				//dialogService.error('Form invalid');
+				console.debug('Form invalid');
 			}
 		}
 
 	}])
 
-	.controller("SidebarController", ['$scope', '$mdSidenav', '$log', 'widgetService', 'settings', function($scope, $mdSidenav, $log, widgetService, settings){
+	.controller("SidebarController", ['$scope', /*'$mdSidenav', */'$log', 'widgetService', 'settings', function($scope, /*$mdSidenav,*/ $log, widgetService, settings){
 
 		$scope.user = {
 			avatar: settings.user.avatar,
-			displayName: settings.user.username,
-			mail: settings.user.mail
+			email: settings.user.email,
+			firstName: settings.user.firstName,
+			lastName: settings.user.lastName,
+			displayName: settings.user.firstName ? settings.user.firstName : settings.user.email
 		};
 
 		$scope.close = function(){
-			$mdSidenav('sidebar').close()
-				.then(function(){
-
-				});
+			//$mdSidenav('sidebar').close()
+			//	.then(function(){
+            //
+			//	});
 		}
 		$scope.refreshWidgets = function(){
 			widgetService.sendSignal( null, 'refresh' );
@@ -268,13 +272,13 @@ angular
 		};
 
 		$scope.changeBackground = function($event){
-			$mdDialog.show({
-				targetEvent: $event,
-				//parent: angular.element("#" + widget.identityHTML + "-container"),
-				templateUrl: 'app/templates/widget_options.tmpl.html',
-				controller: changeBackgroundController,
-				//locals: { widget: widget }
-			});
+			//$mdDialog.show({
+			//	targetEvent: $event,
+			//	//parent: angular.element("#" + widget.identityHTML + "-container"),
+			//	templateUrl: 'app/templates/widget_options.tmpl.html',
+			//	controller: changeBackgroundController,
+			//	//locals: { widget: widget }
+			//});
 		}
 
 

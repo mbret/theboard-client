@@ -1,12 +1,15 @@
 module.exports = {
   	
   	index: function (req, res) {
-    	return res.view('app');
+    	return res.view('app', {
+			//title: 'Board'
+		});
   	},
 
 	settings: function(req, res){
 		console.log(req.user);
 		var settings = {
+			pageTitle: 'Board',
 			paths: {
 				server: '/',
 				icons: '/app/icons',
@@ -46,8 +49,9 @@ module.exports = {
 			},
 			user: {
 				id: req.user.id,
-				username: req.user.username,
-				mail: req.user.mail,
+				firstName: req.user.firstName,
+				lastName: req.user.lastName,
+				email: req.user.email,
 				avatar: req.user.avatar,
 				backgroundImagesInterval: req.user.backgroundImagesInterval,
 				backgroundImages: req.user.backgroundImages

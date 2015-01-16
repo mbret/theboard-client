@@ -9,7 +9,8 @@ var User = {
     firstName: { type: 'string' },
     lastName: { type: 'string' },
     backgroundImagesInterval: { type: 'integer' },
-    backgroundImages: { type: 'array' }
+    backgroundImages: { type: 'array' },
+    avatar: { type: 'string', defaultsTo: '/images/profile_small.jpg' }
   }
 };
 

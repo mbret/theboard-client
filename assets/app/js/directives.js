@@ -13,6 +13,44 @@ angular
     .module('app.directives',[])
 
     /**
+     * Use declarative approach
+     * Use it with <title page-title></title>
+     */
+    .directive('pageTitle', ['$rootScope', '$timeout', 'settings',
+        function($rootScope, $timeout, settings){
+            return {
+                restrict: 'A',
+                link: function(scope, element, attr) {
+                    var listener = function(event, toState, toParams, fromState, fromParams) {
+                        // Default title - load on Dashboard 1
+                        var title = settings.pageTitle + ' | Home';
+                        // Create your own title pattern
+                        if (toState.data && toState.data.pageTitle) title = settings.pageTitle + ' | ' + toState.data.pageTitle;
+                        $timeout(function() {
+                            element.text(title);
+                        });
+                    };
+                    // @todo take the best one
+                    $rootScope.$on('$stateChangeStart', listener);
+                    //$rootScope.$on('$stateChangeSuccess', listener);
+                }
+            }
+        }
+    ])
+
+    .directive('sidebar', ['$rootScope', '$timeout', 'settings',
+        function($rootScope, $timeout, settings){
+            return {
+                restrict: 'A',
+                link: function(scope, element, attr) {
+                    // Call the metsiMenu plugin and plug it to sidebar navigation
+                    element.metisMenu();
+                }
+            }
+        }
+    ])
+
+    /**
      * widget-iframe directive
      *
      * This new directive is about the widget iframe container
