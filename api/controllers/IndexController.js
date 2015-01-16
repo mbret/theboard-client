@@ -44,6 +44,9 @@ module.exports = {
 			},
 			messages: {
 				errors: {
+					form: {
+						invalid: 'Your form contain some errors, please check it before submit!'
+					},
 					unableToUpdate: 'Sorry but we were unable to update',
 					unableToLoad: 'Sorry but we were unable to load',
 					geolocation: {

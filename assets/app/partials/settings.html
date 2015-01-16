@@ -22,7 +22,6 @@
                     </h5>
                 </div>
                 <div class="ibox-content">
-                    <button ng-click="foo()"></button>
                     <form class="form-horizontal" name="updateAccountForm" ng-submit="updateAccountFormSubmit()">
 
                         <div class="form-group">
@@ -39,6 +38,28 @@
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
+
+                        <!--<div class="form-group">-->
+                            <!--<label class="col-sm-3 control-label">Email (for test)</label>-->
+                            <!--<div class="col-sm-5">-->
+                                <!--<input type="email" class="form-control" id="email" name="email" ng-model="email" required ng-minlength=2>-->
+                                <!--<div class="error-container ng-hide" ng-show="updateAccountForm.email.$dirty && updateAccountForm.email.$invalid">-->
+                                    <!--<label  class="error" ng-show="updateAccountForm.email.$error.required">This is required</label>-->
+                                    <!--<label  class="error" ng-show="updateAccountForm.email.$error.email">This is not a valid email</label>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Email (for test)</label>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" id="test" name="test" ng-model="test" required ng-minlength=2>
+                                <div class="error-container ng-hide" ng-show="updateAccountForm.test.$dirty && updateAccountForm.test.$invalid">
+                                    <label  class="error" ng-show="updateAccountForm.test.$error.required">This is required</label>
+                                    <label  class="error" ng-show="updateAccountForm.test.$error.minlength">This is not a valid email</label>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">

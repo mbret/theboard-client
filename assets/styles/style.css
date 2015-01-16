@@ -84,3 +84,14 @@ h1.logo-name{
 .modal-danger .modal-header .close{
     color: #ffffff;
 }
+
+/************************************
+ * Form rewrite from theme
+ ************************************/
+label.error {
+    font-weight: inherit; /* with open sans the label error was to fat, we reduced the weight */
+}
+/* add error support (.form-control.error) from theme to angular */
+.form-control.ng-invalid.ng-dirty {
+    border: 1px dotted #cc5965;
+}

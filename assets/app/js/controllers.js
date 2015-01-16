@@ -207,23 +207,20 @@ angular
 	 */
 	.controller("SettingsController", ['$scope', '$http', '$log', 'accountService', 'modalService', 'settings', 'notifService', function($scope, $http, $log, accountService, modalService, settings, notifService){
 
-		$scope.foo = function(){
-			modalService.simpleError('Controllers should never do DOM manipulation or hold DOM selectors; that');
-		}
-
-		// @todo Clean the div from backstretch
-
-		// Get account data and create a scope
+		/*===========================
+		 * Get user data from server
+		 * - init scope used by form
+		 *===========================*/
 		accountService.get( settings.user.id ).then(function(account){
 			$scope.account = account;
 		}).catch(function(err){
-			//dialogService.error(err.message);
+			modalService.simpleError(err.message);
 			// @todo get a return of dialog and put application on error
 		});
 
-		/*
+		/*===========================
 		 * Form submit
-		 */
+		 *===========================*/
 		$scope.submitted = false;
 		$scope.updateAccountFormSubmit = function(){
 			if($scope.updateAccountForm.$valid){
@@ -234,12 +231,11 @@ angular
 				}).then(function(){
 					notifService.success( settings.messages.account.updated )
 				}).catch(function(err){
-					//dialogService.error(err.message);
-					console.error(err);
+					modalService.simpleError(err.message);
 				});
 			}
 			else{
-				notifService.error( 'Form invalid' );
+				notifService.error( settings.messages.errors.form.invalid );
 			}
 		}
 
