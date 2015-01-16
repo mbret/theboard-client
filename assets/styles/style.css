@@ -56,6 +56,7 @@ md-content.board-content{
     padding-top: 20px;
 }
 
+
 /* Login container
    - change some values from the theme */
 .loginscreen.middle-box {
@@ -68,4 +69,18 @@ md-content.board-content{
 /* Logo name in login form */
 h1.logo-name{
     font-size: 70px;
+}
+
+/**********************************
+ * Bootstrap modals
+ **********************************/
+.modal-danger {
+
+}
+.modal-danger .modal-header{
+    background-color: #ed5565;
+    color: #ffffff;
+}
+.modal-danger .modal-header .close{
+    color: #ffffff;
 }

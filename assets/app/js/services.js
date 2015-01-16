@@ -57,13 +57,22 @@ angular
 
     }])
 
-    .factory('dialogService', ['$rootScope', '$http', 'settings', '$mdDialog', '$mdToast', function($rootScope, $http, settings, $mdDialog, $mdToast){
+    .factory('modalService', ['$rootScope', '$http', 'settings', '$modal', function($rootScope, $http, settings, $modal){
         return {
-            error: function(message){
-                return $mdDialog.show($mdDialog.alert()
-                    .title('An error occured')
-                    .ok('Ok')
-                    .content(message));
+            simpleError: function(message){
+                $modal.open({
+                    templateUrl: '/app/templates/modals/error.html',
+                    windowClass: 'modal-danger',
+                    size: 'sm',
+                    controller: modalController,
+                    resolve: { message: function(){ return message; } }
+                });
+                function modalController($scope, $modalInstance, message) {
+                    $scope.message = message;
+                    $scope.ok = function () {
+                        $modalInstance.close();
+                    };
+                };
             },
 
             success: function(message){

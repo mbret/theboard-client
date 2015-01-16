@@ -205,7 +205,11 @@ angular
 	/**
 	 * form validation: http://www.ng-newsletter.com/posts/validations.html
 	 */
-	.controller("SettingsController", ['$scope', '$http', '$log', 'accountService', /*'dialogService',*/ 'settings', 'notifService', function($scope, $http, $log, accountService, /*dialogService,*/ settings, notifService){
+	.controller("SettingsController", ['$scope', '$http', '$log', 'accountService', 'modalService', 'settings', 'notifService', function($scope, $http, $log, accountService, modalService, settings, notifService){
+
+		$scope.foo = function(){
+			modalService.simpleError('Controllers should never do DOM manipulation or hold DOM selectors; that');
+		}
 
 		// @todo Clean the div from backstretch
 
