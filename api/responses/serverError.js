@@ -56,7 +56,6 @@ module.exports = function serverError (data, options) {
   // but fall back to sending JSON(P) if any errors occur.
   else{
     return res.view('500', { data: data, layout: 'layout-blank', title: 'The Board | Error' }, function (err, html) {
-      console.log(data);
 
       // If a view error occured, fall back to JSON(P).
       if (err) {

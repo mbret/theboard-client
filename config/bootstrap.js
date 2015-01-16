@@ -96,12 +96,21 @@ module.exports.bootstrap = function(cb) {
 
   ]).then(function(){
 
+        console.log(sails.config.dataURL);
       // Create user for test
       if( sails.config.environment == 'development' ){
           return User.create({
               email    : 'user@gmail.com',
               backgroundImagesInterval: 5000,
-              backgroundImages: ['board (2).jpg', 'board (3).jpg', 'board (4).jpg', 'board (5).jpg', 'board (6).jpg', 'board (7).jpg', 'board (8).jpg', 'board (9).jpg']
+              backgroundImages: [
+                  sails.config.dataURL + '/img/board (2).jpg',
+                  sails.config.dataURL + '/img/board (3).jpg',
+                  sails.config.dataURL + '/img/board (4).jpg',
+                  sails.config.dataURL + '/img/board (5).jpg',
+                  sails.config.dataURL + '/img/board (6).jpg',
+                  sails.config.dataURL + '/img/board (7).jpg',
+                  sails.config.dataURL + '/img/board (8).jpg',
+                  sails.config.dataURL + '/img/board (9).jpg']
           }).then(function(user){
               return Passport.create({
                   protocol : 'local',

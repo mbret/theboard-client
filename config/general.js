@@ -6,6 +6,7 @@ var path = require('path');
 module.exports = {
 
     dataPath: __dirname + '/../data',
+    dataURL: '/public',
 
     general: {
         // Web site copy

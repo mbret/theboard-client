@@ -97,7 +97,7 @@ angular
                         // and create an array with image and url
                         var urls = [];
                         angular.forEach(settings.user.backgroundImages, function(image){
-                            urls.push(settings.paths.images + '/' + image );
+                            urls.push(image);
                         });
                         // Instead of doing that we could have pass url directly or also use ng-backstrench=[...] in the html
                         // Thi sline is still here to keep in mind possibilities

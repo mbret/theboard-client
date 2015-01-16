@@ -1,5 +1,6 @@
 var passport = require('passport');
 var express = require('express');
+var async = require('async');
 
 /**
  * HTTP Server Settings
@@ -75,21 +76,30 @@ module.exports.http = {
     * @param next
     */
     custom: function(req, res, next){
-        // Auto log user if asked
-        if(sails.config.autoLogin && !req.isAuthenticated()){
-            User.findOne({email:'user@gmail.com'}, function(err, user){
-                if(err){
-                    return next(err);
+
+        async.series([
+            function(cb){
+                // Auto log user if asked
+                if(sails.config.autoLogin && !req.isAuthenticated()){
+                    User.findOne({email:'user@gmail.com'}, function(err, user){
+                        if(err){
+                            return cb(err);
+                        }
+                        req.login(user, function (err) {
+                            if (err){
+                                return cb(err);
+                            }
+                            sails.log.debug('User autologged by middleware!');
+                            return cb();
+                        });
+                    });
                 }
-                req.login(user, function (err) {
-                    if (err){
-                        return next(err);
-                    }
-                    sails.log.debug('User autologged by middleware!');
-                });
-            });
-        }
-        return next();
+                else return cb();
+            }
+        ],
+        function(err){
+            return next(err);
+        });
     },
 
     //Passport middleware
