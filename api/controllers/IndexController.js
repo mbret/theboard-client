@@ -9,7 +9,34 @@ module.exports = {
 	settings: function(req, res){
 		console.log(req.user);
 		var settings = {
-			pageTitle: 'Board',
+			app: {
+				pageTitle: 'Board',
+
+				// configuration for toaster plugin
+				toastr: {
+					//allowHtml: false,
+					//closeButton: false,
+					//closeHtml: '<button>&times;</button>',
+					//containerId: 'toast-container',
+					//extendedTimeOut: 1000,
+					//iconClasses: {
+					//	error: 'toast-error',
+					//	info: 'toast-info',
+					//	success: 'toast-success',
+					//	warning: 'toast-warning'
+					//},
+					//maxOpened: 0,
+					//messageClass: 'toast-message',
+					//newestOnTop: true,
+					//onHidden: null,
+					//onShown: null,
+					positionClass: 'toast-top-right',
+					//tapToDismiss: true,
+					//timeOut: 5000,
+					//titleClass: 'toast-title',
+					//toastClass: 'toast'
+				}
+			},
 			paths: {
 				server: '/',
 				icons: '/app/icons',
@@ -43,8 +70,8 @@ module.exports = {
 					update: '/widgets' // put
 				},
 				account: {
-					get: '/account', // get
-					update: '/account' // put
+					get: '/users', // get
+					update: '/users' // put
 				}
 			},
 			user: {
@@ -102,14 +129,45 @@ module.exports = {
 	},
 
 	getAccountData: function(req, res){
-		return res.ok({
-			firstName: 'Maxime',
-			lastName: 'Bret'
+		User.findOne({id:req.param('id')}, function(err, user){
+			if(err){
+				return res.serverError(err);
+			}
+			if(!user){
+				return res.notFound();
+			}
+			return res.ok({
+				id: user.id,
+				firstName: user.firstName,
+				lastName: user.lastName
+			});
 		});
 	},
 
 	updateAccountData: function(req, res){
-		console.log(req.param('firstName'), req.param('lastName'));
-		return res.ok();
+		User.findOne({id:req.param('id')}, function(err, user){
+			if(err){
+				return res.serverError(err);
+			}
+			if(!user){
+				return res.notFound();
+			}
+			var firstName = req.param('firstName', user.firstName);
+			var lastName = req.param('lastName', user.lastName);
+
+			// Check if okay ...
+			// @todo do that
+
+			user.firstName = firstName;
+			user.lastName = lastName;
+
+			user.save(function(err, userUpdated){
+				console.log(userUpdated);
+				if(err){
+					return res.serverError(err);
+				}
+				return res.ok();
+			});
+		});
 	}
 };

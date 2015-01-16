@@ -9,10 +9,11 @@
 	angular.module('app',[
 			'ui.router',
 			'ui.bootstrap',
-
+			'ngAnimate',
 			//'ngRoute',
 			//'ngMaterial',
 			'gridster',
+			'toastr',
 
 			// modules
 			// modules are loaded at the time

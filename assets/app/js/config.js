@@ -42,6 +42,12 @@ angular
     .module('app')
     .constant('settings', window.settings)
 
+    // Toaster configuration
+    // The configuration come from the server
+    .config(['toastrConfig', 'settings', function(toastrConfig, settings){
+        angular.extend(toastrConfig, settings.app.toastr);
+    }])
+
     // ...
     .config(['$stateProvider','$urlRouterProvider', function($stateProvider, $urlRouterProvider){
             $urlRouterProvider.otherwise("/");

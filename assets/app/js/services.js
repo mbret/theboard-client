@@ -29,8 +29,9 @@ angular
     .factory('accountService', ['$http', 'settings', '$log', function($http, settings, $log){
 
         return {
-            update: function( data ){
-                return $http.put(settings.routes.account.update, data)
+            update: function( id, data ){
+                console.log(data);
+                return $http.put(settings.routes.account.update + '/' + id, data)
                     .then(function(data) {
                         $log.debug('Account updated successfully!', data.data);
                         return data.data;
@@ -41,8 +42,8 @@ angular
                     });
             },
 
-            get: function(){
-                return $http.get(settings.routes.account.get)
+            get: function( id ){
+                return $http.get(settings.routes.account.get + '/' + id)
                     .then(function(data) {
                         $log.debug('Account loaded successfully!', data.data);
                         return data.data;
@@ -83,6 +84,26 @@ angular
                         .position('top right')
                         //.hideDelay(0)
                 );
+            }
+        }
+    }])
+
+    .factory('notifService', ['$rootScope', '$http', 'settings', 'toastr', function($rootScope, $http, settings, toastr){
+        return {
+            error: function(message){
+                return toastr.error(message);
+            },
+
+            success: function(message){
+                return toastr.success(message);
+            },
+
+            warning: function(message){
+                return toastr.warning(message);
+            },
+
+            info: function(message){
+                return toastr.info(message);
             }
         }
     }])

@@ -39,8 +39,8 @@ module.exports.routes = {
     'get /settings.js': 'IndexController.settings',
     'get /widgets': 'IndexController.getWidgets',
     'put /widgets': 'IndexController.updateWidget',
-    'get /account': 'IndexController.getAccountData',
-    'put /account': 'IndexController.updateAccountData',
+    'get /users/:id': 'IndexController.getAccountData',
+    'put /users/:id': 'IndexController.updateAccountData',
 
     // Login & register
     '/login': 'AuthController.login', // login form

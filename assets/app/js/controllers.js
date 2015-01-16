@@ -205,18 +205,15 @@ angular
 	/**
 	 * form validation: http://www.ng-newsletter.com/posts/validations.html
 	 */
-	.controller("SettingsController", ['$scope', '$http', '$log', 'accountService', /*'dialogService',*/ 'settings', function($scope, $http, $log, accountService, /*dialogService,*/ settings){
+	.controller("SettingsController", ['$scope', '$http', '$log', 'accountService', /*'dialogService',*/ 'settings', 'notifService', function($scope, $http, $log, accountService, /*dialogService,*/ settings, notifService){
 
 		// @todo Clean the div from backstretch
 
 		// Get account data and create a scope
-		accountService.get().then(function(account){
-			$scope.account = {
-				firstName: account.firstName,
-				lastName: account.lastName
-			}
+		accountService.get( settings.user.id ).then(function(account){
+			$scope.account = account;
 		}).catch(function(err){
-			dialogService.error(err.message);
+			//dialogService.error(err.message);
 			// @todo get a return of dialog and put application on error
 		});
 
@@ -225,21 +222,20 @@ angular
 		 */
 		$scope.submitted = false;
 		$scope.updateAccountFormSubmit = function(){
-			console.log('sdsd');
 			if($scope.updateAccountForm.$valid){
 				// Update
-				//accountService.update({
-				//	firstName: $scope.account.firstName,
-				//	lastName: $scope.account.lastName
-				//}).then(function(){
-				//	dialogService.successToast( settings.messages.account.updated );
-				//}).catch(function(err){
-				//	dialogService.error(err.message);
-				//});
+				accountService.update(settings.user.id, {
+					firstName: $scope.account.firstName,
+					lastName: $scope.account.lastName
+				}).then(function(){
+					notifService.success( settings.messages.account.updated )
+				}).catch(function(err){
+					//dialogService.error(err.message);
+					console.error(err);
+				});
 			}
 			else{
-				//dialogService.error('Form invalid');
-				console.debug('Form invalid');
+				notifService.error( 'Form invalid' );
 			}
 		}
 

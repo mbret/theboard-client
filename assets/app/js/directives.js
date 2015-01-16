@@ -23,9 +23,9 @@ angular
                 link: function(scope, element, attr) {
                     var listener = function(event, toState, toParams, fromState, fromParams) {
                         // Default title - load on Dashboard 1
-                        var title = settings.pageTitle + ' | Home';
+                        var title = settings.app.pageTitle + ' | Home';
                         // Create your own title pattern
-                        if (toState.data && toState.data.pageTitle) title = settings.pageTitle + ' | ' + toState.data.pageTitle;
+                        if (toState.data && toState.data.pageTitle) title = settings.app.pageTitle + ' | ' + toState.data.pageTitle;
                         $timeout(function() {
                             element.text(title);
                         });
