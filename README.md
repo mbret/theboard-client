@@ -4,7 +4,6 @@ Node on the back and angular on the front ! Release the power !!!
 
 # First time running the project ? 
 - Once you have the source files install if needed sails 'npm install sails --g'
-- 
 
 # How to run
 - Be sure to have latest node dependencies 'npm install'
