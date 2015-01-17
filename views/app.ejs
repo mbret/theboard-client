@@ -24,12 +24,11 @@
 
 </head>
 
-<body  ng-controller="MainController">
+<body  ng-controller="MainController" class="{{$state.current.name}}" ng-backstretch>
 
-    <!--<ng-backstretch state="backstretch"></ng-backstretch>-->
 
     <!-- Wrapper-->
-    <div id="wrapper">
+    <div id="wrapper" class="">
 
         <!-- Navigation -->
         <div ng-include="'app/partials/sidebar.html'"></div>
@@ -52,29 +51,6 @@
 
     </div>
     <!-- End wrapper-->
-
-          <!-- Main content -->
-          <!--<md-content class="board-content">-->
-
-              <!--<md-content layout="row"  layout-algn="start center" class="topbar">-->
-                  <!--<div>-->
-                      <!--<md-button ng-click="toggleMenu()" class="md-primary ">-->
-                          <!--<md-icon icon="/app/icons/material/navigation/1x_web/ic_menu_black_24dp.png"></md-icon>-->
-                      <!--</md-button>-->
-                  <!--</div>-->
-                  <!--<div class="logo">Board</div>-->
-              <!--</md-content>-->
-
-
-              <!--<div layout="column" layout-align="left left" class="md-padding">-->
-                  <!--<div class="view-container">-->
-                      <!--<div ng-view class="view-frame"></div>-->
-                  <!--</div>-->
-              <!--</div>-->
-
-
-          <!--</md-content>-->
-
 
 
     <!-- Load application config -->

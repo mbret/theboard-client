@@ -55,7 +55,7 @@ var AuthController = {
                         return send('Error.Application.Generic');
                     }
                     req.flash('success', 'Success.Auth.Login');
-                    res.redirect('/');
+                    return res.redirect('/');
                 });
             })(req, res);
         }
@@ -116,12 +116,12 @@ var AuthController = {
 
             // Email
             if( !validator.isEmail(email) ){
-                send( 'Error.Form.Invalid' );
+                return send( 'Error.Form.Invalid' );
             }
 
             // Password must have at least 3 char
             if ( !validator.isLength(password, 3)) {
-                send( 'Error.Form.Invalid' );
+                return send( 'Error.Form.Invalid' );
             }
 
             User.create({
@@ -131,13 +131,13 @@ var AuthController = {
                     if (err.code === 'E_VALIDATION') {
                         if (err.invalidAttributes.email) {
                             // This error could be something else but as we validate before we should only get an error because emeail already taken here
-                            send( 'Error.Passport.Email.Exists' );
+                            return send( 'Error.Passport.Email.Exists' );
                         } else {
-                            send( 'Error.Passport.User.Exists' );
+                            return send( 'Error.Passport.User.Exists' );
                         }
                     }
                     sails.log.error(err);
-                    send( 'Error.Application.Generic' );
+                    return send( 'Error.Application.Generic' );
                 }
                 Passport.create({
                     protocol : 'local'
@@ -151,16 +151,16 @@ var AuthController = {
                             if(destroyErr){
                                 sails.log.error(err);
                             }
-                            send('Error.Application.Generic');
+                            return send('Error.Application.Generic');
                         });
                     }
                     req.flash('success', 'Success.Auth.Register&Login');
-                    res.redirect('/');
+                    return res.redirect('/');
                 });
             });
         }
         else{
-            send();
+            return send();
         }
 
         function send(err){

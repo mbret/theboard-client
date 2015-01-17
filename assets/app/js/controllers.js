@@ -3,18 +3,33 @@
 angular
 	.module('app.controllers', [])
 
+	/**
+	 * USE THIS CONTROLLER AS LESS AS POSSIBLE (bad practice)
+	 * Usually if you need something to go here you should probably make a directive or service !
+	 */
 	.controller("MainController", [
-		'$scope', '$http', '$window', '$q', 'settings', '$log', /*'$mdSidenav', '$mdToast', */'$animate', /*'$mdDialog', */'widgetService', 'geolocationService',
-		function($scope, $http, $window, $q, settings, $log, /*$mdSidenav, $mdToast,*/ $animate, /*$mdDialog,*/ widgetService, geolocationService){
+		'$scope', '$http', '$window', '$q', 'settings', '$log', /*'$mdToast', */'$animate', /*'$mdDialog', */'widgetService', 'geolocationService',
+		function($scope, $http, $window, $q, settings, $log,/* $mdToast,*/ $animate, /*$mdDialog,*/ widgetService, geolocationService){
 
-			/*
-			 * Sidebar part
+			/**
+			 * Lib used: https://github.com/TalAter/annyang
+			 * Google test speech recognition: http://www.google.com/intl/fr/chrome/demos/speech.html
+			 *
+			 * On http site the authorization will pop every time, not on https
 			 */
-			$scope.toggleMenu = function(){
-				//$mdSidenav('sidebar').toggle().then(function(){
-				//	$log.debug("toggle Menu is done");
-				//});
+			var commands = {
+				'Widgets* refresh': function() {
+					alert('Widgets are refreshing');
+				},
+				'Widgets* stop': function() {
+					alert('Widgets are stopped!');
+				}
 			};
+
+			//annyang.debug();
+			//annyang.addCommands(commands);
+			//annyang.start();
+
 
 		}
 	])
@@ -27,9 +42,8 @@ angular
 	 * Data should also be stored in services, except where it is being bound to the $scope
 	 */
 	.controller("IndexController", [
-		'$scope', '$http', '$window', '$q', 'settings', '$log', '$mdSidenav', '$mdToast', '$animate', '$mdDialog', 'widgetService', 'geolocationService',
-		function($scope, $http, $window, $q, settings, $log, $mdSidenav, $mdToast, $animate, $mdDialog, widgetService, geolocationService){
-
+		'$scope', '$http', '$window', '$q', 'settings', '$log', '$animate', 'widgetService', 'geolocationService', 'modalService', 'notifService', '$timeout', 'sidebarService',
+		function($scope, $http, $window, $q, settings, $log, $animate, widgetService, geolocationService, modalService, notifService, $timeout, sidebarService){
 
 			$scope.$broadcast('backstretch-start');
 
@@ -55,7 +69,6 @@ angular
 				var promises = [];
 				angular.forEach(widgets, function(widget){
 
-					$log.debug('toto');
 					var deferred = $q.defer();
 
 					// Check for permissions
@@ -100,9 +113,8 @@ angular
 
 			})
 			.catch(function(error){
-				// ...
+				modalService.simpleError(error.message);
 			});
-
 
 
 			/*
@@ -189,14 +201,18 @@ angular
 				if( widgetHasNewPlace ){
 					return widgetService.update( widgetToUpdate )
 						.then(function( widgetUpdated ){
-							$mdToast.show($mdToast.simple().content( settings.messages.widgets.updated ).position('top right'));
+							notifService.success( settings.messages.widgets.updated );
 							widgetsPreviousState[key] = angular.copy(widgetToUpdate);
 						})
 						.catch(function(err){
-							// ...
-							$mdToast.show($mdToast.simple().content(err.message).position('top right'));
+							notifService.error( err.message );
 						});
 				}
+			}
+
+
+			$scope.toggleMenu = function () {
+				sidebarService.toggle();
 			}
 
 		}
@@ -241,49 +257,49 @@ angular
 
 	}])
 
+	.controller("ProfileController", ['$scope', '$http', '$log', 'accountService', 'modalService', 'settings', 'notifService',
+		function($scope, $http, $log, accountService, modalService, settings, notifService){
 
-	.controller("ProfileController", ['$scope', '$http', '$log', 'accountService', 'modalService', 'settings', 'notifService', function($scope, $http, $log, accountService, modalService, settings, notifService){
+			$scope.user = {
+				avatar: settings.user.avatar,
+				job: 'Developer',
+				address: 'Nancy, France',
+				phone: '(+33) 6 06 65 87 55',
+				email: settings.user.email,
+				firstName: settings.user.firstName,
+				lastName: settings.user.lastName,
+				displayName: settings.user.firstName ? settings.user.firstName : settings.user.email
+			};
 
-		$scope.user = {
-			avatar: settings.user.avatar,
-			job: 'Developer',
-			address: 'Nancy, France',
-			phone: '(+33) 6 06 65 87 55',
-			email: settings.user.email,
-			firstName: settings.user.firstName,
-			lastName: settings.user.lastName,
-			displayName: settings.user.firstName ? settings.user.firstName : settings.user.email
-		};
+		}
+	])
 
-	}])
-
-	.controller("SidebarController", ['$scope', /*'$mdSidenav', */'$log', 'widgetService', 'settings', function($scope, /*$mdSidenav,*/ $log, widgetService, settings){
-
-		$scope.user = {
-			avatar: settings.user.avatar,
-			email: settings.user.email,
-			firstName: settings.user.firstName,
-			lastName: settings.user.lastName,
-			displayName: settings.user.firstName ? settings.user.firstName : settings.user.email
-		};
+	.controller("SidebarController", ['$scope', '$log', 'widgetService', 'settings', 'sidebarService', function($scope, $log, widgetService, settings, sidebarService){
 
 		$scope.close = function(){
-			//$mdSidenav('sidebar').close()
-			//	.then(function(){
-            //
-			//	});
+			sidebarService.close();
 		}
-		$scope.refreshWidgets = function(){
-			widgetService.sendSignal( null, 'refresh' );
-		};
-		$scope.stopWidgets = function(){
-			widgetService.sendSignal( null, 'stop' );
-		};
-		$scope.startWidgets = function(){
-			widgetService.sendSignal( null, 'start' );
+		
+		$scope.user = {
+			avatar: settings.user.avatar,
+			email: settings.user.email,
+			firstName: settings.user.firstName,
+			lastName: settings.user.lastName,
+			displayName: settings.user.firstName ? settings.user.firstName : settings.user.email
 		};
 
-		$scope.changeBackground = function($event){
+
+		//$scope.refreshWidgets = function(){
+		//	widgetService.sendSignal( null, 'refresh' );
+		//};
+		//$scope.stopWidgets = function(){
+		//	widgetService.sendSignal( null, 'stop' );
+		//};
+		//$scope.startWidgets = function(){
+		//	widgetService.sendSignal( null, 'start' );
+		//};
+
+		//$scope.changeBackground = function($event){
 			//$mdDialog.show({
 			//	targetEvent: $event,
 			//	//parent: angular.element("#" + widget.identityHTML + "-container"),
@@ -291,7 +307,7 @@ angular
 			//	controller: changeBackgroundController,
 			//	//locals: { widget: widget }
 			//});
-		}
+		//}
 
 
 		var changeBackgroundController = [ '$scope', '$mdDialog', 'widgetService', 'widget', function($scope, $mdDialog, widgetService, widget){
@@ -312,7 +328,7 @@ angular
 	 *
 	 * This controller has a specific scope with object 'widget'
 	 */
-	.controller("WidgetController", ['$scope', '$http', '$mdDialog', '$log', 'widgetService', function($scope, $http, $mdDialog, $log, widgetService){
+	.controller("WidgetController", ['$scope', '$http', '$log', 'widgetService', function($scope, $http, $log, widgetService){
 
 		var widget = $scope.widget; // We get widget as its a scoped var from html
 
@@ -323,13 +339,13 @@ angular
 		// We pass our sub controller (as the sub controller is defined inside parent he can reach the same var)
 		$scope.showOptions = function($event) {
 			//console.log(widgetID);
-			$mdDialog.show({
-				targetEvent: $event,
-				//parent: angular.element("#" + widget.identityHTML + "-container"),
-				templateUrl: 'app/templates/widget_options.tmpl.html',
-				controller: dialogController,
-				locals: { widget: widget }
-			});
+			//$mdDialog.show({
+			//	targetEvent: $event,
+			//	//parent: angular.element("#" + widget.identityHTML + "-container"),
+			//	templateUrl: 'app/templates/widget_options.tmpl.html',
+			//	controller: dialogController,
+			//	locals: { widget: widget }
+			//});
 		};
 
 		// Controller for dialog box
@@ -352,47 +368,9 @@ angular
 			$scope.closeDialog = function() {
 				// Easily hides most recent dialog shown...
 				// no specific instance reference is needed.
-				$mdDialog.hide();
+				//$mdDialog.hide();
 			};
 		}];
 	}])
 
-
-	/**
-	 * ErrorController
-	 *
-	 */
-	.controller("ErrorController", ['$scope', '$http', 'batchLog', function($scope, $http, batchLog){
-
-		$scope.init = function() {
-
-			// Use a service
-			batchLog('Hello');
-
-		};
-
-	}])
-
-	/**
-	 * Lib used: https://github.com/TalAter/annyang
-	 * Google test speech recognition: http://www.google.com/intl/fr/chrome/demos/speech.html
-	 *
-	 * On http site the authorization will pop every time, not on https
-	 */
-	.controller("VoiceController", ['$scope', function($scope){
-
-
-		var commands = {
-			'Widgets* refresh': function() {
-				alert('Widgets are refreshing');
-			},
-			'Widgets* stop': function() {
-				alert('Widgets are stopped!');
-			}
-		};
-
-		annyang.debug();
-		annyang.addCommands(commands);
-		//annyang.start();
-
-	}]);
+	

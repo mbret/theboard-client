@@ -5,6 +5,41 @@
 angular
     .module('app.services', [])
 
+    /**
+     * This is BAAAAAAAAAAAAAD practices
+     * @todo animate 
+     * @todo don't use jquery 
+     */
+    .factory('sidebarService', ['$log', function($log){
+        return {
+            close: function(){
+                $('.sidebar').removeClass('sidebar-open');
+                $('.sidebar').addClass('sidebar-closed');
+                $('.sidebar-backdrop').removeClass('active');
+            },
+            open: function(){
+                $('.sidebar').removeClass('sidebar-closed');
+                $('.sidebar').addClass('sidebar-open');
+                $('.sidebar-backdrop').addClass('active');
+            },
+            toggle: function(){
+                var self = this;
+                if ($('.sidebar').hasClass('sidebar-closed')) {
+                    self.open();
+                }
+                else{
+                    self.close();
+                }
+            },
+            // Put the sidebar in static state (disable backdrop but let open the sidebar)
+            putStatic: function(){
+                var self = this;
+                self.open();
+                $('.sidebar-backdrop').removeClass('active');
+            }
+        }
+    }])
+    
     .factory('batchLog', ['$interval', '$log', function($interval, $log) {
         var messageQueue = [];
 

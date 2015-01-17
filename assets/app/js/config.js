@@ -56,6 +56,7 @@ angular
                 .state('board', {
                     url: '/',
                     templateUrl: 'app/partials/board.html',
+                    controller: 'IndexController',
                     data: {
                         pageTitle: 'Board'
                     }

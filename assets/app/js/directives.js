@@ -38,7 +38,40 @@ angular
         }
     ])
 
-    .directive('sidebar', ['$rootScope', '$timeout', 'settings',
+    /**
+     * Control the sidebar component
+     * For now it only reset the state when route change. In that way the sidebar is always reset when user leave the /board state
+     */
+    .directive('sidebar', ['$rootScope', '$timeout', 'settings', 'sidebarService',
+        function($rootScope, $timeout, settings, sidebarService){
+            return {
+                restrict: 'A',
+                link: function(scope, element, attrs) {
+                    
+                    // get eventual attribute 
+                    // sidebar-close="" define who whant a sidebar closed at state change
+                    var stateWhoWhantSidebarClosed = attrs.sidebarClose;
+                    
+                    // Reset sidebar when the route is changed
+                    //
+                    $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState, fromParams){
+                        if(toState.name == stateWhoWhantSidebarClosed){
+                            sidebarService.close();
+                        }
+                        else{
+                            sidebarService.putStatic(); // put static (disable backdrop)
+                        }
+                    });
+                }
+            }
+        }
+    ])
+
+    /**
+     * Apply the plugin metis menu to the element that have the directive
+     * (in our app it come to the sidebar ul)
+     */
+    .directive('metisMenu', ['$rootScope', '$timeout', 'settings',
         function($rootScope, $timeout, settings){
             return {
                 restrict: 'A',
@@ -102,22 +135,26 @@ angular
                 });
 
 
+            },
+            controller: function ($scope, $element) {
+
             }
         }
 
     }])
 
+    
     /**
      *
      * http://srobbin.com/jquery-plugins/backstretch/
      */
-    .directive('ngBackstretch', ['settings', function(settings) {
+    .directive('ngBackstretch', ['settings', '$state', '$rootScope', function(settings, $state, $rootScope) {
 
             if (typeof $.fn.backstretch !== 'function')
                 throw new Error('ngBackstretch | Please make sure the jquery backstretch plugin is included before this directive is added.');
 
             return {
-                restrict: 'E', // element
+                restrict: 'AE', // element
                 //controller: function($scope){
                 //
                 //
@@ -140,8 +177,7 @@ angular
                         // Instead of doing that we could have pass url directly or also use ng-backstrench=[...] in the html
                         // Thi sline is still here to keep in mind possibilities
                         attr.ngBackstretch = urls;
-
-
+                    
                         //if (element.context.toString().match(/HTMLBodyElement/gi)){
                         //    return $.backstretch( attr.ngBackstretch , {
                         //        duration: settings.user.backgroundImagesInterval,
@@ -150,11 +186,32 @@ angular
                         //}
 
                         // Apply to body
-                        $.backstretch(attr.ngBackstretch , {
-                            duration: settings.user.backgroundImagesInterval,
-                            fade: 750
-                        });
+                        //$.backstretch(attr.ngBackstretch , {
+                        //    duration: settings.user.backgroundImagesInterval,
+                        //    fade: 750
+                        //});
+                    var isCreated = false;
 
+                    $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState, fromParams){
+                        if(toState.name == 'board'){
+                            if( isCreated ){
+                                element.backstretch('resume');
+                            }
+                            else{
+                                element.backstretch(attr.ngBackstretch , {
+                                    duration: settings.user.backgroundImagesInterval,
+                                    fade: 750
+                                });
+                                isCreated = true;
+                            }
+                        }
+                        else{
+                            console.log('PAUSE')
+                            if( isCreated ){
+                                element.backstretch('pause');
+                            }
+                        }
+                    });
 
 
                 }
