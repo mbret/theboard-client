@@ -1,34 +1,47 @@
 
 	<div class="row">
-		<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="" ng-click="toggleMenu()"><i class="fa fa-bars"></i></a>
+		<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#" ng-click="toggleMenu()"><i class="fa fa-bars"></i></a>
+		<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#" ng-click="stopWidgets()">Stop</a>
+		<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#" ng-click="startWidgets()">Start</a>
+		<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#" ng-click="refreshWidgets()">Refresh</a>
+		<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#" ng-click="reloadWidgets()">Reload widget</a>
 	</div>
 
 	<div class="row">
+		
+		<!-- 
+			Gridster plugin
+			Will organize the gridster-item itself
+		-->
 		<div gridster="gridsterOpts" class="widgets-iframes-container">
 			<ul>
-				<li
-						gridster-item="widget"
-						ng-repeat="widget in widgets"
-						ng-style="{'background-color': widget.backgroundColor}" ng-controller="WidgetController">
+				<li gridster-item="widget"
+					ng-repeat="widget in widgets"
+					ng-style="{'background-color': widget.backgroundColor}">
+				<!-- ng-controller="WidgetController"-->
 
-					<div id="{{widget.identityHTML}}-container" class="widget-iframe-container" >
+					<!--
+						widgetIfram directive:
+						handle the UI control of the widget
+					-->
+					<widget-iframe id="{{widget.identityHTML}}-container" class="widget-iframe-container"  widget="widget" >
 
+						<!--Action buttons-->
 						<div layout="row" layout-align="start center" class="widget-buttons">
-					<span class="widget-options-button"  aria-label="Options" ng-click="showOptions($event, widget.identityHTML)">
-						<i class="fa fa-cog"></i>
-					</span>
-					<span class="widget-dragger-button"  aria-label="Move">
-						<i class="fa fa-arrows"></i>
-					</span>
+							<span class="widget-options-button"  aria-label="Options" ng-click="showOptions($event, widget.identityHTML)">
+								<i class="fa fa-cog"></i>
+							</span>
+							<span class="widget-dragger-button"  aria-label="Move">
+								<i class="fa fa-arrows"></i>
+							</span>
 						</div>
 
+						<!--Widget component-->
 						<iframe id="{{widget.identityHTML}}"
 								ng-src="{{widget.iframeURL}}"
-								class="widget-iframe {{widget.tile}}"
-								widget-iframe
-								widget="widget" ></iframe>
+								class="widget-iframe {{widget.tile}}"></iframe>
 
-					</div><!-- end: widget container -->
+					</widget-iframe><!-- end: widget container -->
 				</li>
 			</ul>
 		</div><!-- end: gridster -->

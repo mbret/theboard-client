@@ -73,7 +73,7 @@
      transition: none;
 }
 .sidebar-backdrop{
-    background-color: rgba(0,0,0,0.12);
+    background-color: rgba(0,0,0,0.4);
     position: absolute;
     z-index: 59;
     left: 0;

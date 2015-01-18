@@ -8,7 +8,7 @@
 
     var testWidgetProvided = null;
 
-    var logLvl = 'warn';
+    var logLvl = 'debug'; // warn / debug / info
 
     var serverURL = 'http://localhost:1337';
 
@@ -93,6 +93,12 @@
                     if(obj) console.debug('Widget ' + window.location.pathname + ' -> ' + message, obj);
                     else console.debug('Widget ' + window.location.pathname + ' -> ' + message);
                 }
+            },
+            warn: function(message, obj){
+                if(logLvl == 'warn' || logLvl == 'debug' || logLvl == 'all'){
+                    if(obj) console.warn('Widget ' + window.location.pathname + ' -> ' + message, obj);
+                    else console.warn('Widget ' + window.location.pathname + ' -> ' + message);
+                }
             }
         },
 
@@ -151,8 +157,9 @@
                 //console.log('New hash received ', window.location.hash);
 
                 // Received hash is an stringified object
+                // #(obj)
                 var hash = window.location.hash.substring(1);
-                var hashObject = JSON.parse(hash);
+                var hashObject = JSON.parse( decodeURIComponent(hash));
 
                 // Fire event refresh when signal received
                 if( hashObject.signal === vthis.signals.refresh  ){
@@ -199,8 +206,11 @@
 
     // ===============
     // Some init
+    // widgetConfiguration is an object that can be create by widget creator to 
+    // overwrite some settings
     // ===============
     if( typeof widgetConfiguration !== 'undefined' ){
+        Utils.log.debug('Substitute configuration provided by user. Use it instead of default library configuration!');
         if( widgetConfiguration.widget && widgetConfiguration.widget.configuration){
             isTestWidgetProvided = true;
             testWidgetProvided = widgetConfiguration.widget;
@@ -208,6 +218,9 @@
         if( widgetConfiguration.log ){
             logLvl = widgetConfiguration.log;
         }
+    }
+    else{
+        Utils.log.debug('No substitute configuration provided by user. Use default library configuration!');
     }
 
 
@@ -245,7 +258,7 @@
             );
         }
         // Set the handler listener for future hash change
-        window.onhashchange = function() {
+        window.onhashchange = function(){
             // Check hash
             if(window.location.hash == null || window.location.hash == ''){
                 return;
@@ -259,7 +272,7 @@
         // STEP 3
         // ===============
         // Export module
-        window.WidgetAdapter = WidgetAdapter;
+        //window.WidgetAdapter = WidgetAdapter;
         window.WidgetUtils = Utils;
 
         // ===============
@@ -269,12 +282,20 @@
         Widget.identity = WidgetAdapter.configuration.identity;
         //Widget.configuration = WidgetAdapter.configuration;
         Utils.log.debug('Widget has been prepared by library and is calling with init() method');
-        Widget.init( WidgetAdapter.configuration );
+        
+        try{
+            Widget.init( WidgetAdapter.configuration );
+        }
+        catch(e){
+            Utils.log.warn('Widget (' + WidgetAdapter.configuration.identity + ') is on error', e);
+            throw e;
+        }
     }
     catch(e){
         if(e instanceof WidgetError){
             console.error('A problem occurred when initialising library!', e.message);
         }else{
+            // If you came here because of an thrown exception then you need to try with another nav. Chrome is bugged and doesn't keep stack.
             throw e;
         }
 

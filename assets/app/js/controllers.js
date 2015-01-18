@@ -45,8 +45,6 @@ angular
 		'$scope', '$http', '$window', '$q', 'settings', '$log', '$animate', 'widgetService', 'geolocationService', 'modalService', 'notifService', '$timeout', 'sidebarService',
 		function($scope, $http, $window, $q, settings, $log, $animate, widgetService, geolocationService, modalService, notifService, $timeout, sidebarService){
 
-			$scope.$broadcast('backstretch-start');
-
 			// This var will contain all widget element
 			// These widgets will be placed inside iframe and get from server
 			$scope.widgets = null;
@@ -55,58 +53,97 @@ angular
 			// If widgets are moved then this var contain all widgets before this move
 			var widgetsPreviousState = null;
 
+			// Function for menu button
+			$scope.toggleMenu = function () {
+				sidebarService.toggle();
+			}
+
+			$scope.refreshWidgets = function(){
+				widgetService.sendSignal( null, 'refresh' );
+			};
+			$scope.stopWidgets = function(){
+				widgetService.sendSignal( null /*widget*/, 'stop' /*signal*/);
+			};
+			$scope.startWidgets = function(){
+				widgetService.sendSignal( null, 'start' );
+			};
+			$scope.reloadWidgets = function(){
+				widgetService.reloadAll();
+			};
+			
 			/*
-			 * Widget part
+			 * Widget load and init
 			 *
-			 * Get widgets from server
-			 * Widgets will be relative to an account
-			 * This is just a list of widgets informations
+			 * - Get widgets from server
+			 * - Transform the permissions array into filled object
+			 *
 			 */
 			widgetService.get().then(function(widgets){
 
 				// Loop over all widget and set required values
-				//@todo use .each of async here
+				// some tasks may be async so we prepare promise loop
 				var promises = [];
 				angular.forEach(widgets, function(widget){
-
+					
+					// create promise and push it to run job later
 					var deferred = $q.defer();
-
-					// Check for permissions
-					var permissionsWithValues = {};
-
-					if( widget.permissions &&  widget.permissions.indexOf('mail') !== -1  ) permissionsWithValues.mail = 'user@user.com';
-					// async
-					if( widget.permissions &&  widget.permissions.indexOf('location') !== -1 ){
-						geolocationService.getLocation()
-							.then(function(data){
-								permissionsWithValues.location = data.coords;
-								return next();
-							})
-							.catch(function(err){
-								permissionsWithValues.location = null;
-								$mdToast.show($mdToast.simple().content(err).position('top right'));
-								return next();
-							});
-					}
-					else{
-						return next();
-					}
-
-					function next(){
-						widget.permissions = permissionsWithValues;
-
-						// Init the iframe url
-						widget.iframeURL = $window.URI(widget.baseURL).search({test: "sqd + ",widget:JSON.stringify(widget)}).toString();
-
-						return deferred.resolve();
-					}
-
 					promises.push(deferred);
 
+					// =============================
+					// Fill permissions part
+					// permissions: ['email', 'location']
+					// =============================
+					var permissions = {
+						email: null,
+						location: null
+					};
+
+					// mail
+					if( widget.permissions &&  widget.permissions.indexOf('email') !== -1  ){
+						permissions.email = settings.user.email;
+					}
+					// location (async)
+					(function(){
+						var deferred = $q.defer();
+						if( widget.permissions &&  widget.permissions.indexOf('location') !== -1 ){
+							// get location using geoloc browser api
+							return geolocationService.getLocation()
+								.then(function(data){
+									permissions.location = data.coords;
+									return deferred.resolve();
+								})
+								.catch(function(err){
+									$log.debug('User has not accepted location, permission is set to null');
+									modalService.simpleError(err.message);
+									return deferred.reject(err);
+								});
+						}
+						else{
+							return deferred.resolve();
+						}
+					})()
+					.then(function(){
+						widget.permissions = permissions;
+							
+						// =============================
+						// Fill URL of iframe
+						// =============================
+						widget.iframeURL = $window.URI(widget.baseURL).search({test: "sqd + ",widget:JSON.stringify(widget)}).toString();
+						return;
+					})
+					.catch(function(err){
+						// nothing
+					})
+					.finally(function(){
+						
+						// Init the iframe url
+						return deferred.resolve();
+					});
+					// nothing should happens here
 				});
 
+				// Run loop job
 				$q.all(promises).then(function(){
-					$log.debug('tata');
 					$scope.widgets = widgets;
 					widgetsPreviousState = angular.copy(widgets);
 				});
@@ -208,11 +245,6 @@ angular
 							notifService.error( err.message );
 						});
 				}
-			}
-
-
-			$scope.toggleMenu = function () {
-				sidebarService.toggle();
 			}
 
 		}
@@ -328,49 +360,49 @@ angular
 	 *
 	 * This controller has a specific scope with object 'widget'
 	 */
-	.controller("WidgetController", ['$scope', '$http', '$log', 'widgetService', function($scope, $http, $log, widgetService){
-
-		var widget = $scope.widget; // We get widget as its a scoped var from html
-
-		//console.log($scope);
-
-		// Display option menu for specific widget
-		// The dialog use another controller
-		// We pass our sub controller (as the sub controller is defined inside parent he can reach the same var)
-		$scope.showOptions = function($event) {
-			//console.log(widgetID);
-			//$mdDialog.show({
-			//	targetEvent: $event,
-			//	//parent: angular.element("#" + widget.identityHTML + "-container"),
-			//	templateUrl: 'app/templates/widget_options.tmpl.html',
-			//	controller: dialogController,
-			//	locals: { widget: widget }
-			//});
-		};
-
-		// Controller for dialog box
-		// We cannot use the same because the dialog is open in another controller with reduce scope
-		// Instead of create new controller alonside others we define here a sub controller
-		// We could have used the global var of the parent controller but we prefer doing a complete declaration (widgetService or widget was available from parent)
-		var dialogController = [ '$scope', '$mdDialog', 'widgetService', 'widget', function($scope, $mdDialog, widgetService, widget){
-			$scope.widget = widget;
-
-			$scope.refresh = function(){
-				widgetService.sendSignal( widget, 'refresh' );
-			};
-			$scope.stop = function(){
-				widgetService.sendSignal( widget, 'stop' );
-			};
-			$scope.start = function(){
-				widgetService.sendSignal( widget, 'start' );
-			};
-
-			$scope.closeDialog = function() {
-				// Easily hides most recent dialog shown...
-				// no specific instance reference is needed.
-				//$mdDialog.hide();
-			};
-		}];
-	}])
+	//.controller("WidgetController", ['$scope', '$http', '$log', 'widgetService', function($scope, $http, $log, widgetService){
+    //
+	//	var widget = $scope.widget; // We get widget as its a scoped var from html
+    //
+	//	//console.log($scope);
+    //
+	//	// Display option menu for specific widget
+	//	// The dialog use another controller
+	//	// We pass our sub controller (as the sub controller is defined inside parent he can reach the same var)
+	//	$scope.showOptions = function($event) {
+	//		//console.log(widgetID);
+	//		//$mdDialog.show({
+	//		//	targetEvent: $event,
+	//		//	//parent: angular.element("#" + widget.identityHTML + "-container"),
+	//		//	templateUrl: 'app/templates/widget_options.tmpl.html',
+	//		//	controller: dialogController,
+	//		//	locals: { widget: widget }
+	//		//});
+	//	};
+    //
+	//	// Controller for dialog box
+	//	// We cannot use the same because the dialog is open in another controller with reduce scope
+	//	// Instead of create new controller alonside others we define here a sub controller
+	//	// We could have used the global var of the parent controller but we prefer doing a complete declaration (widgetService or widget was available from parent)
+	//	var dialogController = [ '$scope', '$mdDialog', 'widgetService', 'widget', function($scope, $mdDialog, widgetService, widget){
+	//		$scope.widget = widget;
+    //
+	//		$scope.refresh = function(){
+	//			widgetService.sendSignal( widget, 'refresh' );
+	//		};
+	//		$scope.stop = function(){
+	//			widgetService.sendSignal( widget, 'stop' );
+	//		};
+	//		$scope.start = function(){
+	//			widgetService.sendSignal( widget, 'start' );
+	//		};
+    //
+	//		$scope.closeDialog = function() {
+	//			// Easily hides most recent dialog shown...
+	//			// no specific instance reference is needed.
+	//			//$mdDialog.hide();
+	//		};
+	//	}];
+	//}])
 
 	

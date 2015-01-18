@@ -1,3 +1,33 @@
+/**
+ * Here is an object that you can use for test.
+ * The library will use it instead of url (which is filled by application automatically)
+ *
+ */
+var widgetConfiguration = {
+
+    //widget: {
+    //    configuration: {
+    //        identity: 'Velib Nancy',
+    //
+    //        // Require information from user without action from user
+    //        permissions: {
+    //            location: 'Nancy, France'
+    //        },
+    //
+    //        // Options are information that can be changed by user
+    //        options: {
+    //            station: {
+    //                city: "Paris, France",
+    //                station: "22 RUE DE LA PERLE"
+    //            }
+    //        }
+    //    }
+    //},
+
+    log: 'debug'
+
+};
+
 (function(){
 
     /**
@@ -32,30 +62,30 @@
      */
     window.Widget = {
 
-        configuration: null,
+        //identity: foo // filled by library
+        configuration: {},
 
         // This method is call by the library
-        init: function( configuration ){
-            this.configuration = configuration;
-            console.log(this.identity + ' is initializing');
-            console.log('Here is the widget adapter', WidgetAdapter);
+        init: function( conf ){
+            this.configuration = _.extend(this.configuration, conf);
+            WidgetUtils.log.debug(this.identity + ' is initializing');
             this.initDisplay();
             this.start();
         },
         // This method will be call when widget should be start
         start: function(){
-            console.log(this.identity + ' is running');
+            WidgetUtils.log.debug(this.identity + ' is running');
             this.refreshProcess.start();
         },
         // ...
         stop: function(){
-            console.log(this.identity + ' is stopped');
+            WidgetUtils.log.debug(this.identity + ' is stopped');
             this.displayStopped();
             this.refreshProcess.stop();
         },
         // ...
         refresh: function(){
-            console.log(this.identity + ' is refreshing');
+            WidgetUtils.log.debug(this.identity + ' is refreshing');
             this.displayRefreshing();
             this.refreshProcess.refresh();
         },

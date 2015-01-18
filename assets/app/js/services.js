@@ -186,8 +186,13 @@ angular
             sendSignal: function( widget, signal ){
                 //console.log(widget);
                 if(widget) $log.debug('Signal ' + signal + ' sent to widget ' + widget.identity);
-                else $log.debug('Signal ' + signal + ' sent to everyone');
-                $rootScope.$broadcast('widget-signal', widget, signal);
+                else $log.debug('widgetService: Signal ' + signal + ' sent to all widgets');
+                $rootScope.$broadcast('widget-signal', widget, signal, JSON.stringify({signal:signal}));
+                return;
+            },
+            
+            reloadAll: function(){
+                $rootScope.$broadcast('widget-reload');
                 return;
             },
 

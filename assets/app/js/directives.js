@@ -91,18 +91,22 @@ angular
     .directive('widgetIframe', ['$rootScope', '$log', '$window', function ($rootScope, $log, $window) {
 
         return {
-            restrict: 'A', // attribute name
+            restrict: 'AE', // attribute name
             scope: {
                 widget: '=widget'
             },
             link: function(scope, element, attrs) {
 
+                // Get jquery iframe element
+                var $widgetElt = element.children('.widget-iframe');
+                var widgetID = scope.widget.identityHTML; // .Attr('id') return angular '{{foo}}' :/
+                
                 /**
                  * On load event
                  * @description When iframe is loaded, send an init signal directly
                  */
-                element.bind("load" , function(e){
-
+                $widgetElt.bind("load" , function(e){
+                    
                     // This version use the iframeURL wich is linked directly to ng-src
                     // It cause a reload of all widget, then it's not nice
                     //var iframeURL = new $window.URI( scope.widget.iframeURL );
@@ -111,34 +115,88 @@ angular
                     //scope.widget.iframeURL = iframeURL.toString();
 
                     // This version use primary javascript but at least it does not refresh element
-                    document.getElementById(element[0].id).contentWindow.window.location.hash = JSON.stringify({signal:"init"});
+                    //document.getElementById(element[0].id).contentWindow.window.location.hash = JSON.stringify({signal:"init"});
 
                 });
 
+                //$widgetElt[0].contentWindow.onhashchange = function(){
+                //    console.log('hash change');
+                //};
+                
                 /**
-                 * When user send
+                 * When user send a signal to widget
                  */
-                scope.$on('widget-signal', function(ev, widget, signal){
-                    var iframeWidgetElement = element[0];
-
+                scope.$on('widget-signal', function(ev, widget, signal, hash){
+                    //console.log(widgetID);
+                    //var sUrl = document.getElementById( widgetID ).src.replace(/#.*/, '');
+                    //console.log(sUrl);
+                    //console.log( sUrl + hash );
+                    
                     // event to specific widget
                     if( angular.equals(widget, scope.widget) /* widget && widget.identityHTML == scope.widget.identityHTML*/ ){
-                        document.getElementById(iframeWidgetElement.id).contentWindow.window.location.hash =  JSON.stringify({signal:signal});
+                        document.getElementById( widgetID ).contentWindow.window.location.hash =  encodeURIComponent(hash);
                     }
                     // event to everyone
                     else if(widget == null){
-                        document.getElementById(iframeWidgetElement.id).contentWindow.window.location.hash = JSON.stringify({signal:signal});
+                        //$widgetElt[0].src = sUrl + '#' + encodeURIComponent(hash);
+                        document.getElementById( widgetID ).contentWindow.window.location.hash = encodeURIComponent(hash);
                     }
                     else{
                         // not for me
                     }
                 });
+                
+                scope.$on('widget-reload', function(ev){
+                    document.getElementById( widgetID ).contentDocument.location.reload(true);
+                    
+                });
 
 
             },
-            controller: function ($scope, $element) {
+            controller: ['$scope', '$http', '$log', 'widgetService', function($scope, $http, $log, widgetService){
 
-            }
+                var widget = $scope.widget; // We get widget as its a scoped var from html
+
+                //console.log($scope);
+
+                // Display option menu for specific widget
+                // The dialog use another controller
+                // We pass our sub controller (as the sub controller is defined inside parent he can reach the same var)
+                $scope.showOptions = function($event) {
+                    //console.log(widgetID);
+                    //$mdDialog.show({
+                    //	targetEvent: $event,
+                    //	//parent: angular.element("#" + widget.identityHTML + "-container"),
+                    //	templateUrl: 'app/templates/widget_options.tmpl.html',
+                    //	controller: dialogController,
+                    //	locals: { widget: widget }
+                    //});
+                };
+
+                // Controller for dialog box
+                // We cannot use the same because the dialog is open in another controller with reduce scope
+                // Instead of create new controller alonside others we define here a sub controller
+                // We could have used the global var of the parent controller but we prefer doing a complete declaration (widgetService or widget was available from parent)
+                var dialogController = [ '$scope', '$mdDialog', 'widgetService', 'widget', function($scope, $mdDialog, widgetService, widget){
+                    $scope.widget = widget;
+
+                    $scope.refresh = function(){
+                        widgetService.sendSignal( widget, 'refresh' );
+                    };
+                    $scope.stop = function(){
+                        widgetService.sendSignal( widget, 'stop' );
+                    };
+                    $scope.start = function(){
+                        widgetService.sendSignal( widget, 'start' );
+                    };
+
+                    $scope.closeDialog = function() {
+                        // Easily hides most recent dialog shown...
+                        // no specific instance reference is needed.
+                        //$mdDialog.hide();
+                    };
+                }];
+            }]
         }
 
     }])

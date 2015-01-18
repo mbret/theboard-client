@@ -21,50 +21,50 @@ module.exports.bootstrap = function(cb) {
     Promise.all([
 
 
-      Widget.create({
-          identity: 'Velib',
-          identityHTML: 'widget-velib',
-          url: 'widgets/velib/widget.html',
-          baseURL: 'widgets/velib/widget.html',
-          permissions: [
-              'location'
-          ],
-          options: {
-              defaultLocation: 'New York'
-          },
-          sizeX: 1,
-          sizeY: 1,
-          row: 0,
-          col: 1
-      }),
-      Widget.create({
-            identity: 'Widget meteo',
-            identityHTML: 'widget-meteo',
-            url: 'widgets/meteo/widget.html',
-            baseURL: 'widgets/meteo/widget.html',
-            permissions: [
-              'mail',
-              'location'
-            ],
-            options: {
-                defaultLocation: 'New York'
-            },
-            sizeX: 1,
-            sizeY: 1,
-            row: 0,
-            col: 0
-      }),
-      Widget.create({
-          identity: 'Widget clock',
-          identityHTML: 'widget-clock',
-          url: 'widgets/clock/widget.html',
-          baseURL: 'widgets/clock/widget.html',
-          backgroundColor: '#202020',
-          sizeX: 2,
-          sizeY: 1,
-          row: 0,
-          col: 2
-      }),
+      //Widget.create({
+      //    identity: 'Velib',
+      //    identityHTML: 'widget-velib',
+      //    url: 'widgets/velib/widget.html',
+      //    baseURL: 'widgets/velib/widget.html',
+      //    permissions: [
+      //        'location'
+      //    ],
+      //    options: {
+      //        defaultLocation: 'New York'
+      //    },
+      //    sizeX: 1,
+      //    sizeY: 1,
+      //    row: 0,
+      //    col: 1
+      //}),
+      //Widget.create({
+      //      identity: 'Widget meteo',
+      //      identityHTML: 'widget-meteo',
+      //      url: 'widgets/meteo/widget.html',
+      //      baseURL: 'widgets/meteo/widget.html',
+      //      permissions: [
+      //        'mail',
+      //        'location'
+      //      ],
+      //      options: {
+      //          defaultLocation: 'New York'
+      //      },
+      //      sizeX: 1,
+      //      sizeY: 1,
+      //      row: 0,
+      //      col: 0
+      //}),
+      //Widget.create({
+      //    identity: 'Widget clock',
+      //    identityHTML: 'widget-clock',
+      //    url: 'widgets/clock/widget.html',
+      //    baseURL: 'widgets/clock/widget.html',
+      //    backgroundColor: '#202020',
+      //    sizeX: 2,
+      //    sizeY: 1,
+      //    row: 0,
+      //    col: 2
+      //}),
       Widget.create({
           identity: 'Widget sample',
           identityHTML: 'widget-sample',
@@ -72,7 +72,7 @@ module.exports.bootstrap = function(cb) {
           baseURL: 'widgets/sample/widget.html',
           backgroundColor: '#57aae1',
           permissions:[
-              'user_mail',
+              'email',
               'location'
           ],
           sizeX: 1,
@@ -80,19 +80,19 @@ module.exports.bootstrap = function(cb) {
           row: 1,
           col: 2
       }),
-      Widget.create({
-          identity: 'Widget meteo 4',
-          identityHTML: 'widget-meteo4',
-          url: 'widgets/meteo/widget.html',
-          baseURL: 'widgets/meteo/widget.html',
-          options: {
-              defaultLocation: 'New York'
-          },
-          sizeX: 1,
-          sizeY: 1,
-          row: 0,
-          col: 5
-      }),
+      //Widget.create({
+      //    identity: 'Widget meteo 4',
+      //    identityHTML: 'widget-meteo4',
+      //    url: 'widgets/meteo/widget.html',
+      //    baseURL: 'widgets/meteo/widget.html',
+      //    options: {
+      //        defaultLocation: 'New York'
+      //    },
+      //    sizeX: 1,
+      //    sizeY: 1,
+      //    row: 0,
+      //    col: 5
+      //}),
 
   ]).then(function(){
 
