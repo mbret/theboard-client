@@ -24,6 +24,7 @@
 
 </head>
 
+
 <body  ng-controller="MainController" class="{{$state.current.name}}" ng-backstretch>
 
 
@@ -33,10 +34,12 @@
         <!-- Navigation -->
         <div ng-include="'app/partials/sidebar.html'"></div>
 
+
         <!-- Page wraper -->
         <!-- ng-class with current state name give you the ability to extended customization your view -->
         <div id="page-wrapper" class="gray-bg {{$state.current.name}}">
-
+        <!--<div id="page-wrapper" class="gray-bg board">-->
+            
             <!-- Page wrapper -->
             <!--<div ng-include="'views/common/topnavbar.html'"></div>-->
 

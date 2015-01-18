@@ -21,7 +21,7 @@
             get: function() {
                 return tmp.stack
             }
-        })
+        });
 
         return this
     }
@@ -54,9 +54,20 @@
             window.location.hash = '#';
         },
 
+        /**
+         * 
+         * - take care of eventual hash and ignore it
+         * @returns {Array}
+         */
         getUrlVars: function(){
             var vars = [], hash;
             var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+
+            // remove eventual hash
+            var indexOfLastHash = hashes[hashes.length -1].lastIndexOf('#');
+            indexOfLastHash = (indexOfLastHash > -1) ? indexOfLastHash : hashes[hashes.length -1].length; // -1 means the were no hash
+            hashes[hashes.length -1] = hashes[hashes.length -1].substring(0, indexOfLastHash); // take all string or only good part
+            
             for(var i = 0; i < hashes.length; i++)
             {
                 hash = hashes[i].split('='); // get var name and its value into array
@@ -231,7 +242,7 @@
         // Get eventual settings from application
         // The first run a settings object may be passed by application
         var tmp = Utils.getUrlVars();
-
+        
         // Get and build widget configuration into adapter
         if( testWidgetProvided ){
             WidgetAdapter.configuration = testWidgetProvided.configuration;

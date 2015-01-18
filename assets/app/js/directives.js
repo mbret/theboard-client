@@ -88,7 +88,7 @@ angular
      *
      * This new directive is about the widget iframe container
      */
-    .directive('widgetIframe', ['$rootScope', '$log', '$window', function ($rootScope, $log, $window) {
+    .directive('widgetIframe', ['$rootScope', '$log', '$window', '$timeout', function ($rootScope, $log, $window, $timeout) {
 
         return {
             restrict: 'AE', // attribute name
@@ -99,7 +99,14 @@ angular
 
                 // Get jquery iframe element
                 var $widgetElt = element.children('.widget-iframe');
-                var widgetID = scope.widget.identityHTML; // .Attr('id') return angular '{{foo}}' :/
+                var $widgetRawElt = $widgetElt[0];
+                var widgetID = scope.widget.identityHTML; // .Attr('id') return angular '{{foo}}' because directive is loaded before some angular work (you got it):/
+
+                // This code is run after all render queue
+                // Here all {{foo}} are replaced by value
+                $timeout(function () {
+
+                });
                 
                 /**
                  * On load event
@@ -119,10 +126,6 @@ angular
 
                 });
 
-                //$widgetElt[0].contentWindow.onhashchange = function(){
-                //    console.log('hash change');
-                //};
-                
                 /**
                  * When user send a signal to widget
                  */
@@ -134,12 +137,12 @@ angular
                     
                     // event to specific widget
                     if( angular.equals(widget, scope.widget) /* widget && widget.identityHTML == scope.widget.identityHTML*/ ){
-                        document.getElementById( widgetID ).contentWindow.window.location.hash =  encodeURIComponent(hash);
+                        $widgetRawElt.contentWindow.window.location.hash =  encodeURIComponent(hash);
                     }
                     // event to everyone
                     else if(widget == null){
                         //$widgetElt[0].src = sUrl + '#' + encodeURIComponent(hash);
-                        document.getElementById( widgetID ).contentWindow.window.location.hash = encodeURIComponent(hash);
+                        $widgetRawElt.contentWindow.window.location.hash = encodeURIComponent(hash);
                     }
                     else{
                         // not for me
@@ -147,10 +150,14 @@ angular
                 });
                 
                 scope.$on('widget-reload', function(ev){
-                    document.getElementById( widgetID ).contentDocument.location.reload(true);
-                    
+                    $widgetRawElt.contentWindow.window.location.hash = '';
+                    console.log($widgetRawElt.contentWindow.window.location.hash);
+                    console.log($widgetRawElt.contentWindow.window.location.href);
+                    console.log($widgetRawElt.contentDocument.location);
+                    $widgetRawElt.contentDocument.location.reload();
                 });
 
+                
 
             },
             controller: ['$scope', '$http', '$log', 'widgetService', function($scope, $http, $log, widgetService){

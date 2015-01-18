@@ -1,12 +1,14 @@
 
 	<div class="row">
-		<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#" ng-click="toggleMenu()"><i class="fa fa-bars"></i></a>
-		<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#" ng-click="stopWidgets()">Stop</a>
-		<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#" ng-click="startWidgets()">Start</a>
-		<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#" ng-click="refreshWidgets()">Refresh</a>
-		<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#" ng-click="reloadWidgets()">Reload widget</a>
+		<button class="navbar-minimalize minimalize-styl-2 btn btn-primary " ng-click="toggleMenu()"><i class="fa fa-bars"></i></button>
+		<button class="navbar-minimalize minimalize-styl-2 btn btn-success btn-circle  " ng-click="stopWidgets()"><i class="fa fa-stop"></i></button>
+		<button class="navbar-minimalize minimalize-styl-2 btn btn-success btn-circle  " ng-click="startWidgets()"><i class="fa fa-play"></i></button>
+		<button class="navbar-minimalize minimalize-styl-2 btn btn-success btn-circle " ng-click="refreshWidgets()"><i class="fa fa-undo"></i></button>
+		<button class="navbar-minimalize minimalize-styl-2 btn btn-warning btn-circle " ng-click="reloadWidgets()"><i class="fa fa-undo"></i></button>
 	</div>
 
+
+	
 	<div class="row">
 		
 		<!-- 
@@ -16,15 +18,14 @@
 		<div gridster="gridsterOpts" class="widgets-iframes-container">
 			<ul>
 				<li gridster-item="widget"
-					ng-repeat="widget in widgets"
-					ng-style="{'background-color': widget.backgroundColor}">
+					ng-repeat="widget in widgets">
 				<!-- ng-controller="WidgetController"-->
 
 					<!--
 						widgetIfram directive:
 						handle the UI control of the widget
 					-->
-					<widget-iframe id="{{widget.identityHTML}}-container" class="widget-iframe-container"  widget="widget" >
+					<widget-iframe id="{{widget.identityHTML}}-container" class="widget-iframe-container"  widget="widget" ng-style="{'background-color': widget.backgroundColor}" >
 
 						<!--Action buttons-->
 						<div layout="row" layout-align="start center" class="widget-buttons">

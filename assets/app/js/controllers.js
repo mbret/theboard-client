@@ -63,6 +63,7 @@ angular
 			};
 			$scope.stopWidgets = function(){
 				widgetService.sendSignal( null /*widget*/, 'stop' /*signal*/);
+				return false;
 			};
 			$scope.startWidgets = function(){
 				widgetService.sendSignal( null, 'start' );
@@ -104,31 +105,34 @@ angular
 					}
 					// location (async)
 					(function(){
-						var deferred = $q.defer();
+						console.log(widget);
+						var deferred2 = $q.defer();
 						if( widget.permissions &&  widget.permissions.indexOf('location') !== -1 ){
 							// get location using geoloc browser api
-							return geolocationService.getLocation()
+							geolocationService.getLocation()
 								.then(function(data){
 									permissions.location = data.coords;
-									return deferred.resolve();
+									deferred2.resolve();
 								})
 								.catch(function(err){
 									$log.debug('User has not accepted location, permission is set to null');
 									modalService.simpleError(err.message);
-									return deferred.reject(err);
+									deferred2.reject(err);
 								});
 						}
 						else{
-							return deferred.resolve();
+							deferred2.resolve();
 						}
+						return deferred2.promise;
 					})()
 					.then(function(){
+						console.log(widget);
 						widget.permissions = permissions;
 							
 						// =============================
 						// Fill URL of iframe
 						// =============================
-						widget.iframeURL = $window.URI(widget.baseURL).search({test: "sqd + ",widget:JSON.stringify(widget)}).toString();
+						widget.iframeURL = $window.URI(widget.baseURL).search({widget:JSON.stringify(widget)}).toString();
 						return;
 					})
 					.catch(function(err){
@@ -144,7 +148,9 @@ angular
 
 				// Run loop job
 				$q.all(promises).then(function(){
-					$scope.widgets = widgets;
+					$timeout(function(){
+						$scope.widgets = widgets;
+					});
 					widgetsPreviousState = angular.copy(widgets);
 				});
 

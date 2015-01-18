@@ -122,6 +122,7 @@ window.Widget = {
                         case 'Mist':
                             icon = Skycons.FOG;
                             break;
+                        case 'Rain':
                         case 'Heavy Rain':
                         case 'Light Rain':
                             icon = Skycons.RAIN;

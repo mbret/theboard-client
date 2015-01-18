@@ -1,8 +1,9 @@
 module.exports = {
   	
   	index: function (req, res) {
+		var state = '';
     	return res.view('app', {
-			//title: 'Board'
+			state: state
 		});
   	},
 
