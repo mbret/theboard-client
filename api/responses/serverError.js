@@ -45,6 +45,10 @@ module.exports = function serverError (data, options) {
   options = (typeof options === 'string') ? { view: options } : options || {};
 
 
+  // Prepare data for view
+  var title = (data.title ? data.title : 'The Board | Error');
+  var message = (data.message) ? data.message : null;
+  
   // If a view was provided in options, serve it.
   // Otherwise try to guess an appropriate view, or if that doesn't
   // work, just send JSON.
@@ -55,7 +59,7 @@ module.exports = function serverError (data, options) {
   // If no second argument provided, try to serve the default view,
   // but fall back to sending JSON(P) if any errors occur.
   else{
-    return res.view('500', { data: data, layout: 'layout-blank', title: 'The Board | Error' }, function (err, html) {
+    return res.view('500', { data: data, layout: 'layout-blank', title: title, message: message }, function (err, html) {
 
       // If a view error occured, fall back to JSON(P).
       if (err) {

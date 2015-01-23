@@ -22,25 +22,27 @@
 
 module.exports.routes = {
 
-  /***************************************************************************
-  *                                                                          *
-  * Make the view located at `views/homepage.ejs` (or `views/homepage.jade`, *
-  * etc. depending on your default view engine) your home page.              *
-  *                                                                          *
-  * (Alternatively, remove this and add an `index.html` file in your         *
-  * `assets` directory)                                                      *
-  *                                                                          *
-  ***************************************************************************/
+    /***************************************************************************
+    *                                                                          *
+    * Make the view located at `views/homepage.ejs` (or `views/homepage.jade`, *
+    * etc. depending on your default view engine) your home page.              *
+    *                                                                          *
+    * (Alternatively, remove this and add an `index.html` file in your         *
+    * `assets` directory)                                                      *
+    *                                                                          *
+    ***************************************************************************/
 
-    // Helpers
-    'GET /helpers/cor/:url': 'HelperController.pipeCOR', // THIS ROUTE MUST BE DISABLED FOR PRODUCTION
-
-    'get /meteo': 'MeteoController.getWeather',
-    'get /settings.js': 'IndexController.settings',
-    'get /widgets': 'IndexController.getWidgets',
-    'put /widgets': 'IndexController.updateWidget',
-    'get /users/:id': 'IndexController.getAccountData',
-    'put /users/:id': 'IndexController.updateAccountData',
+    // ==============
+    // App routes
+    // ==============
+    'GET /helpers/cor/:url': 'AppController.pipeCOR', // act as proxy for any request out of this domain
+    'get /configuration.json': 'AppController.getConfiguration', // return app settings
+    
+    'get /widgets': 'AppController.getWidgets',
+    'put /widgets': 'AppController.updateWidget',
+    
+    'get /account': 'AppController.getAccountData',
+    'put /account': 'AppController.updateAccountData',
 
     // Login & register
     '/login': 'AuthController.login', // login form
@@ -53,19 +55,6 @@ module.exports.routes = {
     'get /auth/:provider/callback': 'AuthController.callback',
     'get /auth/:provider/:action': 'AuthController.callback',
 
-    // Home (start point of front end app)
-    'get /': 'IndexController.index'
-
-
-
-  /***************************************************************************
-  *                                                                          *
-  * Custom routes here...                                                    *
-  *                                                                          *
-  *  If a request to a URL doesn't match any of the custom routes above, it  *
-  * is matched against Sails route blueprints. See `config/blueprints.js`    *
-  * for configuration options and examples.                                  *
-  *                                                                          *
-  ***************************************************************************/
+    'get /': 'AppController.index' // Home (start point of front end app)
 
 };

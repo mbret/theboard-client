@@ -12,7 +12,6 @@ var async = require('async');
  * For more information on configuration, check out:
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.http.html
  */
-
 module.exports.http = {
 
   /****************************************************************************
@@ -79,22 +78,7 @@ module.exports.http = {
 
         async.series([
             function(cb){
-                // Auto log user if asked
-                if(sails.config.autoLogin && !req.isAuthenticated()){
-                    User.findOne({email:'user@gmail.com'}, function(err, user){
-                        if(err){
-                            return cb(err);
-                        }
-                        req.login(user, function (err) {
-                            if (err){
-                                return cb(err);
-                            }
-                            sails.log.debug('User autologged by middleware!');
-                            return cb();
-                        });
-                    });
-                }
-                else return cb();
+                return cb();
             }
         ],
         function(err){
@@ -104,16 +88,43 @@ module.exports.http = {
 
     //Passport middleware
     passport: function (req, res, next) {
-      // Initialize Passport
-      passport.initialize()(req, res, function () {
-        // Use the built-in sessions
-        passport.session()(req, res, function () {
-          // Make the user available throughout the frontend
-          res.locals.user = req.user;
-          //sails.log.debug('Passport middleware');
-          return next();
-        });
-      });
+        async.series([
+            
+            function initPassport(cb){
+                passport.initialize()(req, res, cb);
+            },
+            
+            // Create a session with this user id if auto login is set to true for this env
+            // This user will be load by passport then
+            // No action is needed to be logged with that method
+            function autoLogUser(cb){
+                if(sails.config.autoLogin && !req.isAuthenticated() && !req.session.passport.user ){
+                    User.findOne({email:'user@gmail.com'}).exec(function(err, user){
+                        if(err) return cb(err);
+                        req.login(user, function (err) {
+                            if (err) return cb(err);
+                            sails.log.debug('User autologged by middleware!');
+                            return cb();
+                        });
+                    });
+                }
+                else return cb();
+            },
+            
+            // This module of passport is in charge of loading the user in session
+            // the session only contain an id and is then completely loaded for app
+            function initPassportSession(cb){
+                passport.session()(req, res, function () {
+                    // Make the user available throughout the frontend
+                    res.locals.user = req.user;
+                    //sails.log.debug('Passport middleware');
+                    return cb();
+                });
+                
+            }
+        ], function(err){
+            return next(err);
+        })
     }
 
     // myRequestLogger: function (req, res, next) {

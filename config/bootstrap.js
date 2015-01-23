@@ -112,12 +112,18 @@ module.exports.bootstrap = function(cb) {
                   sails.config.dataURL + '/img/board (8).jpg',
                   sails.config.dataURL + '/img/board (9).jpg']
           }).then(function(user){
+              user.settings.add(UserSetting.buildNewSetting('widgetsBorders', true));
+              return user.save().then(function(user){
+                  console.log(user.settings)
+                  return user;
+              });
+          }).then(function(user){
               return Passport.create({
                   protocol : 'local',
                   password : 'password',
                   user     : user.id
               });
-          });
+        });
       }
       else{
           return;
@@ -129,6 +135,6 @@ module.exports.bootstrap = function(cb) {
         return FileService.createDataDir(cb);
 
   }).catch(function(err){
-      return cb(err);
+        return cb(err);
   });
 };

@@ -8,8 +8,8 @@ angular
 	 * Usually if you need something to go here you should probably make a directive or service !
 	 */
 	.controller("MainController", [
-		'$scope', '$http', '$window', '$q', 'settings', '$log', /*'$mdToast', */'$animate', /*'$mdDialog', */'widgetService', 'geolocationService',
-		function($scope, $http, $window, $q, settings, $log,/* $mdToast,*/ $animate, /*$mdDialog,*/ widgetService, geolocationService){
+		'$scope', '$http', '$window', '$q', 'config', '$log', /*'$mdToast', */'$animate', /*'$mdDialog', */'widgetService', 'geolocationService',
+		function($scope, $http, $window, $q, config, $log,/* $mdToast,*/ $animate, /*$mdDialog,*/ widgetService, geolocationService){
 
 			/**
 			 * Lib used: https://github.com/TalAter/annyang
@@ -42,8 +42,8 @@ angular
 	 * Data should also be stored in services, except where it is being bound to the $scope
 	 */
 	.controller("IndexController", [
-		'$scope', '$http', '$window', '$q', 'settings', '$log', '$animate', 'widgetService', 'geolocationService', 'modalService', 'notifService', '$timeout', 'sidebarService',
-		function($scope, $http, $window, $q, settings, $log, $animate, widgetService, geolocationService, modalService, notifService, $timeout, sidebarService){
+		'$scope', '$http', '$window', '$q', 'config', '$log', '$animate', 'widgetService', 'geolocationService', 'modalService', 'notifService', '$timeout', 'sidebarService',
+		function($scope, $http, $window, $q, config, $log, $animate, widgetService, geolocationService, modalService, notifService, $timeout, sidebarService){
 
 			// This var will contain all widget element
 			// These widgets will be placed inside iframe and get from server
@@ -101,7 +101,7 @@ angular
 
 					// mail
 					if( widget.permissions &&  widget.permissions.indexOf('email') !== -1  ){
-						permissions.email = settings.user.email;
+						permissions.email = config.user.email;
 					}
 					// location (async)
 					(function(){
@@ -129,10 +129,10 @@ angular
 						console.log(widget);
 						widget.permissions = permissions;
 							
-						// =============================
 						// Fill URL of iframe
-						// =============================
 						widget.iframeURL = $window.URI(widget.baseURL).search({widget:JSON.stringify(widget)}).toString();
+						// Get user pref for specific style for widget
+						widget.borders = config.user.config.widgetsBorders;
 						return;
 					})
 					.catch(function(err){
@@ -166,7 +166,7 @@ angular
 			 *
 			 */
 			// Inject to view the gridster configuration
-			$scope.gridsterOpts = settings.gridsterOpts;
+			$scope.gridsterOpts = config.gridsterOpts;
 
 			// When the window change and gridster has been resized in order to be displayed
 			$scope.$on('gridster-resized', function(size){
@@ -244,7 +244,7 @@ angular
 				if( widgetHasNewPlace ){
 					return widgetService.update( widgetToUpdate )
 						.then(function( widgetUpdated ){
-							notifService.success( settings.messages.widgets.updated );
+							notifService.success( config.messages.widgets.updated );
 							widgetsPreviousState[key] = angular.copy(widgetToUpdate);
 						})
 						.catch(function(err){
@@ -258,72 +258,99 @@ angular
 
 	/**
 	 * form validation: http://www.ng-newsletter.com/posts/validations.html
+	 *
 	 */
-	.controller("SettingsController", ['$scope', '$http', '$log', 'accountService', 'modalService', 'settings', 'notifService', function($scope, $http, $log, accountService, modalService, settings, notifService){
+	.controller("SettingsController", ['$scope', '$http', '$log', 'accountService', 'modalService', 'config', 'notifService', function($scope, $http, $log, accountService, modalService, config, notifService){
 
+		// Set scope for widgets settings
+		$scope.widgets = {
+			borders: config.user.config.widgetsBorders
+		};
+		
 		/*===========================
 		 * Get user data from server
 		 * - init scope used by form
 		 *===========================*/
-		accountService.get( settings.user.id ).then(function(account){
-			$scope.account = account;
-		}).catch(function(err){
-			modalService.simpleError(err.message);
-			// @todo get a return of dialog and put application on error
-		});
+		//accountService.get( config.user.id ).then(function(account){
+		//	$scope.account = account;
+		//}).catch(function(err){
+		//	modalService.simpleError(err.message);
+		//	// @todo get a return of dialog and put application on error
+		//});
 
 		/*===========================
-		 * Form submit
+		 * Form submit (profile)
 		 *===========================*/
-		$scope.submitted = false;
+		//$scope.submitted = false;
 		$scope.updateAccountFormSubmit = function(){
 			if($scope.updateAccountForm.$valid){
 				// Update
-				accountService.update(settings.user.id, {
+				accountService.update({
 					firstName: $scope.account.firstName,
 					lastName: $scope.account.lastName
 				}).then(function(){
-					notifService.success( settings.messages.account.updated )
+					notifService.success( config.messages.success.form.updated )
 				}).catch(function(err){
 					modalService.simpleError(err.message);
 				});
 			}
 			else{
-				notifService.error( settings.messages.errors.form.invalid );
+				notifService.error( config.messages.errors.form.invalid );
+			}
+		}
+
+		/*===========================
+		 * Form submit (widgets)
+		 *===========================*/
+		//$scope.submitted = false;
+		$scope.updateWidgetsSettingsFormSubmit = function(){
+			if($scope.updateWidgetsSettingsForm.$valid){
+				// Update
+				accountService.updateSettings({
+					widgetsBorders: $scope.widgets.borders
+				}, true /*refreshUser*/ ).then(function(){
+					notifService.success( config.messages.success.form.updated )
+				}).catch(function(err){
+					modalService.simpleError(err.message);
+				});
+			}
+			else{
+				notifService.error( config.messages.errors.form.invalid );
 			}
 		}
 
 	}])
 
-	.controller("ProfileController", ['$scope', '$http', '$log', 'accountService', 'modalService', 'settings', 'notifService',
-		function($scope, $http, $log, accountService, modalService, settings, notifService){
+	.controller("ProfileController", ['$scope', '$http', '$log', 'accountService', 'modalService', 'config', 'notifService',
+		function($scope, $http, $log, accountService, modalService, config, notifService){
 
 			$scope.user = {
-				avatar: settings.user.avatar,
+				avatar: config.user.avatar,
+				banner: config.user.banner,
 				job: 'Developer',
 				address: 'Nancy, France',
 				phone: '(+33) 6 06 65 87 55',
-				email: settings.user.email,
-				firstName: settings.user.firstName,
-				lastName: settings.user.lastName,
-				displayName: settings.user.firstName ? settings.user.firstName : settings.user.email
+				email: config.user.email,
+				firstName: config.user.firstName,
+				lastName: config.user.lastName,
+				displayName: config.user.firstName ? config.user.firstName : config.user.email
 			};
 
 		}
 	])
 
-	.controller("SidebarController", ['$scope', '$log', 'widgetService', 'settings', 'sidebarService', function($scope, $log, widgetService, settings, sidebarService){
+	.controller("SidebarController", ['$scope', '$log', 'widgetService', 'config', 'sidebarService', function($scope, $log, widgetService, config, sidebarService){
 
 		$scope.close = function(){
 			sidebarService.close();
 		}
 		
 		$scope.user = {
-			avatar: settings.user.avatar,
-			email: settings.user.email,
-			firstName: settings.user.firstName,
-			lastName: settings.user.lastName,
-			displayName: settings.user.firstName ? settings.user.firstName : settings.user.email
+			avatar: config.user.avatar,
+			email: config.user.email,
+			firstName: config.user.firstName,
+			lastName: config.user.lastName,
+			displayName: config.user.firstName ? config.user.firstName : config.user.email
 		};
 
 

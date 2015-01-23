@@ -61,38 +61,62 @@ angular
     /**
      * Account service
      */
-    .factory('accountService', ['$http', 'settings', '$log', function($http, settings, $log){
+    .factory('accountService', ['$http', 'config', '$log', function($http, config, $log){
 
         return {
-            update: function( id, data ){
-                console.log(data);
-                return $http.put(settings.routes.account.update + '/' + id, data)
+            
+            refreshUser: function(){
+                return $http.get(config.routes.account.get)
+                        .then(function(data) {
+                            config.user = data.data;
+                            $log.debug('User refreshed successfully!', data.data);
+                            return data.data;
+                        })
+                        .catch(function(error) {
+                            $log.error('Failure refreshing user', error);
+                            throw Error(config.messages.errors.unableToLoad);
+                        });
+            },
+            
+            update: function( data, refreshUser ){
+                var that = this;
+                return $http.put(config.routes.account.update, data)
                     .then(function(data) {
                         $log.debug('Account updated successfully!', data.data);
+                        if(refreshUser === true){
+                            return that.refreshUser();
+                        }
                         return data.data;
                     })
                     .catch(function(err) {
                         $log.error('Failure while updating account', err);
-                        throw new Error(settings.messages.errors.unableToUpdate);
+                        throw new Error(config.messages.errors.unableToUpdate);
                     });
             },
 
-            get: function( id ){
-                return $http.get(settings.routes.account.get + '/' + id)
-                    .then(function(data) {
-                        $log.debug('Account loaded successfully!', data.data);
-                        return data.data;
-                    })
-                    .catch(function(error) {
-                        $log.error('Failure loading account', error);
-                        throw Error(settings.messages.errors.unableToLoad);
-                    });
+            //get: function( id ){
+            //    return $http.get(config.routes.account.get)
+            //        .then(function(data) {
+            //            $log.debug('Account loaded successfully!', data.data);
+            //            return data.data;
+            //        })
+            //        .catch(function(error) {
+            //            $log.error('Failure loading account', error);
+            //            throw Error(config.messages.errors.unableToLoad);
+            //        });
+            //},
+            
+            updateSettings: function( settings, refreshUser ){
+                return this.update({
+                    settings: settings
+                }, refreshUser);
+                
             }
         }
 
     }])
 
-    .factory('modalService', ['$rootScope', '$http', 'settings', '$modal', function($rootScope, $http, settings, $modal){
+    .factory('modalService', ['$rootScope', '$http', 'config', '$modal', function($rootScope, $http, config, $modal){
         return {
             simpleError: function(message){
                 $modal.open({
@@ -132,7 +156,7 @@ angular
         }
     }])
 
-    .factory('notifService', ['$rootScope', '$http', 'settings', 'toastr', function($rootScope, $http, settings, toastr){
+    .factory('notifService', ['$rootScope', '$http', 'config', 'toastr', function($rootScope, $http, config, toastr){
         return {
             error: function(message){
                 return toastr.error(message);
@@ -156,30 +180,30 @@ angular
      * Widget service
      *
      */
-    .factory('widgetService', ['$rootScope', '$http', '$log', 'settings', function($rootScope, $http, $log, settings){
+    .factory('widgetService', ['$rootScope', '$http', '$log', 'config', function($rootScope, $http, $log, config){
 
         return {
             get: function(){
-                return $http.get(settings.routes.widgets.get)
+                return $http.get(config.routes.widgets.get)
                     .then(function(data) {
                         $log.debug('Widgets loaded successfully!', data.data);
                         return data.data;
                     })
                     .catch(function(error) {
                         $log.error('Failure loading widgets');
-                        throw new Error(settings.messages.errors.widgets.unableToLoad);
+                        throw new Error(config.messages.errors.widgets.unableToLoad);
                     });
             },
 
             update: function( widget ){
-                return $http.put(settings.routes.widgets.update, {widget: widget})
+                return $http.put(config.routes.widgets.update, {widget: widget})
                     .then(function(data) {
                         $log.debug('Widget updated successfully!', data.data);
                         return data.data;
                     })
                     .catch(function(err) {
                         $log.error('Failure while updating widget', err);
-                        throw new Error(settings.messages.errors.widgets.unableToUpdate);
+                        throw new Error(config.messages.errors.widgets.unableToUpdate);
                     });
             },
 
@@ -213,7 +237,7 @@ angular
 
     }])
 
-    .factory('geolocationService', ['$q','$rootScope','$window','settings',function ($q,$rootScope,$window,settings) {
+    .factory('geolocationService', ['$q','$rootScope','$window','config',function ($q,$rootScope,$window,config) {
         return {
             getLocation: function (opts) {
 
@@ -229,19 +253,19 @@ angular
                             case 1:
                                 //$rootScope.$broadcast('error',geolocation_msgs['errors.location.permissionDenied']);
                                 //$rootScope.$apply(function() {
-                                    deferred.reject(settings.messages.errors.geolocation.permissionDenied);
+                                    deferred.reject(config.messages.errors.geolocation.permissionDenied);
                                 //});
                                 break;
                             case 2:
                                 //$rootScope.$broadcast('error',geolocation_msgs['errors.location.positionUnavailable']);
                                 //$rootScope.$apply(function() {
-                                    deferred.reject(settings.messages.errors.geolocation.positionUnavailable);
+                                    deferred.reject(config.messages.errors.geolocation.positionUnavailable);
                                 //});
                                 break;
                             case 3:
                                 //$rootScope.$broadcast('error',geolocation_msgs.errors.geolocation.timeout);
                                 //$rootScope.$apply(function() {
-                                    deferred.reject(settings.messages.errors.geolocation.timeout);
+                                    deferred.reject(config.messages.errors.geolocation.timeout);
                                 //});
                                 break;
                         }
@@ -251,7 +275,7 @@ angular
                 {
                     //$rootScope.$broadcast('error',messages.errors.geolocation.unsupportedBrowser);
                     //$rootScope.$apply(function(){deferred.reject(messages.errors.geolocation.unsupportedBrowser);});
-                    deferred.reject(settings.messages.errors.geolocation.unsupportedBrowser);
+                    deferred.reject(config.messages.errors.geolocation.unsupportedBrowser);
                 }
                 return deferred.promise;
             }

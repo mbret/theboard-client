@@ -16,16 +16,16 @@ angular
      * Use declarative approach
      * Use it with <title page-title></title>
      */
-    .directive('pageTitle', ['$rootScope', '$timeout', 'settings',
-        function($rootScope, $timeout, settings){
+    .directive('pageTitle', ['$rootScope', '$timeout', 'config',
+        function($rootScope, $timeout, config){
             return {
                 restrict: 'A',
                 link: function(scope, element, attr) {
                     var listener = function(event, toState, toParams, fromState, fromParams) {
                         // Default title - load on Dashboard 1
-                        var title = settings.app.pageTitle + ' | Home';
+                        var title = config.pageTitle + ' | Home';
                         // Create your own title pattern
-                        if (toState.data && toState.data.pageTitle) title = settings.app.pageTitle + ' | ' + toState.data.pageTitle;
+                        if (toState.data && toState.pageTitle) title = config.pageTitle + ' | ' + toState.data.pageTitle;
                         $timeout(function() {
                             element.text(title);
                         });
@@ -42,8 +42,8 @@ angular
      * Control the sidebar component
      * For now it only reset the state when route change. In that way the sidebar is always reset when user leave the /board state
      */
-    .directive('sidebar', ['$rootScope', '$timeout', 'settings', 'sidebarService',
-        function($rootScope, $timeout, settings, sidebarService){
+    .directive('sidebar', ['$rootScope', '$timeout', 'config', 'sidebarService',
+        function($rootScope, $timeout, config, sidebarService){
             return {
                 restrict: 'A',
                 link: function(scope, element, attrs) {
@@ -71,8 +71,8 @@ angular
      * Apply the plugin metis menu to the element that have the directive
      * (in our app it come to the sidebar ul)
      */
-    .directive('metisMenu', ['$rootScope', '$timeout', 'settings',
-        function($rootScope, $timeout, settings){
+    .directive('metisMenu', ['$rootScope', '$timeout', 'config',
+        function($rootScope, $timeout, config){
             return {
                 restrict: 'A',
                 link: function(scope, element, attr) {
@@ -82,6 +82,42 @@ angular
             }
         }
     ])
+    
+    /**
+     * icheck - Directive for custom checkbox icheck
+     */
+    .directive('icheck', ['$timeout', function icheck($timeout) {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function($scope, element, $attrs, ngModel) {
+                return $timeout(function() {
+                    var value;
+                    value = $attrs['value'];
+
+                    $scope.$watch($attrs['ngModel'], function(newValue){
+                        $(element).iCheck('update');
+                    })
+
+                    return $(element).iCheck({
+                        checkboxClass: 'icheckbox_square-green',
+                        radioClass: 'iradio_square-green'
+                    }).on('ifChanged', function(event) {
+                        if ($(element).attr('type') === 'checkbox' && $attrs['ngModel']) {
+                            $scope.$apply(function() {
+                                return ngModel.$setViewValue(event.target.checked);
+                            });
+                        }
+                        if ($(element).attr('type') === 'radio' && $attrs['ngModel']) {
+                            return $scope.$apply(function() {
+                                return ngModel.$setViewValue(value);
+                            });
+                        }
+                    });
+                });
+            }
+        };
+    }])
 
     /**
      * widget-iframe directive
@@ -213,7 +249,7 @@ angular
      *
      * http://srobbin.com/jquery-plugins/backstretch/
      */
-    .directive('ngBackstretch', ['settings', '$state', '$rootScope', function(settings, $state, $rootScope) {
+    .directive('ngBackstretch', ['config', '$state', '$rootScope', function(config, $state, $rootScope) {
 
             if (typeof $.fn.backstretch !== 'function')
                 throw new Error('ngBackstretch | Please make sure the jquery backstretch plugin is included before this directive is added.');
@@ -236,7 +272,7 @@ angular
                         // backstretch take an array of url so we take settings
                         // and create an array with image and url
                         var urls = [];
-                        angular.forEach(settings.user.backgroundImages, function(image){
+                        angular.forEach(config.user.backgroundImages, function(image){
                             urls.push(image);
                         });
                         // Instead of doing that we could have pass url directly or also use ng-backstrench=[...] in the html
@@ -264,14 +300,13 @@ angular
                             }
                             else{
                                 element.backstretch(attr.ngBackstretch , {
-                                    duration: settings.user.backgroundImagesInterval,
+                                    duration: config.user.backgroundImagesInterval,
                                     fade: 750
                                 });
                                 isCreated = true;
                             }
                         }
                         else{
-                            console.log('PAUSE')
                             if( isCreated ){
                                 element.backstretch('pause');
                             }
