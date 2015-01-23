@@ -228,10 +228,52 @@ angular
              * @returns {boolean}
              */
             hasSamePosition: function( widget, widgetToCompare){
-                return (widget.col == widgetToCompare.row
-                && widget.row == widgetToCompare.row
-                && widget.sizeX == widgetToCompare.sizeX
-                && widget.sizeY == widgetToCompare.sizeY);
+                return (widget.col === widgetToCompare.col
+                && widget.row === widgetToCompare.row
+                && widget.sizeX === widgetToCompare.sizeX
+                && widget.sizeY === widgetToCompare.sizeY);
+            },
+
+            /**
+             * Function that handle the widget update on action
+             * - Get the new widget
+             * - Compare this widget to all other widgets
+             * - Check the equality between this widget and the list of previous widget
+             * 	if one eq found 	=> this widget has not been dragged or resized (the old is equal to the new)
+             *	if no eq found 		=> this widget is new so update it
+             *
+             * - When success we also update the widget in previous state etc
+             * @todo remove use of notifService and return a promise (always)
+             */
+            updateWidgetIfChanged: function(widgetToUpdate, widgetsPreviousState, notifService){
+                var that = this;
+                // loop over all widget, if there are one equality, it means that the widget is still at the same place
+                var widgetHasNewPlace = true;
+                var key = null;
+                angular.forEach(widgetsPreviousState, function(obj, objKey){
+    
+                    if(obj.id == widgetToUpdate.id){
+                        key = objKey; // keep reference to update previous widgets
+                        //$log.debug(obj, widgetToUpdate);
+                        if( that.hasSamePosition(obj, widgetToUpdate) ){
+                            widgetHasNewPlace = false;
+                        }
+                    }
+    
+                });
+                // If there are different then update widget
+                if( widgetHasNewPlace ){
+                    $log.debug('sdfsdf');
+                    return that.update( widgetToUpdate )
+                        .then(function( widgetUpdated ){
+                            notifService.success( config.messages.widgets.updated );
+                            widgetsPreviousState[key] = angular.copy(widgetToUpdate);
+                        })
+                        .catch(function(err){
+                            notifService.error( err.message );
+                        });
+                }
+                return false;
             }
         }
 

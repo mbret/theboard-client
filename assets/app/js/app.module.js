@@ -55,7 +55,8 @@
 				width: 'auto', // can be an integer or 'auto'. 'auto' scales gridster to be the full width of its containing element
 				colWidth: 300, // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
 				margins: [20, 20], // the pixel distance between each widget
-				outerMargin: true, // whether margins apply to outer edges of the grid
+				outerMargin: true, // whether margins apply to outer edges of the grid,
+				floating: false, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
 				resizable: {
 					enabled: true,
 					handles: ['n', 'e', 's', 'w', 'ne', 'se', 'sw', 'nw'],

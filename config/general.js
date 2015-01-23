@@ -13,8 +13,10 @@ module.exports = {
         default: {
             avatar: 'avatar.jpg',
             banner: 'user_banner.jpg',
+            backgroundImages: [ 'board_wall_default.jpg', 'board_wall1_default.jpg', 'board_wall2_default.jpg' ],
+            backgroundImagesInterval: 5000,
             settings: {
-                widgetsBorders: true
+                widgetsBorders: false
             }
         },
         settings: {

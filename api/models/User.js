@@ -9,30 +9,12 @@ var User = {
         firstName: { type: 'string' },
         lastName: { type: 'string' },
         backgroundImagesInterval: { type: 'integer' },
-        backgroundImages: { type: 'array' },
+        backgroundImages: { type: 'array', required:false },
         
-        avatar: { type: 'string', required: false },
-        banner: { type: 'string', required: false },
+        avatar: { type: 'string', required: false }, // default value set in lifecycle callback
+        banner: { type: 'string', required: false }, // default value set in lifecycle callback
 
         settings: { collection:'userSetting', via: 'user' },
-        
-        getAvatar: function(){
-            if( _.isUndefined(this.avatar) || _.isNull(this.avatar)){
-                return sails.config.imagesURL + '/' + sails.config.user.default.avatar;
-            }
-            else{
-                return this.avatar;
-            }
-        },
-
-        getBanner: function(){
-            if( _.isUndefined(this.banner) || _.isNull(this.banner)){
-                return sails.config.imagesURL + '/' + sails.config.user.default.banner;
-            }
-            else{
-                return this.banner;
-            }
-        },
 
         /**
          * Return the value of the asked settings
@@ -80,12 +62,55 @@ var User = {
             });
             data.config = userSettings;
             
-            data.avatar = this.getAvatar();
-            data.banner = this.getBanner();
             return data;
             
         }
         
+    },
+
+    beforeCreate: function(values, cb){
+        // check avatar
+        if( _.isUndefined(values.avatar) || _.isNull(values.avatar)){
+            values.avatar = this._getDefaultAvatar();
+        }
+        // Check banner
+        if( _.isUndefined(values.banner) || _.isNull(values.banner)){
+            values.banner = this._getDefaultBanner();
+        }
+        // Check backgroundImages
+        if(_.isUndefined(values.backgroundImages) || _.isEmpty(values.backgroundImages)){
+            values.backgroundImages = this._getDefaultBackgroundImages();
+        }
+        // Check backgroundImagesInterval
+        if( _.isUndefined(values.backgroundImagesInterval) || _.isNull(values.backgroundImagesInterval)){
+            values.backgroundImagesInterval = this._getDefaultBackgroundImagesInterval();
+        }
+        console.log(values);
+        return cb();
+    },
+
+    beforeUpdate: function(values, cb){
+        return cb();
+    },
+
+    _getDefaultAvatar: function(){
+        return sails.config.imagesURL + '/' + sails.config.user.default.avatar;
+    },
+
+    _getDefaultBanner: function(){
+        return sails.config.imagesURL + '/' + sails.config.user.default.banner;
+    },
+
+    _getDefaultBackgroundImages: function(){
+        var bgImages = [];
+        _.forEach(sails.config.user.default.backgroundImages, function(image){
+            bgImages.push(sails.config.imagesURL + '/' + image)
+        });
+        return bgImages;
+    },
+
+    _getDefaultBackgroundImagesInterval: function(){
+        return sails.config.user.default.backgroundImagesInterval;
     }
 };
 

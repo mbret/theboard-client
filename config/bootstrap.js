@@ -54,17 +54,17 @@ module.exports.bootstrap = function(cb) {
             row: 0,
             col: 0
       }),
-      Widget.create({
-          identity: 'Widget clock',
-          identityHTML: 'widget-clock',
-          url: 'widgets/clock/widget.html',
-          baseURL: 'widgets/clock/widget.html',
-          backgroundColor: '#202020',
-          sizeX: 2,
-          sizeY: 1,
-          row: 0,
-          col: 2
-      }),
+      //Widget.create({
+      //    identity: 'Widget clock',
+      //    identityHTML: 'widget-clock',
+      //    url: 'widgets/clock/widget.html',
+      //    baseURL: 'widgets/clock/widget.html',
+      //    backgroundColor: '#202020',
+      //    sizeX: 2,
+      //    sizeY: 1,
+      //    row: 0,
+      //    col: 2
+      //}),
       Widget.create({
           identity: 'Widget sample',
           identityHTML: 'widget-sample',
@@ -101,18 +101,17 @@ module.exports.bootstrap = function(cb) {
       if( sails.config.environment == 'development' ){
           return User.create({
               email    : 'user@gmail.com',
-              backgroundImagesInterval: 5000,
-              backgroundImages: [
-                  sails.config.dataURL + '/img/board (2).jpg',
-                  sails.config.dataURL + '/img/board (3).jpg',
-                  sails.config.dataURL + '/img/board (4).jpg',
-                  sails.config.dataURL + '/img/board (5).jpg',
-                  sails.config.dataURL + '/img/board (6).jpg',
-                  sails.config.dataURL + '/img/board (7).jpg',
-                  sails.config.dataURL + '/img/board (8).jpg',
-                  sails.config.dataURL + '/img/board (9).jpg']
+              //backgroundImages: [
+              //    sails.config.dataURL + '/img/board (2).jpg',
+              //    sails.config.dataURL + '/img/board (3).jpg',
+              //    sails.config.dataURL + '/img/board (4).jpg',
+              //    sails.config.dataURL + '/img/board (5).jpg',
+              //    sails.config.dataURL + '/img/board (6).jpg',
+              //    sails.config.dataURL + '/img/board (7).jpg',
+              //    sails.config.dataURL + '/img/board (8).jpg',
+              //    sails.config.dataURL + '/img/board (9).jpg']
           }).then(function(user){
-              user.settings.add(UserSetting.buildNewSetting('widgetsBorders', true));
+              user.settings.add(UserSetting.buildNewSetting('widgetsBorders', false));
               return user.save().then(function(user){
                   console.log(user.settings)
                   return user;

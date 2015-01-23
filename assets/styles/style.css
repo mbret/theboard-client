@@ -113,9 +113,9 @@
 .board #page-wrapper{
     margin-left:0px;
 }
-.board #page-wrapper.gray-bg{
-    background-color: inherit;
-    
+.board #page-wrapper{
+    /*background-color: #2f4050;*/
+    background-color: inherit; /* we can see backstretch */
 }
 .board .pace .pace-progress{
     left:0;

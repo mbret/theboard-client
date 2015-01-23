@@ -88,7 +88,7 @@ angular
 					
 					// create promise and push it to run job later
 					var deferred = $q.defer();
-					promises.push(deferred);
+					promises.push(deferred.promise);
 
 					// =============================
 					// Fill permissions part
@@ -104,6 +104,7 @@ angular
 						permissions.email = config.user.email;
 					}
 					// location (async)
+					// We create a new promise (with anonymous function)
 					(function(){
 						console.log(widget);
 						var deferred2 = $q.defer();
@@ -116,7 +117,6 @@ angular
 								})
 								.catch(function(err){
 									$log.debug('User has not accepted location, permission is set to null');
-									modalService.simpleError(err.message);
 									deferred2.reject(err);
 								});
 						}
@@ -126,28 +126,24 @@ angular
 						return deferred2.promise;
 					})()
 					.then(function(){
-						console.log(widget);
+						//console.log(widget);
 						widget.permissions = permissions;
-							
 						// Fill URL of iframe
 						widget.iframeURL = $window.URI(widget.baseURL).search({widget:JSON.stringify(widget)}).toString();
 						// Get user pref for specific style for widget
 						widget.borders = config.user.config.widgetsBorders;
-						return;
 					})
 					.catch(function(err){
-						// nothing
+						return deferred.reject(err);
 					})
 					.finally(function(){
-						
-						// Init the iframe url
 						return deferred.resolve();
 					});
-					// nothing should happens here
 				});
 
 				// Run loop job
-				$q.all(promises).then(function(){
+				// catch is handle by superior promise
+				return $q.all(promises).then(function(){
 					$timeout(function(){
 						$scope.widgets = widgets;
 					});
@@ -156,6 +152,8 @@ angular
 
 			})
 			.catch(function(error){
+				// This catch handle error from all subsequent code
+				// If error happens when set permission or promises loop for example
 				modalService.simpleError(error.message);
 			});
 
@@ -167,7 +165,25 @@ angular
 			 */
 			// Inject to view the gridster configuration
 			$scope.gridsterOpts = config.gridsterOpts;
-
+			
+			// Set event function when widgets are dragged
+			$scope.gridsterOpts.draggable = {
+				stop: function(event, $element, widget) {
+					return widgetService.updateWidgetIfChanged( widget, widgetsPreviousState, notifService);
+				}
+			};
+			
+			// Set event function when widgets are resized
+			$scope.gridsterOpts.resizable = {
+				/**
+				 * When a widget has been resized
+				 *
+				 */
+				stop: function(event, $element, widget) {
+					return widgetService.updateWidgetIfChanged( widget, widgetsPreviousState, notifService);
+				}
+			};
+			
 			// When the window change and gridster has been resized in order to be displayed
 			$scope.$on('gridster-resized', function(size){
 
@@ -196,63 +212,6 @@ angular
 					return;
 				}
 			}, true);
-			$scope.gridsterOpts.draggable = {
-				/**
-				 * When a widget has been dragged
-				 *
-				 */
-				stop: function(event, $element, widget) {
-					return updateWidgetIfNecessary( widget, widgetsPreviousState);
-				}
-			};
-			$scope.gridsterOpts.resizable = {
-				/**
-				 * When a widget has been resized
-				 *
-				 */
-				stop: function(event, $element, widget) {
-					return updateWidgetIfNecessary( widget, widgetsPreviousState);
-				}
-			};
-
-			/**
-			 * Function that handle the widget update on action
-			 * - Get the new widget
-			 * - Compare this widget to all other widgets
-			 * - Check the equality between this widget and the list of previous widget
-			 * 	if one eq found 	=> this widget has not been dragged or resized (the old is equal to the new)
-			 *	if no eq found 		=> this widget is new so update it
-			 *
-			 * - When success we also update the widget in previous state etc
-			 */
-			function updateWidgetIfNecessary(widgetToUpdate, widgetsPreviousState){
-				// loop over all widget, if there are one equality, it means that the widget is still at the same place
-				var widgetHasNewPlace = true;
-				var key = null;
-				angular.forEach(widgetsPreviousState, function(obj, objKey){
-
-					if(obj.id == widgetToUpdate.id){
-						key = objKey; // keep reference to update previous widgets
-						$log.debug(obj, widgetToUpdate);
-						if( widgetService.hasSamePosition(obj, widgetToUpdate) ){
-							widgetHasNewPlace = false;
-						}
-					}
-
-				});
-				// If there are different then update widget
-				if( widgetHasNewPlace ){
-					return widgetService.update( widgetToUpdate )
-						.then(function( widgetUpdated ){
-							notifService.success( config.messages.widgets.updated );
-							widgetsPreviousState[key] = angular.copy(widgetToUpdate);
-						})
-						.catch(function(err){
-							notifService.error( err.message );
-						});
-				}
-			}
-
 		}
 	])
 
