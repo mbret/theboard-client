@@ -30,22 +30,6 @@
 							widget="widget"
 							ng-class="{'with-border': widget.borders}"
 							ng-style="{'background-color': widget.backgroundColor}" >
-
-						<!--Action buttons-->
-						<div layout="row" layout-align="start center" class="widget-buttons">
-							<span class="widget-options-button"  aria-label="Options" ng-click="showOptions($event, widget.identityHTML)">
-								<i class="fa fa-cog"></i>
-							</span>
-							<span class="widget-dragger-button"  aria-label="Move">
-								<i class="fa fa-arrows"></i>
-							</span>
-						</div>
-
-						<!--Widget component-->
-						<iframe id="{{widget.identityHTML}}"
-								ng-src="{{widget.iframeURL}}"
-								class="widget-iframe {{widget.tile}}"></iframe>
-
 					</widget-iframe><!-- end: widget container -->
 				</li>
 			</ul>

@@ -3,30 +3,30 @@
  * The library will use it instead of url (which is filled by application automatically)
  *
  */
-var widgetConfiguration = {
-
-    widget: {
-        configuration: {
-            identity: 'Velib Nancy',
-
-            // Require information from user without action from user
-            permissions: {
-                location: 'Nancy, France'
-            },
-
-            // Options are information that can be changed by user
-            options: {
-                station: {
-                    city: "Paris, France",
-                    station: "22 RUE DE LA PERLE"
-                }
-            }
-        }
-    },
-
-    log: 'debug'
-
-};
+//var widgetConfiguration = {
+//
+//    widget: {
+//        configuration: {
+//            identity: 'Velib Nancy',
+//
+//            // Require information from user without action from user
+//            permissions: {
+//                location: 'Nancy, France'
+//            },
+//
+//            // Options are information that can be changed by user
+//            options: {
+//                station: {
+//                    city: "Paris, France",
+//                    station: "22 RUE DE LA PERLE"
+//                }
+//            }
+//        }
+//    },
+//
+//    log: 'debug'
+//
+//};
 
 (function(){
 

@@ -15,7 +15,8 @@ var User = {
         banner: { type: 'string', required: false }, // default value set in lifecycle callback
 
         settings: { collection:'userSetting', via: 'user' },
-
+        widgets: {collection:'userWidget', via: 'user'},
+        
         /**
          * Return the value of the asked settings
          * Return the default value if the setting is not yet set
@@ -45,6 +46,28 @@ var User = {
             }
         },
 
+        /**
+         * Register a new widget 
+         * This method use a queue so you NEED to call user.save in order to save these change
+         * @param widget
+         */
+        registerWidget: function(widget){
+            var registered = {
+                sizeX: widget.sizeX,
+                sizeY: widget.sizeY,
+                row: widget.row,
+                col: widget.col,
+                widget: widget.id
+            };
+            // fill options
+            var options = {};
+            _.forEach(widget.options, function(option, index){
+               options[option.id] = (option.default) ?  option.default : null;
+            });
+            registered.options = options;
+            this.widgets.add(registered);
+        },
+        
         /**
          * Return a user object for the view
          * all sensitive data are removed
@@ -85,7 +108,6 @@ var User = {
         if( _.isUndefined(values.backgroundImagesInterval) || _.isNull(values.backgroundImagesInterval)){
             values.backgroundImagesInterval = this._getDefaultBackgroundImagesInterval();
         }
-        console.log(values);
         return cb();
     },
 

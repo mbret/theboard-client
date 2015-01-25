@@ -83,6 +83,9 @@ module.exports = {
             success: {
                 form:{
                     updated: 'Update completed successfully!'
+                },
+                widget: {
+                    updated: 'Widget updated!'
                 }
             },
             widgets: {

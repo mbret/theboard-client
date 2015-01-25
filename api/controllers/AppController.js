@@ -26,38 +26,73 @@ module.exports = {
 		res.ok(config);
 	},
 
+	/**
+	 * Return widgets of logged user
+	 * @param req
+	 * @param res
+	 */
 	getWidgets: function(req, res){
-
-		Widget.find().then(function(widgets){
-			return res.ok(widgets);
+		var user = req.user;
+		var data = [];
+		UserWidget.find({user: user.id}).populate('widget').then(function(results){
+			_.forEach(results, function(result){
+				// We create a widget from default widget
+				// And we overwrite with the user widget settings
+				var widget = _.assign(result.widget, {
+					sizeX: result.sizeX,
+					sizeY: result.sizeY,
+					row: result.row,
+					col: result.col
+				});
+				_.forEach(widget.options, function(option, index){
+					option.value = result.getOptionValue(option.id);
+				});
+				data.push(widget);
+			});
+			return res.ok(data);
 		})
-
 	},
 
 	/**
-	 * Update a widget
+	 * Update a widget for a specific user
 	 * @param req
 	 * @param res
 	 */
 	updateWidget: function(req, res){
+		var user = req.user;
+		var widgetID = req.param('id');
 
-		var widget = req.param('widget');
-		var widgetsToUpdate = {
-			sizeX: widget.sizeX,
-			sizeY: widget.sizeY,
-			row: widget.row,
-			col: widget.col
-		};
-
-		Widget.update( {id:widget.id}, widgetsToUpdate, function(err, widgets){
+		// Load widget
+		UserWidget.findOne({user:user.id, widget:widgetID}, function(err, widget){
 			if(err){
 				return res.serverError(err);
 			}
+			if(!widget) return res.notFound();
+			
+			// Update pos
+			widget.sizeX = req.param('sizeX', widget.sizeX);
+			widget.sizeY = req.param('sizeY', widget.sizeY);
+			widget.row = req.param('row', widget.row);
+			widget.col = req.param('col', widget.col);
+			
+			// Option update
+			var options = req.param('options', null);
+			_.forEach(options, function(value, name){
+				widget.setOptionValue(name, value);
+			});
+			console.log(widget.options);
 
-			if(!widgets || widgets.length < 1) return res.notFound();
+			widget.save(function(err, widgets){
+				if(err){
+					return res.serverError(err);
+				}
 
-			return res.ok(widgets);
+				if(!widgets || widgets.length < 1) return res.notFound();
+
+				return res.ok(widgets);
+			});
 		});
+		
 	},
 
 	getAccountData: function(req, res){

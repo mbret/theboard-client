@@ -176,18 +176,124 @@ angular
         }
     }])
 
+    .factory('Widget', function($window, $http, config, $log){
+        
+        var Widget = function(widget){
+            this.id = widget.id;
+            this.iframeURL = widget.iframeURL;
+            
+            // @todo remove it and set all attribute in hard
+            for(var prop in widget){
+                this[prop] = widget[prop];
+            }
+        }
+        
+        Widget.prototype.setOptionValue = function(id, value){
+            angular.forEach(this.options, function(option){
+                if(option.id === id){
+                    option.value = value;
+                }
+            })
+        };
+        
+        /**
+         * Take an associative array of options
+         * @param options
+         */
+        Widget.prototype.setOptionsValues = function(options){
+            var that = this;
+            angular.forEach(options, function(value, id){
+                that.setOptionValue(id, value);
+            });
+        };
+
+        /**
+         * WARNING: if you linked the url to an iframe you will occur an iframe reload
+         */
+        Widget.prototype.rebuildIframeURL = function(){
+            // prepare options for widget
+            var options = {};
+            angular.forEach(this.options, function(option, index){
+                options[option.id] = option.value;
+            });
+
+            // Prepare finally the widget conf to send to widget
+            // It contain only needed information
+            var configuration = {
+                identity: this.identity,
+                identityHTML: this.identityHTML,
+                permissions: this.permissions,
+                options: options
+            };
+            this.iframeURL = $window.URI(this.baseURL).search({widget:JSON.stringify(configuration)}).toString();
+        };
+
+        Widget.prototype.save = function(){
+            return this._save({
+                sizeX: this.sizeX,
+                sizeY: this.sizeY,
+                row: this.row,
+                col: this.col,
+                options: this.options
+            });
+        };
+
+        /*
+         * Private methods
+         */
+
+        Widget.prototype._save = function(data){
+            return $http.put(config.routes.widgets.update + '/' + this.id, data)
+                .then(function(data) {
+                    $log.debug('Widget updated successfully!', data.data);
+                    return data.data;
+                })
+                .catch(function(err) {
+                    $log.error('Failure while updating widget', err);
+                    throw new Error(config.messages.errors.widgets.unableToUpdate);
+                });
+        };
+        
+        return Widget;
+        
+    })
+    
     /**
      * Widget service
-     *
+     * http://blog.revolunet.com/blog/2014/02/14/angularjs-services-inheritance/
      */
-    .factory('widgetService', ['$rootScope', '$http', '$log', 'config', function($rootScope, $http, $log, config){
+    .factory('widgetService', function($rootScope, $http, $log, config, $window, Widget){
 
         return {
+
+            //
+            _buildBaseWidget: function(widgets){
+                var models = [];
+                angular.forEach(widgets, function(widget){
+                    models.push( new Widget(widget) );
+                });
+                $log.debug('Widgets built as models successfully!', models);
+                return models;
+            },
+
+            _update: function(id, data){
+                return $http.put(config.routes.widgets.update + '/' + id, data).then(function(data) {
+                    $log.debug('Widget updated successfully!', data.data);
+                    return data.data;
+                })
+                    .catch(function(err) {
+                        $log.error('Failure while updating widget', err);
+                        throw new Error(config.messages.errors.widgets.unableToUpdate);
+                    });
+            },
+            
             get: function(){
+                var that = this;
                 return $http.get(config.routes.widgets.get)
                     .then(function(data) {
                         $log.debug('Widgets loaded successfully!', data.data);
-                        return data.data;
+                        var widgets = data.data;
+                        return that._buildBaseWidget(widgets);
                     })
                     .catch(function(error) {
                         $log.error('Failure loading widgets');
@@ -196,16 +302,15 @@ angular
             },
 
             update: function( widget ){
-                return $http.put(config.routes.widgets.update, {widget: widget})
-                    .then(function(data) {
-                        $log.debug('Widget updated successfully!', data.data);
-                        return data.data;
-                    })
-                    .catch(function(err) {
-                        $log.error('Failure while updating widget', err);
-                        throw new Error(config.messages.errors.widgets.unableToUpdate);
-                    });
+                return this._update(widget.id, {
+                    sizeX: widget.sizeX,
+                    sizeY: widget.sizeY,
+                    row: widget.row,
+                    col: widget.col
+                });
             },
+            
+            
 
             sendSignal: function( widget, signal ){
                 //console.log(widget);
@@ -215,8 +320,15 @@ angular
                 return;
             },
             
+            
+            
             reloadAll: function(){
                 $rootScope.$broadcast('widget-reload');
+                return;
+            },
+            
+            reloadWidget: function(widget){
+                $rootScope.$broadcast('widget-reload', widget);
                 return;
             },
 
@@ -277,7 +389,7 @@ angular
             }
         }
 
-    }])
+    })
 
     .factory('geolocationService', ['$q','$rootScope','$window','config',function ($q,$rootScope,$window,config) {
         return {

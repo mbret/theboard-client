@@ -4,9 +4,6 @@
 
 module.exports = {
 
-    //identity: 'widget',
-
-
     attributes: {
 
         author: 'email',

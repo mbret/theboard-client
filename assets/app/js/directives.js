@@ -134,6 +134,10 @@ angular
             scope: {
                 widget: '=widget'
             },
+            // Here we use a template. It means that everything inside will use the directive controller instead of parent
+            templateUrl: '/app/templates/widget-iframe.tmpl.html',
+            // Link is run after compilation
+            // Separation of concern (here is DOM code)
             link: function(scope, element, attrs) {
 
                 // Get jquery iframe element
@@ -153,27 +157,12 @@ angular
                  */
                 $widgetElt.bind("load" , function(e){
                     
-                    // This version use the iframeURL wich is linked directly to ng-src
-                    // It cause a reload of all widget, then it's not nice
-                    //var iframeURL = new $window.URI( scope.widget.iframeURL );
-                    //iframeURL.hash( JSON.stringify({signal:"init"}) ); // set hash
-                    //$log.debug('Widget ' + scope.widget.identity + ' has been initalized with URL ' + iframeURL.toString());
-                    //scope.widget.iframeURL = iframeURL.toString();
-
-                    // This version use primary javascript but at least it does not refresh element
-                    //document.getElementById(element[0].id).contentWindow.window.location.hash = JSON.stringify({signal:"init"});
-
                 });
 
                 /**
                  * When user send a signal to widget
                  */
                 scope.$on('widget-signal', function(ev, widget, signal, hash){
-                    //console.log(widgetID);
-                    //var sUrl = document.getElementById( widgetID ).src.replace(/#.*/, '');
-                    //console.log(sUrl);
-                    //console.log( sUrl + hash );
-                    
                     // event to specific widget
                     if( angular.equals(widget, scope.widget) /* widget && widget.identityHTML == scope.widget.identityHTML*/ ){
                         $widgetRawElt.contentWindow.window.location.hash =  encodeURIComponent(hash);
@@ -188,44 +177,61 @@ angular
                     }
                 });
                 
-                scope.$on('widget-reload', function(ev){
-                    $widgetRawElt.contentWindow.window.location.hash = '';
-                    console.log($widgetRawElt.contentWindow.window.location.hash);
-                    console.log($widgetRawElt.contentWindow.window.location.href);
-                    console.log($widgetRawElt.contentDocument.location);
-                    $widgetRawElt.contentDocument.location.reload();
+                scope.$on('widget-reload', function(ev, widget){
+                    if(widget.id === scope.widget.id){
+                        $widgetRawElt.contentWindow.window.location.hash = '';
+                        $widgetRawElt.contentDocument.location.reload();
+                    }
                 });
 
                 
 
             },
-            controller: ['$scope', '$http', '$log', 'widgetService', function($scope, $http, $log, widgetService){
+            // Controller is run after general controller but before link of this directive
+            // It ran before compilation
+            // http://jasonmore.net/angular-js-directives-difference-controller-link/
+            // So we keep separation of concern (here is logic code)
+            controller: function($scope, $element, widgetService, $modal){
 
                 var widget = $scope.widget; // We get widget as its a scoped var from html
-
-                //console.log($scope);
 
                 // Display option menu for specific widget
                 // The dialog use another controller
                 // We pass our sub controller (as the sub controller is defined inside parent he can reach the same var)
                 $scope.showOptions = function($event) {
-                    //console.log(widgetID);
-                    //$mdDialog.show({
-                    //	targetEvent: $event,
-                    //	//parent: angular.element("#" + widget.identityHTML + "-container"),
-                    //	templateUrl: 'app/templates/widget_options.tmpl.html',
-                    //	controller: dialogController,
-                    //	locals: { widget: widget }
-                    //});
+                    var modalInstance = $modal.open({
+                        templateUrl: '/app/templates/widget-iframe-options.tmpl.html',
+                        controller: dialogController,
+                        size: 'sm',
+                        resolve: {
+                            widget: function(){
+                                return widget;
+                            }
+                        }
+                    })
+                    .result.then(function (result) {
+                        $scope.result = result;
+                    }, function () {
+                        $log.info('Modal dismissed at: ' + new Date());
+                    });
                 };
 
                 // Controller for dialog box
                 // We cannot use the same because the dialog is open in another controller with reduce scope
                 // Instead of create new controller alonside others we define here a sub controller
                 // We could have used the global var of the parent controller but we prefer doing a complete declaration (widgetService or widget was available from parent)
-                var dialogController = [ '$scope', '$mdDialog', 'widgetService', 'widget', function($scope, $mdDialog, widgetService, widget){
+                var dialogController = function($scope, $modalInstance, widgetService, widget, modalService, notifService, config){
                     $scope.widget = widget;
 
+                    // Relative to modal
+                    $scope.ok = function(){
+                        $modalInstance.close(true);
+                    };
+                    $scope.cancel = function(){
+                        $modalInstance.dismiss('cancel');
+                    };
+                    
+                    // Relative to widgets
                     $scope.refresh = function(){
                         widgetService.sendSignal( widget, 'refresh' );
                     };
@@ -235,14 +241,68 @@ angular
                     $scope.start = function(){
                         widgetService.sendSignal( widget, 'start' );
                     };
+                    
+                    // Here we prepare different options the widget has configured
+                    // A scope with specific options is created
+                    // The html will loop over all these option and build a form that correspond
+                    $scope.options = []; // This var is used by view to render all form
+                    angular.forEach(widget.options, function(option){
+                        var tmp = {
+                            id: option.id,
+                            label: option.name,
+                            placeholder: option.placeholder,
+                            type: option.type,
+                            name: option.id,
+                            value: option.value
+                        };
+                        // In case of select we need to do some more job
+                        if(tmp.type === 'select'){
+                            tmp.selectOptions = [];
+                            // Loop over all select option to create the ng-options
+                            angular.forEach(option.options, function(label , index){
+                                var selectOption = { label:label, value:index };
+                                tmp.selectOptions.push(selectOption);
+                                if( label === option.value ){
+                                    tmp.value = selectOption;
+                                }
+                            });
+                        }
+                        $scope.options.push(tmp);
+                    });
 
-                    $scope.closeDialog = function() {
-                        // Easily hides most recent dialog shown...
-                        // no specific instance reference is needed.
-                        //$mdDialog.hide();
-                    };
-                }];
-            }]
+                    // Form submit
+                    $scope.updateOptionsFormSubmit = function(){
+                        if($scope.updateOptionsForm.$valid){
+
+                            // build options data
+                            // Just an associative array of options
+                            var options = {};
+                            // Loop over all options bound with <form>
+                            // Set the new value to the widget
+                            angular.forEach($scope.options, function(option, index){
+                                if(option.type === 'select'){
+                                    widget.setOptionValue(option.id, option.value.label);
+                                }
+                                else{
+                                    widget.setOptionValue(option.id, option.value);
+                                }
+                            });
+                            widget.save(options)
+                                .then(function(){
+                                    // Update local widget
+                                    notifService.success( config.messages.success.widget.updated );
+                                    widget.rebuildIframeURL(); // this method cause an automatic refresh
+                                    $scope.ok();
+                                }).catch(function(err){
+                                    modalService.simpleError(err.message);
+                                });
+                        }
+                        else{
+                            notifService.error( config.messages.errors.form.invalid );
+                        }
+                    }
+                };
+            }
         }
 
     }])

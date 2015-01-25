@@ -71,7 +71,7 @@ angular
 			$scope.reloadWidgets = function(){
 				widgetService.reloadAll();
 			};
-			
+
 			/*
 			 * Widget load and init
 			 *
@@ -106,7 +106,6 @@ angular
 					// location (async)
 					// We create a new promise (with anonymous function)
 					(function(){
-						console.log(widget);
 						var deferred2 = $q.defer();
 						if( widget.permissions &&  widget.permissions.indexOf('location') !== -1 ){
 							// get location using geoloc browser api
@@ -124,12 +123,13 @@ angular
 							deferred2.resolve();
 						}
 						return deferred2.promise;
-					})()
-					.then(function(){
+						
+					})().then(function(){
 						//console.log(widget);
-						widget.permissions = permissions;
-						// Fill URL of iframe
-						widget.iframeURL = $window.URI(widget.baseURL).search({widget:JSON.stringify(widget)}).toString();
+						widget.permissions = permissions; // @todo maybe not useful anymore
+
+						widget.rebuildIframeURL(); // We need to build one time the iframe URL, because it's first time ..
+						
 						// Get user pref for specific style for widget
 						widget.borders = config.user.config.widgetsBorders;
 					})
