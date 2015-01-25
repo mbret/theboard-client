@@ -1,34 +1,7 @@
 /**
- * Here is an object that you can use for test.
- * The library will use it instead of url (which is filled by application automatically)
- *
+ * Created by Damien on 25/01/2015.
  */
-    /*
-var widgetConfiguration = {
 
-    widget: {
-        configuration: {
-            identity: 'Velib Nancy',
-
-            // Require information from user without action from user
-            permissions: {
-                location: 'Nancy, France'
-            },
-
-            // Options are information that can be changed by user
-            options: {
-                station: {
-                    city: "Paris, France",
-                    station: "22 RUE DE LA PERLE"
-                }
-            }
-        }
-    },
-
-    log: 'debug'
-
-};
-*/
 (function(){
 
     /**
@@ -64,11 +37,11 @@ var widgetConfiguration = {
     window.Widget = {
 
         //identity: foo // filled by library
-        configuration: {},
+        configuration: null,
 
         // This method is call by the library
         init: function( conf ){
-            this.configuration = _.extend(this.configuration, conf);
+            this.configuration = conf;
             WidgetUtils.log.debug(this.identity + ' is initializing');
             this.initDisplay();
             this.start();
@@ -132,10 +105,7 @@ var widgetConfiguration = {
         },
 
         displayContent: function(){
-            $('.widget-content').html(
-                '<p>Sunday 21 December 2014,'+
-                '</br><span class="widget-component-highlighted">the weather seems clear!</span></p>'
-            );
+            Widget.getDailyWord();
             $('.widget-updated').html('Updated: ' + new Date().toISOString());
         },
 
@@ -158,6 +128,26 @@ var widgetConfiguration = {
                 '<p>Widget is stopped</span></p>'
             );
             $('.widget-updated').html('');
+        },
+
+        getDailyWord: function(){
+            google.load('feeds', '1', {callback : function(){
+                Widget.getFeed();
+            }});
+        },
+
+        getFeed: function() {
+            var feed = new google.feeds.Feed("http://unmotparjour.fr/feed/");
+            feed.load(function (result) {
+                if (!result.error) {
+                    $('.widget-header').html(
+                        '<h1>Mot du jour</h1>'
+                    );
+                    $('.widget-content').html(
+                        '<p>'+result.feed.entries[0].title+' : <br />'+result.feed.entries[0].content+'</p>'
+                    );
+                }
+            });
         }
     };
 
