@@ -41,14 +41,13 @@ angular
 	 * Controllers should never do DOM manipulation or hold DOM selectors; that's where directives and using ng-model come in. Likewise business logic should live in services, not controllers.
 	 * Data should also be stored in services, except where it is being bound to the $scope
 	 */
-	.controller("IndexController", [
-		'$scope', '$http', '$window', '$q', 'config', '$log', '$animate', 'widgetService', 'geolocationService', 'modalService', 'notifService', '$timeout', 'sidebarService',
-		function($scope, $http, $window, $q, config, $log, $animate, widgetService, geolocationService, modalService, notifService, $timeout, sidebarService){
+	.controller("IndexController", function($rootScope, $scope, $http, $window, $q, config, $log, $animate, widgetService, geolocationService, modalService, notifService, $timeout, sidebarService){
 
 			// This var will contain all widget element
 			// These widgets will be placed inside iframe and get from server
 			$scope.widgets = null;
-
+			$scope.lockWidgets = false;
+			
 			// This var save the previous widget state.
 			// If widgets are moved then this var contain all widgets before this move
 			var widgetsPreviousState = null;
@@ -71,6 +70,13 @@ angular
 			$scope.reloadWidgets = function(){
 				widgetService.reloadAll();
 			};
+			$scope.lockOrUnlock = function(){
+				$scope.lockWidgets = !$scope.lockWidgets;
+				if($scope.lockWidgets){
+				}
+				else{
+				}
+			}
 			
 			/*
 			 * Widget load and init
@@ -157,7 +163,6 @@ angular
 				modalService.simpleError(error.message);
 			});
 
-
 			/*
 			 * Gridster part
 			 *
@@ -165,27 +170,36 @@ angular
 			 */
 			// Inject to view the gridster configuration
 			$scope.gridsterOpts = config.gridsterOpts;
-			
+
+
 			// Set event function when widgets are dragged
 			$scope.gridsterOpts.draggable = {
+				start: function(event, $element, widget){
+					$rootScope.$broadcast('backstretch-pause');
+				},
 				stop: function(event, $element, widget) {
+					$rootScope.$broadcast('backstretch-resume');
 					return widgetService.updateWidgetIfChanged( widget, widgetsPreviousState, notifService);
 				}
 			};
 			
 			// Set event function when widgets are resized
 			$scope.gridsterOpts.resizable = {
+				start: function(event, $element, widget){
+					$rootScope.$broadcast('backstretch-pause');
+				},
 				/**
 				 * When a widget has been resized
 				 *
 				 */
 				stop: function(event, $element, widget) {
+					$rootScope.$broadcast('backstretch-resume');
 					return widgetService.updateWidgetIfChanged( widget, widgetsPreviousState, notifService);
 				}
 			};
 			
 			// When the window change and gridster has been resized in order to be displayed
-			$scope.$on('gridster-resized', function(size){
+			$scope.$on('gridster-resized', function(event, size){
 
 			});
 			// Watch item changes
@@ -193,27 +207,10 @@ angular
 			// @todo maybe use a queue here to store change and call server less times
 			$scope.$watch('widgets', function(newWidgets){
 
-				//$log.warn('salut', widgetsPreviousState, newWidgets);
-				// Update widgets on server (only when widgets has been loaded first time)
-				if( widgetsPreviousState != null && ! angular.equals(widgetsPreviousState, newWidgets )){
-
-					//$log.warn('salut', widgetsPreviousState, newWidgets);
-					//return widgetService.update( newWidgets )
-					//	.then(function(){
-					//		$mdToast.show($mdToast.simple().content( settings.messages.widgets.updated ).position('top right'));
-					//	})
-					//	.catch(function(err){
-					//		// ...
-					//		$mdToast.show($mdToast.simple().content(err.message).position('top right'));
-					//	});
-				}
-				else{
-					// widgets are not different so don't make useless call
-					return;
-				}
+				
 			}, true);
 		}
-	])
+	)
 
 	/**
 	 * form validation: http://www.ng-newsletter.com/posts/validations.html

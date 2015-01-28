@@ -35,7 +35,7 @@ module.exports.bootstrap = function(cb) {
           sizeX: 1,
           sizeY: 1,
           row: 0,
-          col: 1
+          col: 0
         }),
         Widget.create({
             identity: 'Widget meteo',
@@ -51,8 +51,8 @@ module.exports.bootstrap = function(cb) {
             },
             sizeX: 1,
             sizeY: 1,
-            row: 0,
-            col: 0
+            row: 1,
+            col: 2
         }),
         //Widget.create({
         //    identity: 'Widget clock',
@@ -77,7 +77,7 @@ module.exports.bootstrap = function(cb) {
           ],
           sizeX: 1,
           sizeY: 1,
-          row: 1,
+          row: 0,
           col: 2
         }),
         Widget.create({
@@ -91,7 +91,7 @@ module.exports.bootstrap = function(cb) {
           sizeX: 1,
           sizeY: 1,
           row: 0,
-          col: 5
+          col: 1
         }),
         Widget.create({
             identity: 'Widget Daily Word',

@@ -130,7 +130,7 @@ window.Widget = {
                         default:
                             icon = Skycons.CLEAR_DAY;
                             console.log(weather.currently);
-                            alert('weather.currently not recognized, go write this code madafaka!');
+                            console.log('weather.currently not recognized, go write this code madafaka!');
                             break;
                     }
                     skycons.set("weather-icon", icon);

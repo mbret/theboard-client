@@ -56,17 +56,17 @@
 				colWidth: 300, // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
 				margins: [20, 20], // the pixel distance between each widget
 				outerMargin: true, // whether margins apply to outer edges of the grid,
-				floating: false, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
+				floating: true, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
 				resizable: {
-					enabled: true,
+					enabled: false,
 					handles: ['n', 'e', 's', 'w', 'ne', 'se', 'sw', 'nw'],
 					start: function(event, $element, widget) {}, // optional callback fired when resize is started,
 					resize: function(event, $element, widget) {}, // optional callback fired when item is resized,
 					stop: function(event, $element, widget) {} // optional callback fired when item is finished resizing
 				},
 				draggable: {
-					enabled: true, // whether dragging items is supported
-					handle: '.widget-dragger-button', // optional selector for resize handle
+					enabled: false, // whether dragging items is supported
+					handle: '.gridster-draggable', // optional selector for resize handle
 					start: function(event, $element, widget) {}, // optional callback fired when drag is started,
 					drag: function(event, $element, widget) {}, // optional callback fired when item is moved,
 					stop: function(event, $element, widget) {} // optional callback fired when item is finished dragging
