@@ -43,23 +43,36 @@ angular
                 })
     }])
 
-    .run(function($rootScope, $state){
+    .config(['$httpProvider', function($httpProvider) {
+        $httpProvider.interceptors.push('myHttpInterceptor');
+    }])
+
+    .run(function($rootScope, $state, $http, $log, notifService, $timeout, config){
 
         $rootScope.$state = $state;
-        //console.log(window.settings);
-        //
-        //// Get Jquery element
-        //var $body = angular.element('body');
-        //
-        //var stack = window.settings.user.backgroundImages;
-        //
-        //changeBG();
-        //setInterval(changeBG, 10000);
-        //
-        //function changeBG(){
-        //	var current = stack.shift();
-        //	$body.css({backgroundImage: 'url("' + window.settings.paths.images + '/' + current + '")'});
-        //	stack.push(current);
-        //}
+
+        // Check for flash message from server
+        // These message can come from login/logout/etc
+        // We display it after Pace is hidden.
+        // @todo if you have a better idea in order to not use directly Pace here give it
+        Pace.on('hide', function(){
+            $http.get(config.routes.flash).then(function(data){
+                $log.debug(data.data);
+                var messages = data.data;
+
+                if(messages.errors){
+                    notifService.error(messages.errors)
+                }
+                if(messages.warnings){
+                    notifService.warning(messages.warnings)
+                }
+                if(messages.success){
+                    notifService.success(messages.success)
+                }
+                if(messages.info){
+                    notifService.info(messages.info)
+                }
+            });
+        });
 
     });

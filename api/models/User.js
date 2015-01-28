@@ -10,7 +10,7 @@ var User = {
         lastName: { type: 'string' },
         backgroundImagesInterval: { type: 'integer' },
         backgroundImages: { type: 'array', required:false },
-        
+        locale: { type:'string', defaultTo: 'en_US' },
         avatar: { type: 'string', required: false }, // default value set in lifecycle callback
         banner: { type: 'string', required: false }, // default value set in lifecycle callback
 

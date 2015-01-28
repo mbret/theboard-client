@@ -10,6 +10,16 @@ module.exports = {
 		var data = {};
     	return res.view('app', data);
   	},
+	
+	getFlashMessages: function(req, res){
+		return res.ok({
+			errors    : req.flash('error'),
+			success : req.flash('success'),
+			warnings  : req.flash('warning'),
+			info: req.flash('info')
+		})	
+		
+	},
 
 	/**
 	 * Return the settings of application

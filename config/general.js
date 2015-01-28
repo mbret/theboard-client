@@ -50,6 +50,7 @@ module.exports = {
             server: '/',
             icons: '/app/icons',
             images: '/app/img',
+            flash: '/flash',
             widgets: {
                 get: '/widgets', // get
                 update: '/widgets' // put
