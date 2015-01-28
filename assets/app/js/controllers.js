@@ -46,7 +46,7 @@ angular
 			// This var will contain all widget element
 			// These widgets will be placed inside iframe and get from server
 			$scope.widgets = null;
-			$scope.lockWidgets = false;
+			$scope.widgetsLocked = false;
 			
 			// This var save the previous widget state.
 			// If widgets are moved then this var contain all widgets before this move
@@ -71,11 +71,9 @@ angular
 				widgetService.reloadAll();
 			};
 			$scope.lockOrUnlock = function(){
-				$scope.lockWidgets = !$scope.lockWidgets;
-				if($scope.lockWidgets){
-				}
-				else{
-				}
+				$scope.widgetsLocked = !$scope.widgetsLocked;
+				if($scope.widgetsLocked){ }
+				else{ }
 			}
 			
 			/*
@@ -188,10 +186,6 @@ angular
 				start: function(event, $element, widget){
 					$rootScope.$broadcast('backstretch-pause');
 				},
-				/**
-				 * When a widget has been resized
-				 *
-				 */
 				stop: function(event, $element, widget) {
 					$rootScope.$broadcast('backstretch-resume');
 					return widgetService.updateWidgetIfChanged( widget, widgetsPreviousState, notifService);

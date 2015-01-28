@@ -6,7 +6,7 @@
 		<button class="navbar-minimalize minimalize-styl-2 btn btn-success btn-circle " ng-click="refreshWidgets()"><i class="fa fa-undo"></i></button>
 		<button class="navbar-minimalize minimalize-styl-2 btn btn-warning btn-circle " ng-click="reloadWidgets()"><i class="fa fa-undo"></i></button>
 		<button class="navbar-minimalize minimalize-styl-2 btn btn-warning btn-circle " ng-click="lockOrUnlock()">
-			<span ng-switch on="lockWidgets">
+			<span ng-switch on="widgetsLocked">
 				<span ng-switch-when="true">
 					<i class="fa fa-lock"></i>
 				</span>
@@ -25,7 +25,7 @@
 			Will organize the gridster-item itself
 		-->
 		<div gridster="gridsterOpts" class="widgets-iframes-container">
-			<ul  ng-class="{'widget-lock': lockWidgets}">
+			<ul  ng-class="{'widget-lock': widgetsLocked}">
 				<li gridster-item="widget"
 					ng-repeat="widget in widgets">
 				<!-- ng-controller="WidgetController"-->
