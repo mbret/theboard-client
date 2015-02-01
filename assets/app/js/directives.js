@@ -312,17 +312,13 @@ angular
      *
      * http://srobbin.com/jquery-plugins/backstretch/
      */
-    .directive('ngBackstretch', ['config', '$state', '$rootScope', function(config, $state, $rootScope) {
+    .directive('ngBackstretch', function(config, $state, $rootScope, $log) {
 
             if (typeof $.fn.backstretch !== 'function')
                 throw new Error('ngBackstretch | Please make sure the jquery backstretch plugin is included before this directive is added.');
 
             return {
                 restrict: 'AE', // element
-                //controller: function($scope){
-                //
-                //
-                //},
                 link: function(scope, element, attr) {
 
                     //scope.$watch(attr.state, function ( newState ) {
@@ -356,10 +352,18 @@ angular
                         //});
                     var isCreated = false;
 
+                    $rootScope.$on('backstretch-pause', function(event){
+                        pause();
+                    });
+
+                    $rootScope.$on('backstretch-resume', function(event){
+                        resume();
+                    });
+                    
                     $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState, fromParams){
                         if(toState.name == 'board'){
                             if( isCreated ){
-                                element.backstretch('resume');
+                                resume();
                             }
                             else{
                                 element.backstretch(attr.ngBackstretch , {
@@ -370,17 +374,49 @@ angular
                             }
                         }
                         else{
-                            if( isCreated ){
-                                element.backstretch('pause');
-                            }
+                            pause();
                         }
                     });
+                    
+                    function pause(){
+                        $log.debug('Backstretch directive => pause');
+                        // If backstretch was resuming, prevent it to put in pause (again)
+                        // With that if user throw multiple pause / resume, it will no resume multiple time and let a latence to user
+                        cancelResume();
+                        if( isCreated ){
+                            element.backstretch('pause');
+                        }
+                    }
 
+                    /**
+                     * Resume after initial duration (otherwise its directly change the image ugly) 
+                     */
+                    var isResuming = false;
+                    var resumingProcess;
+                    function resume(){
+                        if(!isResuming){
+                            isResuming = true;
+                            $log.debug('Backstretch directive => resume');
+                            if( isCreated ){
+                                resumingProcess = setTimeout(function(){
+                                    element.backstretch('resume');
+                                    isResuming = false;
+                                }, config.user.backgroundImagesInterval);
+
+                            }
+                        }
+                    }
+                    function cancelResume(){
+                        if(resumingProcess){
+                            clearTimeout(resumingProcess);
+                        }
+                        isResuming = false;
+                    }
 
                 }
             }
 
         }
 
-    ]);
+    );
 

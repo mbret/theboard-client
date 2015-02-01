@@ -156,25 +156,40 @@ angular
         }
     }])
 
-    .factory('notifService', ['$rootScope', '$http', 'config', 'toastr', function($rootScope, $http, config, toastr){
+    .factory('notifService', function($rootScope, $http, config, toastr, $timeout){
         return {
+            
+            display: function(label, message){
+                $timeout(function(){
+                    if(message instanceof Array){
+                        angular.forEach(message, function(entry){
+                            toastr[label](entry);
+                        })
+                    }
+                    else{
+                        toastr[label](message);
+                    }
+                });
+
+            },
+            
             error: function(message){
-                return toastr.error(message);
+                return this.display('error', message);
             },
 
             success: function(message){
-                return toastr.success(message);
+                return this.display('success', message);
             },
 
             warning: function(message){
-                return toastr.warning(message);
+                return this.display('warning', message);
             },
 
             info: function(message){
-                return toastr.info(message);
+                return this.display('info', message);
             }
         }
-    }])
+    })
 
     .factory('Widget', function($window, $http, config, $log){
         
@@ -389,6 +404,44 @@ angular
             }
         }
 
+    })
+
+    /**
+     * Good doc to read http://www.webdeveasy.com/interceptors-in-angularjs-and-useful-examples/
+     * */
+    .factory('myHttpInterceptor', function($log) {
+        return {
+            // optional method
+            'request': function(config) {
+                $log.debug('A request has been made');
+                // do something on success
+                return config;
+            },
+
+            // optional method
+            //'requestError': function(rejection) {
+            //    // do something on error
+            //    if (canRecover(rejection)) {
+            //        return responseOrNewPromise
+            //    }
+            //    return $q.reject(rejection);
+            //},
+
+            // optional method
+            'response': function(response) {
+                // do something on success
+                return response;
+            }
+
+            // optional method
+            //'responseError': function(rejection) {
+            //    // do something on error
+            //    if (canRecover(rejection)) {
+            //        return responseOrNewPromise
+            //    }
+            //    return $q.reject(rejection);
+            //}
+        };
     })
 
     .factory('geolocationService', ['$q','$rootScope','$window','config',function ($q,$rootScope,$window,config) {

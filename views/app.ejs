@@ -29,6 +29,11 @@
 
 <body  ng-controller="MainController" class="{{$state.current.name}}" ng-backstretch>
 
+    <!-- This preloader is used with pace.js to hide the content of page while rendering is not done -->
+    <div class="preloader">
+        <div class="loading">Loading <i class="fa fa-refresh fa-spin icon"></i></div>
+    </div>
+
     <!-- Wrapper-->
     <div id="wrapper" class="">
 
@@ -77,7 +82,12 @@
 
     <!-- Pace js (automatic page load progress bar -->
     <script src="/js/dependencies/pace/pace.min.js"></script>
-
+    <script>
+        Pace.on("done", function(){
+            $(".preloader").addClass('site-loaded');
+        });
+    </script>
+    
     <script src="/js/dependencies/detect-element-resize.js"></script>
     <script src="/js/dependencies/jquery.backstretch.js"></script>
     <script src="/js/dependencies/URI.js"></script>

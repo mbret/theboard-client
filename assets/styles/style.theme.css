@@ -1420,24 +1420,24 @@ table.dataTable thead .sorting:after {
     text-transform: uppercase;
 }
 /* PEACE */
-.pace .pace-progress {
-    background: #1ab394;
-    position: fixed;
-    z-index: 2000;
-    top: 0px;
-    left: 220px;
-    height: 2px;
-    -webkit-transition: width 1s;
-    -moz-transition: width 1s;
-    -o-transition: width 1s;
-    transition: width 1s;
-}
-.body-small .pace .pace-progress {
-    left: 0px;
-}
-.pace-inactive {
-    display: none;
-}
+/*.pace .pace-progress {*/
+    /*background: #1ab394;*/
+    /*position: fixed;*/
+    /*z-index: 2000;*/
+    /*top: 0px;*/
+    /*left: 220px;*/
+    /*height: 2px;*/
+    /*-webkit-transition: width 1s;*/
+    /*-moz-transition: width 1s;*/
+    /*-o-transition: width 1s;*/
+    /*transition: width 1s;*/
+/*}*/
+/*.body-small .pace .pace-progress {*/
+    /*left: 0px;*/
+/*}*/
+/*.pace-inactive {*/
+    /*display: none;*/
+/*}*/
 /* WIDGETS */
 .widget {
     border-radius: 5px;

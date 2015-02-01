@@ -44,6 +44,8 @@ module.exports.routes = {
     'get /account': 'AppController.getAccountData',
     'put /account': 'AppController.updateAccountData',
 
+    'get /flash': 'AppController.getFlashMessages',
+    
     // Login & register
     '/login': 'AuthController.login', // login form
     '/register': 'AuthController.register',

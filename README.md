@@ -11,6 +11,8 @@ Node on the back and angular on the front ! Release the power !!!
 - Go to [http://localhost;1337](http://localhost;1337)
 
 # TODO
+- block bg change when sidebar is open/close (avoid lag)
+- wait for sidebar closed before load iframe (avoid lag)
 - Send the new size to widget when init/resize/etc
 - Catch resize event inside widget
 - Send local of user to widgets

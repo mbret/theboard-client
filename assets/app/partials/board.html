@@ -5,6 +5,16 @@
 		<button class="navbar-minimalize minimalize-styl-2 btn btn-success btn-circle  " ng-click="startWidgets()"><i class="fa fa-play"></i></button>
 		<button class="navbar-minimalize minimalize-styl-2 btn btn-success btn-circle " ng-click="refreshWidgets()"><i class="fa fa-undo"></i></button>
 		<button class="navbar-minimalize minimalize-styl-2 btn btn-warning btn-circle " ng-click="reloadWidgets()"><i class="fa fa-undo"></i></button>
+		<button class="navbar-minimalize minimalize-styl-2 btn btn-warning btn-circle " ng-click="lockOrUnlock()">
+			<span ng-switch on="widgetsLocked">
+				<span ng-switch-when="true">
+					<i class="fa fa-lock"></i>
+				</span>
+				<span ng-switch-default>
+					<i class="fa fa-unlock"></i>
+				</span>
+			</span>
+		</button>
 	</div>
 
 	
@@ -15,7 +25,7 @@
 			Will organize the gridster-item itself
 		-->
 		<div gridster="gridsterOpts" class="widgets-iframes-container">
-			<ul>
+			<ul  ng-class="{'widget-lock': widgetsLocked}">
 				<li gridster-item="widget"
 					ng-repeat="widget in widgets">
 				<!-- ng-controller="WidgetController"-->
@@ -30,6 +40,9 @@
 							widget="widget"
 							ng-class="{'with-border': widget.borders}"
 							ng-style="{'background-color': widget.backgroundColor}" >
+
+
+
 					</widget-iframe><!-- end: widget container -->
 				</li>
 			</ul>

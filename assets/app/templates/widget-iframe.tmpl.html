@@ -1,14 +1,25 @@
-<!--Action buttons-->
-<div layout="row" layout-align="start center" class="widget-buttons">
+<!--&lt;!&ndash;Action buttons&ndash;&gt;-->
+<!--<div layout="row" layout-align="start center" class="widget-buttons">-->
 
-    <!-- Display widget option panel -->
-    <span class="widget-options-button"  aria-label="Options" ng-click="showOptions($event)">
-        <i class="fa fa-cog"></i>
-    </span>
+    <!--&lt;!&ndash; Display widget option panel &ndash;&gt;-->
+    <!--<span class="widget-options-button"  aria-label="Options" ng-click="showOptions($event)">-->
+        <!--<i class="fa fa-cog"></i>-->
+    <!--</span>-->
 
-    <span class="widget-dragger-button"  aria-label="Move">
-        <i class="fa fa-arrows"></i>
-    </span>
+    <!--<span class="widget-dragger-button"  aria-label="Move">-->
+        <!--<i class="fa fa-arrows"></i>-->
+    <!--</span>-->
+<!--</div>-->
+
+<div class="gridster-draggable widget-iframe-lock">
+    <div class="vertical">
+        <!--Action buttons-->
+        <div>
+            <button class="widget-options-button btn btn-primary btn-circle btn-lg"  aria-label="Options" ng-click="showOptions($event, widget.identityHTML)">
+                <i class="fa fa-cogs"></i>
+            </button>
+        </div>
+    </div>
 </div>
 
 <!--Widget component-->
