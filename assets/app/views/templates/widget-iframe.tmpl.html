@@ -1,0 +1,42 @@
+<div class="gridster-draggable widget-iframe-lock">
+    <div class="vertical" ng-if="widget.state === 'ready'">
+        <!--Action buttons-->
+        <div>
+            <button class="widget-options-button btn btn-primary btn-circle btn-lg"  aria-label="Options" ng-click="showOptions($event, widget.identityHTML)">
+                <i class="fa fa-cogs"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!--Widget component-->
+<div ng-switch="widget.state" class="widget-content">
+    
+    <span ng-switch-when="ready">
+        <iframe id="{{widget.identityHTML}}"
+                ng-src="{{widget.iframeURL}}"
+                class="widget-iframe {{widget.tile}}"></iframe>
+    </span>
+    
+    <span ng-switch-when="location">
+        <div class="widget-loading yellow-bg p-lg text-center">
+            <div class="vertical">
+                <i class="fa fa-refresh fa-spin fa-3x"></i>
+                <h3 class="font-bold m-xs">
+                    Widget is asking for location
+                </h3>
+            </div>
+        </div>
+    </span>
+    
+    <span ng-switch-default>
+        <div class="widget-loading  p-lg text-center">
+            <div class="vertical">
+                <i class="fa fa-refresh fa-spin fa-3x"></i>
+                <h3 class="font-bold m-xs">
+                    Widget preparing
+                </h3>
+            </div>
+        </div>
+    </span>
+</div>

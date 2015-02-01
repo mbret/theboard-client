@@ -73,7 +73,7 @@ module.exports.bootstrap = function(cb) {
           backgroundColor: '#57aae1',
           permissions:[
               'email',
-              'location'
+              //'location'
           ],
           options:[
               {

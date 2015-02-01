@@ -10,7 +10,7 @@
  */
 
 angular
-    .module('app.directives',[])
+    .module('app.directives')
 
     /**
      * Use declarative approach
@@ -127,7 +127,7 @@ angular
      *
      * This new directive is about the widget iframe container
      */
-    .directive('widgetIframe', ['$rootScope', '$log', '$window', '$timeout', function ($rootScope, $log, $window, $timeout) {
+    .directive('widgetIframe', ['$rootScope', '$log', '$window', '$timeout', 'config', function ($rootScope, $log, $window, $timeout, config) {
 
         return {
             restrict: 'AE', // attribute name
@@ -135,7 +135,8 @@ angular
                 widget: '=widget'
             },
             // Here we use a template. It means that everything inside will use the directive controller instead of parent
-            templateUrl: '/app/templates/widget-iframe.tmpl.html',
+            templateUrl: config.routes.templates + '/widget-iframe.tmpl.html',
+            
             // Link is run after compilation
             // Separation of concern (here is DOM code)
             link: function(scope, element, attrs) {
@@ -200,7 +201,7 @@ angular
                 // We pass our sub controller (as the sub controller is defined inside parent he can reach the same var)
                 $scope.showOptions = function($event) {
                     var modalInstance = $modal.open({
-                        templateUrl: '/app/templates/widget-iframe-options.tmpl.html',
+                        templateUrl: config.routes.templates + '/widget-iframe-options.tmpl.html',
                         controller: dialogController,
                         size: 'sm',
                         resolve: {
@@ -307,7 +308,6 @@ angular
 
     }])
 
-    
     /**
      *
      * http://srobbin.com/jquery-plugins/backstretch/

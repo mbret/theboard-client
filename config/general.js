@@ -47,6 +47,7 @@ module.exports = {
         
         // Define all routes needed by the front side
         routes: {
+            app: '/app',
             server: '/',
             icons: '/app/icons',
             images: '/app/img',
