@@ -81,7 +81,7 @@ window.Widget = {
                 unit: Widget.unit,
                 success: function(weather) {
 
-                    console.log('DATE', weather);
+                    WidgetUtils.log.debug('DATE', weather);
                     $('.widget-header').html('<h2><canvas id="weather-icon"></canvas> '+weather.temp+'&deg;'+weather.units.temp+'</h2>');
                     $('.widget-content').html(
                         '<ul>' +
@@ -129,8 +129,9 @@ window.Widget = {
                             break;
                         default:
                             icon = Skycons.CLEAR_DAY;
-                            console.log(weather.currently);
-                            console.log('weather.currently not recognized, go write this code madafaka!');
+                            //WidgetUtils.log.debug(weather.currently);
+                            //console.log(weather.currently);
+                            //console.log('weather.currently not recognized, go write this code madafaka!');
                             break;
                     }
                     skycons.set("weather-icon", icon);

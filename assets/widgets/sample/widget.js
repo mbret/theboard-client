@@ -69,6 +69,7 @@ var widgetConfiguration = {
         // This method is call by the library
         init: function( conf ){
             this.configuration = _.extend(this.configuration, conf);
+            console.log(this.configuration);
             WidgetUtils.log.debug(this.identity + ' is initializing');
             this.initDisplay();
             this.start();
@@ -134,7 +135,8 @@ var widgetConfiguration = {
         displayContent: function(){
             $('.widget-content').html(
                 '<p>Sunday 21 December 2014,'+
-                '</br><span class="widget-component-highlighted">the weather seems clear!</span></p>'
+                '</br><span class="widget-component-highlighted">the weather seems clear!</span>' +
+                '</br><span class="widget-component-highlighted">Option 1 is: '+Widget.configuration.options.option1+'</span></p>'
             );
             $('.widget-updated').html('Updated: ' + new Date().toISOString());
         },

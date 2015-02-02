@@ -8,7 +8,7 @@
 
     var testWidgetProvided = null;
 
-    var logLvl = 'debug'; // warn / debug / info
+    var logLvl = 'warn'; // warn / debug / info
 
     var serverURL = 'http://localhost:1337';
 

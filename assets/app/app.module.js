@@ -3,6 +3,8 @@
 /**
  * - Best practice for directory structure (http://scotch.io/tutorials/angularjs-best-practices-directory-structure)
  * - Here is the official angular styleguide: (https://github.com/johnpapa/angularjs-styleguide)
+ *
+ * http://briantford.com/blog/huuuuuge-angular-apps (perf etc)
  */
 
 (function () {
@@ -11,16 +13,20 @@
 	 * Define app and its dependencies
 	 */
 	var app = angular.module('app',[
-			'ui.router',
-			'ui.bootstrap',
-			'ngAnimate',
-			'gridster',
-			'toastr',
-			// modules
-			// modules are loaded at the time
-			'app.services',
-			'app.controllers',
-			'app.directives',
+
+        'ui.router',
+        'ui.bootstrap',
+        'ngAnimate',
+        'gridster',
+
+        'blocks.exception', // wrap angular exception handling
+        'blocks.logger', // wrap angular logging
+
+        // modules
+        // modules are loaded at the time
+        'app.services',
+        'app.controllers',
+        'app.directives',
 	]);
 
 	/*

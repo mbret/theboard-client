@@ -36,27 +36,9 @@
 					-->
 					<widget-iframe 
 							id="{{widget.identityHTML}}-container" 
-							class="widget-iframe-container"  
+							class="widget-iframe-container yellow-bg"
 							widget="widget"
-							ng-class="{'with-border': widget.borders}"
-							ng-style="{'background-color': widget.backgroundColor}" >
-
-						<div class="gridster-draggable widget-iframe-lock">
-							<div class="vertical">
-								<!--Action buttons-->
-								<div>
-									<button class="widget-options-button btn btn-primary btn-circle btn-lg"  aria-label="Options" ng-click="showOptions($event, widget.identityHTML)">
-										<i class="fa fa-cogs"></i>
-									</button>
-								</div>
-							</div>
-						</div>
-
-
-						<!--Widget component-->
-						<iframe id="{{widget.identityHTML}}"
-								ng-src="{{widget.iframeURL}}"
-								class="widget-iframe {{widget.tile}}"></iframe>
+							ng-class="{'with-border': widget.borders}" >
 
 					</widget-iframe><!-- end: widget container -->
 				</li>

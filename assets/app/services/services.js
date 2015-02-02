@@ -5,41 +5,6 @@
 angular
     .module('app.services', [])
 
-    /**
-     * This is BAAAAAAAAAAAAAD practices
-     * @todo animate 
-     * @todo don't use jquery 
-     */
-    .factory('sidebarService', ['$log', function($log){
-        return {
-            close: function(){
-                $('.sidebar').removeClass('sidebar-open');
-                $('.sidebar').addClass('sidebar-closed');
-                $('.sidebar-backdrop').removeClass('active');
-            },
-            open: function(){
-                $('.sidebar').removeClass('sidebar-closed');
-                $('.sidebar').addClass('sidebar-open');
-                $('.sidebar-backdrop').addClass('active');
-            },
-            toggle: function(){
-                var self = this;
-                if ($('.sidebar').hasClass('sidebar-closed')) {
-                    self.open();
-                }
-                else{
-                    self.close();
-                }
-            },
-            // Put the sidebar in static state (disable backdrop but let open the sidebar)
-            putStatic: function(){
-                var self = this;
-                self.open();
-                $('.sidebar-backdrop').removeClass('active');
-            }
-        }
-    }])
-    
     .factory('batchLog', ['$interval', '$log', function($interval, $log) {
         var messageQueue = [];
 
@@ -190,36 +155,23 @@ angular
             }
         }
     })
-
+    
     /**
      * Widget service
-     *
+     * http://blog.revolunet.com/blog/2014/02/14/angularjs-services-inheritance/
      */
-    .factory('widgetService', ['$rootScope', '$http', '$log', 'config', function($rootScope, $http, $log, config){
+    .factory('widgetService', function($rootScope, $http, $log, config, $window, Widget, $injector){
 
         return {
-            get: function(){
-                return $http.get(config.routes.widgets.get)
-                    .then(function(data) {
-                        $log.debug('Widgets loaded successfully!', data.data);
-                        return data.data;
-                    })
-                    .catch(function(error) {
-                        $log.error('Failure loading widgets');
-                        throw new Error(config.messages.errors.widgets.unableToLoad);
-                    });
-            },
 
-            update: function( widget ){
-                return $http.put(config.routes.widgets.update, {widget: widget})
-                    .then(function(data) {
-                        $log.debug('Widget updated successfully!', data.data);
-                        return data.data;
-                    })
-                    .catch(function(err) {
-                        $log.error('Failure while updating widget', err);
-                        throw new Error(config.messages.errors.widgets.unableToUpdate);
-                    });
+            //
+            _buildBaseWidget: function(widgets){
+                var models = [];
+                angular.forEach(widgets, function(widget){
+                    models.push( new Widget(widget) );
+                });
+                $log.debug('Widgets built as models successfully!', models);
+                return models;
             },
 
             sendSignal: function( widget, signal ){
@@ -229,70 +181,21 @@ angular
                 $rootScope.$broadcast('widget-signal', widget, signal, JSON.stringify({signal:signal}));
                 return;
             },
-            
+
             reloadAll: function(){
                 $rootScope.$broadcast('widget-reload');
                 return;
             },
-
-            /**
-             * Check if two widget have the same position.
-             * Check row, col, size etc
-             * @param widget
-             * @param widgetToCompare
-             * @returns {boolean}
-             */
-            hasSamePosition: function( widget, widgetToCompare){
-                return (widget.col === widgetToCompare.col
-                && widget.row === widgetToCompare.row
-                && widget.sizeX === widgetToCompare.sizeX
-                && widget.sizeY === widgetToCompare.sizeY);
-            },
-
-            /**
-             * Function that handle the widget update on action
-             * - Get the new widget
-             * - Compare this widget to all other widgets
-             * - Check the equality between this widget and the list of previous widget
-             * 	if one eq found 	=> this widget has not been dragged or resized (the old is equal to the new)
-             *	if no eq found 		=> this widget is new so update it
-             *
-             * - When success we also update the widget in previous state etc
-             * @todo remove use of notifService and return a promise (always)
-             */
-            updateWidgetIfChanged: function(widgetToUpdate, widgetsPreviousState, notifService){
-                var that = this;
-                // loop over all widget, if there are one equality, it means that the widget is still at the same place
-                var widgetHasNewPlace = true;
-                var key = null;
-                angular.forEach(widgetsPreviousState, function(obj, objKey){
-    
-                    if(obj.id == widgetToUpdate.id){
-                        key = objKey; // keep reference to update previous widgets
-                        //$log.debug(obj, widgetToUpdate);
-                        if( that.hasSamePosition(obj, widgetToUpdate) ){
-                            widgetHasNewPlace = false;
-                        }
-                    }
-    
-                });
-                // If there are different then update widget
-                if( widgetHasNewPlace ){
-                    $log.debug('sdfsdf');
-                    return that.update( widgetToUpdate )
-                        .then(function( widgetUpdated ){
-                            notifService.success( config.messages.widgets.updated );
-                            widgetsPreviousState[key] = angular.copy(widgetToUpdate);
-                        })
-                        .catch(function(err){
-                            notifService.error( err.message );
-                        });
-                }
-                return false;
+            
+            reloadWidget: function(widget){
+                $rootScope.$broadcast('widget-reload', widget);
+                return;
             }
+
+
         }
 
-    }])
+    })
 
     /**
      * Good doc to read http://www.webdeveasy.com/interceptors-in-angularjs-and-useful-examples/
@@ -301,7 +204,7 @@ angular
         return {
             // optional method
             'request': function(config) {
-                $log.debug('A request has been made');
+                //$log.debug('A request has been made');
                 // do something on success
                 return config;
             },

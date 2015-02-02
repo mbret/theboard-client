@@ -47,6 +47,7 @@ module.exports = {
         
         // Define all routes needed by the front side
         routes: {
+            app: '/app',
             server: '/',
             icons: '/app/icons',
             images: '/app/img',
@@ -84,8 +85,12 @@ module.exports = {
             success: {
                 form:{
                     updated: 'Update completed successfully!'
+                },
+                widget: {
+                    updated: 'Widget updated!'
                 }
             },
+            nochange: 'No change',
             widgets: {
                 updated: 'Widgets updated!'
             }

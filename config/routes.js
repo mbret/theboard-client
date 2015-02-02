@@ -39,8 +39,8 @@ module.exports.routes = {
     'get /configuration.json': 'AppController.getConfiguration', // return app settings
     
     'get /widgets': 'AppController.getWidgets',
-    'put /widgets': 'AppController.updateWidget',
-    
+    'put /widgets/:id': 'AppController.updateWidget',
+
     'get /account': 'AppController.getAccountData',
     'put /account': 'AppController.updateAccountData',
 

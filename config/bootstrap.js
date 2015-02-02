@@ -29,31 +29,31 @@ module.exports.bootstrap = function(cb) {
           permissions: [
               'location'
           ],
-          options: {
-              defaultLocation: 'New York'
-          },
+          //options: {
+          //    defaultLocation: 'New York'
+          //},
           sizeX: 1,
           sizeY: 1,
           row: 0,
           col: 0
         }),
-        Widget.create({
-            identity: 'Widget meteo',
-            identityHTML: 'widget-meteo',
-            url: 'widgets/meteo/widget.html',
-            baseURL: 'widgets/meteo/widget.html',
-            permissions: [
-              'mail',
-              'location'
-            ],
-            options: {
-                defaultLocation: 'New York'
-            },
-            sizeX: 1,
-            sizeY: 1,
-            row: 1,
-            col: 2
-        }),
+        //Widget.create({
+        //    identity: 'Widget meteo',
+        //    identityHTML: 'widget-meteo',
+        //    url: 'widgets/meteo/widget.html',
+        //    baseURL: 'widgets/meteo/widget.html',
+        //    permissions: [
+        //      'mail',
+        //      'location'
+        //    ],
+        //    //options: {
+        //    //    defaultLocation: 'New York'
+        //    //},
+        //    sizeX: 1,
+        //    sizeY: 1,
+        //    row: 1,
+        //    col: 2
+        //}),
         //Widget.create({
         //    identity: 'Widget clock',
         //    identityHTML: 'widget-clock',
@@ -73,41 +73,58 @@ module.exports.bootstrap = function(cb) {
           backgroundColor: '#57aae1',
           permissions:[
               'email',
-              'location'
+              //'location'
+          ],
+          options:[
+              {
+                  id: 'option1', // must not have space
+                  name: 'Option 1',
+                  placeholder: 'Enter something',
+                  type: 'text',
+                  default: 'toto'
+              },
+              {
+                  id: 'option2', // must not have space
+                  name: 'Option 2',
+                  placeholder: 'Select city',
+                  type: 'select',
+                  options: ['Nancy', 'Toul'],
+                  required: false
+                  //default: 'Nancy'
+              }
           ],
           sizeX: 1,
           sizeY: 1,
           row: 0,
           col: 2
         }),
-        Widget.create({
-          identity: 'Widget meteo 4',
-          identityHTML: 'widget-meteo4',
-          url: 'widgets/meteo/widget.html',
-          baseURL: 'widgets/meteo/widget.html',
-          options: {
-              defaultLocation: 'New York'
-          },
-          sizeX: 1,
-          sizeY: 1,
-          row: 0,
-          col: 1
-        }),
-        Widget.create({
-            identity: 'Widget Daily Word',
-            identityHTML: 'widget-daily-word',
-            url: 'widgets/dailyWord/widget.html',
-            baseURL: 'widgets/dailyWord/widget.html',
-            backgroundColor: '#57aae1',
-            sizeX: 1,
-            sizeY: 1,
-            row: 0,
-            col: 3
-        })
+        //Widget.create({
+        //  identity: 'Widget meteo 4',
+        //  identityHTML: 'widget-meteo4',
+        //  url: 'widgets/meteo/widget.html',
+        //  baseURL: 'widgets/meteo/widget.html',
+        //  //options: {
+        //  //    defaultLocation: 'New York'
+        //  //},
+        //  sizeX: 1,
+        //  sizeY: 1,
+        //  row: 0,
+        //  col: 5
+        //}),
+        //Widget.create({
+        //    identity: 'Widget Daily Word',
+        //    identityHTML: 'widget-daily-word',
+        //    url: 'widgets/dailyWord/widget.html',
+        //    baseURL: 'widgets/dailyWord/widget.html',
+        //    backgroundColor: '#57aae1',
+        //    sizeX: 1,
+        //    sizeY: 1,
+        //    row: 0,
+        //    col: 3
+        //})
 
-  ]).then(function(){
-
-        console.log(sails.config.dataURL);
+  ]).then(function(widgets){
+        
       // Create user for test
       if( sails.config.environment == 'development' ){
           return User.create({
@@ -123,8 +140,12 @@ module.exports.bootstrap = function(cb) {
               //    sails.config.dataURL + '/img/board (9).jpg']
           }).then(function(user){
               user.settings.add(UserSetting.buildNewSetting('widgetsBorders', false));
+              // Insert widget for this user
+              _.forEach(widgets, function(widget, key){
+                  user.registerWidget(widget);
+              });
+              
               return user.save().then(function(user){
-                  console.log(user.settings)
                   return user;
               });
           }).then(function(user){
@@ -145,6 +166,7 @@ module.exports.bootstrap = function(cb) {
         return FileService.createDataDir(cb);
 
   }).catch(function(err){
+        //require('util').inspect(err);
         return cb(err);
   });
 };

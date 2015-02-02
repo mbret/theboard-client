@@ -17,7 +17,7 @@
 
     <link rel="stylesheet" href="/styles/plugins/iCheck/custom.css">
     
-    <link rel="stylesheet" href="/styles/plugins/angular-toastr/angular-toastr.css">
+    <link rel="stylesheet" href="/styles/plugins/toastr/toastr.min.css">
 
     <!-- Theme + own css -->
     <link rel="stylesheet" href="/styles/plugins/animate.css">
@@ -27,7 +27,7 @@
 </head>
 
 
-<body  ng-controller="MainController" class="{{$state.current.name}}" ng-backstretch>
+<body  ng-controller="MainController" class="{{$state.current.name}}" backstretch="{{backstretch}}">
 
     <!-- This preloader is used with pace.js to hide the content of page while rendering is not done -->
     <div class="preloader">
@@ -38,7 +38,7 @@
     <div id="wrapper" class="">
 
         <!-- Navigation -->
-        <div ng-include="'app/partials/sidebar.html'"></div>
+        <div ng-include="'app/views/partials/sidebar.html'"></div>
 
 
         <!-- Page wraper -->
@@ -52,7 +52,7 @@
             <div ui-view></div>
 
             <!-- Footer -->
-            <div ng-include="'app/partials/footer.html'"></div>
+            <div ng-include="'app/views/partials/footer.html'"></div>
 
         </div>
         <!-- End page wrapper-->
@@ -71,12 +71,14 @@
     <!-- Jquery and Bootstrap -->
     <script src="/js/dependencies/jquery/jquery-2.1.1.min.js"></script>
     <script src="/js/dependencies/jquery/jquery-ui.min.js"></script>
-    <script src="/js/dependencies/bootstrap/bootstrap.min.js"></script>
+    <!--<script src="/js/dependencies/bootstrap/bootstrap.min.js"></script>-->
 
     <!-- Jquery plugins -->
     <!-- Metis menu -->
     <script src="/js/dependencies/metisMenu/jquery.metisMenu.js"></script>
-    
+
+    <script src="/js/dependencies/toastr/toastr.min.js"></script>
+
     <!-- iCheck (http://fronteed.com/iCheck/) -->
     <script src="/js/dependencies/iCheck/icheck.min.js"></script>
 
@@ -91,7 +93,8 @@
     <script src="/js/dependencies/detect-element-resize.js"></script>
     <script src="/js/dependencies/jquery.backstretch.js"></script>
     <script src="/js/dependencies/URI.js"></script>
-
+    <script src="/js/dependencies/lodash.js"></script>
+    
     <!-- Angular dependencies -->
     <script src="/js/dependencies/angular/angular.js"></script>
     <script src="/js/dependencies/angular/angular-animate.js"></script>
@@ -100,17 +103,37 @@
 
     <!-- Angular plugins -->
     <script src="/js/dependencies/angular-hammer.js"></script>
-    <script src="/js/dependencies/bootstrap/ui-bootstrap-tpls-0.11.0.min.js"></script>
+    <script src="/js/dependencies/bootstrap/ui-bootstrap-tpls-0.12.0.min.js"></script>
     <script src="/js/dependencies/src/angular-gridster.js"></script>
-    <script src="/js/dependencies/angular-toastr/angular-toastr.tpls.js"></script>
 
     <!-- App scripts -->
-    <script src="/app/js/app.module.js"></script>
-    <script src="/app/js/config.js"></script>
-    <script src="/app/js/controllers.js"></script>
-    <script src="/app/js/directives.js"></script>
-    <script src="/app/js/filters.js"></script>
-    <script src="/app/js/services.js"></script>
+    <script src="/app/app.module.js"></script>
+    <script src="/app/app.constants.js"></script>
+    <script src="/app/app.config.js"></script>
+    <script src="/app/app.route.js"></script>
+    
+    <script src="/app/controllers/controllers.module.js"></script>
+    <script src="/app/controllers/controllers.js"></script>
+    <script src="/app/controllers/main.controller.js"></script>
+    <script src="/app/controllers/index.controller.js"></script>
+    <script src="/app/controllers/profile.controller.js"></script>
+    
+    <script src="/app/directives/directives.module.js"></script>
+    <script src="/app/directives/directives.js"></script>
+    <script src="/app/directives/backstretch.directive.js"></script>
+    <script src="/app/directives/widget-iframe.directive.js"></script>
+
+    <script src="/app/services/services.js"></script>
+    <script src="/app/services/dataservice.service.js"></script>
+    <script src="/app/services/backstretch.factory.js"></script>
+    <script src="/app/services/sidebar.service.js"></script>
+    <script src="/app/services/widget.factory.js"></script>
+
+    <script src="/app/blocks/exception/exception.module.js"></script>
+    <script src="/app/blocks/exception/exception-handler.provider.js"></script>
+    <script src="/app/blocks/logger/logger.module.js"></script>
+    <script src="/app/blocks/logger/logger.js"></script>
+
 
 </body>
 </html>
