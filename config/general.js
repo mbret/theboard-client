@@ -90,6 +90,7 @@ module.exports = {
                     updated: 'Widget updated!'
                 }
             },
+            nochange: 'No change',
             widgets: {
                 updated: 'Widgets updated!'
             }

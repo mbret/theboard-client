@@ -27,7 +27,9 @@
                     <div ng-switch on="option.type">
                         <!--Text-->
                         <input  ng-switch-when="text" type="text"  placeholder="{{option.placeholder}}" class="form-control" ng-model="option.value">
-                        <select ng-switch-when="select" class="form-control m-b" ng-model="option.value" ng-options="opt as opt.label for opt in option.selectOptions"></select>
+                        <select ng-switch-when="select" class="form-control m-b" ng-model="option.value" ng-options="opt as opt.label for opt in option.selectOptions">
+                            <option value="" ng-if="!option.required"></option>
+                        </select>
                     </div>
                     
                 </div>

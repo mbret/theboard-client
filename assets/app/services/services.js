@@ -174,7 +174,6 @@ angular
                 return models;
             },
 
-
             sendSignal: function( widget, signal ){
                 //console.log(widget);
                 if(widget) $log.debug('Signal ' + signal + ' sent to widget ' + widget.identity);
@@ -182,9 +181,7 @@ angular
                 $rootScope.$broadcast('widget-signal', widget, signal, JSON.stringify({signal:signal}));
                 return;
             },
-            
-            
-            
+
             reloadAll: function(){
                 $rootScope.$broadcast('widget-reload');
                 return;
@@ -193,9 +190,7 @@ angular
             reloadWidget: function(widget){
                 $rootScope.$broadcast('widget-reload', widget);
                 return;
-            },
-
-
+            }
 
 
         }

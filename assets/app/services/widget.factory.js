@@ -80,6 +80,18 @@
             this.iframeURL = $window.URI(this.baseURL).search({widget:JSON.stringify(configuration)}).toString();
         };
 
+        /**
+         * Save the current widget options
+         * Save it to server
+         * @returns {*}
+         */
+        Widget.prototype.saveOptions = function(){
+            var that = this;
+            return this._save({
+                options: that.options
+            });
+        };
+
         Widget.prototype.save = function(){
             return this._save({
                 sizeX: this.sizeX,

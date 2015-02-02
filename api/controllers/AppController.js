@@ -31,7 +31,6 @@ module.exports = {
 		var config = _.assign(sails.config.frontApp, {
 			// user logged
 			user: user.toView(),
-			sdfsdf: 'sdfds'
 		});
 		res.ok(config);
 	},
@@ -87,8 +86,8 @@ module.exports = {
 			
 			// Option update
 			var options = req.param('options', null);
-			_.forEach(options, function(value, name){
-				widget.setOptionValue(name, value);
+			_.forEach(options, function(option){
+				widget.setOptionValue(option.id, option.value);
 			});
 			console.log(widget.options);
 

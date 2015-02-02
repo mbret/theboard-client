@@ -29,31 +29,31 @@ module.exports.bootstrap = function(cb) {
           permissions: [
               'location'
           ],
-          options: {
-              defaultLocation: 'New York'
-          },
+          //options: {
+          //    defaultLocation: 'New York'
+          //},
           sizeX: 1,
           sizeY: 1,
           row: 0,
           col: 0
         }),
-        Widget.create({
-            identity: 'Widget meteo',
-            identityHTML: 'widget-meteo',
-            url: 'widgets/meteo/widget.html',
-            baseURL: 'widgets/meteo/widget.html',
-            permissions: [
-              'mail',
-              'location'
-            ],
-            //options: {
-            //    defaultLocation: 'New York'
-            //},
-            sizeX: 1,
-            sizeY: 1,
-            row: 1,
-            col: 2
-        }),
+        //Widget.create({
+        //    identity: 'Widget meteo',
+        //    identityHTML: 'widget-meteo',
+        //    url: 'widgets/meteo/widget.html',
+        //    baseURL: 'widgets/meteo/widget.html',
+        //    permissions: [
+        //      'mail',
+        //      'location'
+        //    ],
+        //    //options: {
+        //    //    defaultLocation: 'New York'
+        //    //},
+        //    sizeX: 1,
+        //    sizeY: 1,
+        //    row: 1,
+        //    col: 2
+        //}),
         //Widget.create({
         //    identity: 'Widget clock',
         //    identityHTML: 'widget-clock',
@@ -89,6 +89,7 @@ module.exports.bootstrap = function(cb) {
                   placeholder: 'Select city',
                   type: 'select',
                   options: ['Nancy', 'Toul'],
+                  required: false
                   //default: 'Nancy'
               }
           ],

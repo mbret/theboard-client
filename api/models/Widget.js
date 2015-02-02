@@ -12,10 +12,19 @@ module.exports = {
         url: 'string',
         baseURL: 'string',
         permissions: 'array',
-        options: 'json',
+        options: 'array',
         sizeX: 'integer',
         sizeY: 'integer',
         row: 'integer',
         col: 'integer'
+    },
+
+    beforeCreate: function(values, cb){
+        _.forEach(values.options, function(option){
+            if( ! option.required ){
+                option.required = false;
+            }
+        })
+        return cb();
     }
 };
