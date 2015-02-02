@@ -44,7 +44,7 @@
                     else{
                         images = [];
                     }
-                    resume();
+                    //resume();
                 }
 
                 function init(){
@@ -98,8 +98,10 @@
                 function destroy(){
                     logger.debug('backstretch destroy');
                     cancelResume();
-                    element.backstretch("destroy", false /*preserveBackground*/);
-                    instance = null;
+                    if( instance !== null && instance !== undefined ){
+                        element.backstretch("destroy", false /*preserveBackground*/);
+                        instance = null;
+                    }
                 };
                 
                 function watchStatus(){

@@ -74,8 +74,6 @@
                     }
                 });
 
-
-
             },
             // Controller is run after general controller but before link of this directive
             // It ran before compilation
@@ -168,7 +166,6 @@
                             // build options data
                             // Just an associative array of options
                             if($scope.options.length > 0){
-                                console.log($scope.options);
                                 // Loop over all options bound with <form>
                                 // Set the new value to the widget
                                 angular.forEach($scope.options, function(option, index){

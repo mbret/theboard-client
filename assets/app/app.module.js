@@ -14,19 +14,19 @@
 	 */
 	var app = angular.module('app',[
 
-        'ui.router',
-        'ui.bootstrap',
-        'ngAnimate',
-        'gridster',
+		'ui.router',
+		'ui.bootstrap',
+		'ngAnimate',
+		'gridster',
 
-        'blocks.exception', // wrap angular exception handling
-        'blocks.logger', // wrap angular logging
+		'blocks.exception', // wrap angular exception handling
+		'blocks.logger', // wrap angular logging
+		'blocks.pageTitle',
 
-        // modules
-        // modules are loaded at the time
-        'app.services',
-        'app.controllers',
-        'app.directives',
+		'app.services',
+		'app.controllers',
+		'app.directives',
+
 	]);
 
 	/*
@@ -79,7 +79,13 @@
 				}
 			};
 			// Add new constant
-			app.constant("config", config);
+			app.constant('test', 'HAAHAH');
+			app.constant('config', config); // @todo not used for now
+			//app.config(function($provide){
+			//	$provide.constant('config', config);
+			//})
+			window.appConfig = config; // used to pass to other module
+			return;
 		})
 		.catch(function(errorResponse) {
 			throw errorResponse;

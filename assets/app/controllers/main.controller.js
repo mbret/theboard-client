@@ -5,13 +5,15 @@
         .module('app.controllers')
         .controller('MainController', MainController)
 
-    MainController.$inject = ['$rootScope', '$scope', '$http', '$window', '$q', 'config', '$log', /*'$mdToast', */'$animate', /*'$mdDialog', */'widgetService', 'geolocationService', 'backstretch'];
+    MainController.$inject = ['$rootScope', '$scope', '$http', '$state', 'config', '$log', '$animate', 'widgetService', 'geolocationService', 'backstretch', 'test'];
 
     /**
      * USE THIS CONTROLLER AS LESS AS POSSIBLE (bad practice)
      * Usually if you need something to go here you should probably make a directive or service !
      */
-    function MainController($rootScope, $scope, $http, $window, $q, config, $log,/* $mdToast,*/ $animate, /*$mdDialog,*/ widgetService, geolocationService, backstretch){
+    function MainController($rootScope, $scope, $http, $state, config, $log, $animate, widgetService, geolocationService, backstretch, test){
+
+        console.log(test);
 
         /**
          * Lib used: https://github.com/TalAter/annyang
@@ -48,16 +50,16 @@
         
         // We toggle backstretch state when toggling sidebar to reduce (graphical frame drop)
         $rootScope.$on('sidebar.open', function(){
-            backstretch.pause();
+            if($state.current === 'board') backstretch.pause();
         });
         $rootScope.$on('sidebar.opened', function(){
-            backstretch.resume();
+            if($state.current === 'board') backstretch.resume();
         });
         $rootScope.$on('sidebar.close', function(){
-            backstretch.pause();
+            if($state.current === 'board') backstretch.pause();
         });
         $rootScope.$on('sidebar.closed', function(){
-            backstretch.resume();
+            if($state.current === 'board') backstretch.resume();
         });
         
         //annyang.debug();

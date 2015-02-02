@@ -13,32 +13,6 @@ angular
     .module('app.directives')
 
     /**
-     * Use declarative approach
-     * Use it with <title page-title></title>
-     */
-    .directive('pageTitle', ['$rootScope', '$timeout', 'config',
-        function($rootScope, $timeout, config){
-            return {
-                restrict: 'A',
-                link: function(scope, element, attr) {
-                    var listener = function(event, toState, toParams, fromState, fromParams) {
-                        // Default title - load on Dashboard 1
-                        var title = config.pageTitle + ' | Home';
-                        // Create your own title pattern
-                        if (toState.data && toState.pageTitle) title = config.pageTitle + ' | ' + toState.data.pageTitle;
-                        $timeout(function() {
-                            element.text(title);
-                        });
-                    };
-                    // @todo take the best one
-                    $rootScope.$on('$stateChangeStart', listener);
-                    //$rootScope.$on('$stateChangeSuccess', listener);
-                }
-            }
-        }
-    ])
-
-    /**
      * Control the sidebar component
      * For now it only reset the state when route change. In that way the sidebar is always reset when user leave the /board state
      */
@@ -77,7 +51,9 @@ angular
                 restrict: 'A',
                 link: function(scope, element, attr) {
                     // Call the metsiMenu plugin and plug it to sidebar navigation
-                    element.metisMenu();
+                    $timeout(function(){
+                        element.metisMenu();
+                    });
                 }
             }
         }

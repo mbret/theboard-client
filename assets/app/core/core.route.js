@@ -34,6 +34,14 @@
                     pageTitle: 'Profile'
                 }
             })
+            .state('widget-profiles', {
+                url: '/widget-profiles',
+                templateUrl: config.routes.partials + '/widget-profiles.html',
+                controller: 'WidgetProfilesController',
+                data: {
+                    pageTitle: 'Widget profiles'
+                }
+            })
     }
 
 })();
