@@ -14,7 +14,8 @@
 module.exports = function(grunt) {
 
 	grunt.config.set('sails-linker', {
-		devJs: {
+		
+        devJs: {
 			options: {
 				startTag: '<!--SCRIPTS-->',
 				endTag: '<!--SCRIPTS END-->',
@@ -43,6 +44,37 @@ module.exports = function(grunt) {
 			}
 		},
 
+        /**
+         * Linker for front end js
+         */
+        devJsApp: {
+            options: {
+                startTag: '<!--SCRIPTS APP-->',
+                endTag: '<!--SCRIPTS APP END-->',
+                fileTmpl: '<script src="%s"></script>',
+                appRoot: '.tmp/public'
+            },
+            files: {
+                '.tmp/public/**/*.html': require('../pipeline').jsFilesToInjectApp,
+                'views/**/*.html': require('../pipeline').jsFilesToInjectApp,
+                'views/**/*.ejs': require('../pipeline').jsFilesToInjectApp
+            }
+        },
+        devJsRelativeApp: {
+            options: {
+                startTag: '<!--SCRIPTS APP-->',
+                endTag: '<!--SCRIPTS APP END-->',
+                fileTmpl: '<script src="%s"></script>',
+                appRoot: '.tmp/public',
+                relative: true
+            },
+            files: {
+                '.tmp/public/**/*.html': require('../pipeline').jsFilesToInjectApp,
+                'views/**/*.html': require('../pipeline').jsFilesToInjectApp,
+                'views/**/*.ejs': require('../pipeline').jsFilesToInjectApp
+            }
+        },
+        
 		prodJs: {
 			options: {
 				startTag: '<!--SCRIPTS-->',
@@ -102,6 +134,37 @@ module.exports = function(grunt) {
 				'views/**/*.ejs': require('../pipeline').cssFilesToInject
 			}
 		},
+        
+        /**
+         * Style relative to front end APP
+         */
+        devStylesApp: {
+            options: {
+                startTag: '<!--STYLES APP-->',
+                endTag: '<!--STYLES APP END-->',
+                fileTmpl: '<link rel="stylesheet" href="%s">',
+                appRoot: '.tmp/public'
+            },
+            files: {
+                '.tmp/public/**/*.html': require('../pipeline').cssFilesToInjectApp,
+                'views/**/*.html': require('../pipeline').cssFilesToInjectApp,
+                'views/**/*.ejs': require('../pipeline').cssFilesToInjectApp
+            }
+        },
+        devStylesRelativeApp: {
+            options: {
+                startTag: '<!--STYLES APP-->',
+                endTag: '<!--STYLES APP END-->',
+                fileTmpl: '<link rel="stylesheet" href="%s">',
+                appRoot: '.tmp/public',
+                relative: true
+            },
+            files: {
+                '.tmp/public/**/*.html': require('../pipeline').cssFilesToInjectApp,
+                'views/**/*.html': require('../pipeline').cssFilesToInjectApp,
+                'views/**/*.ejs': require('../pipeline').cssFilesToInjectApp
+            }
+        },
 
 		prodStyles: {
 			options: {

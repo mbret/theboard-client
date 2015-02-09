@@ -9,12 +9,12 @@
         .module('app.directives')
         .directive('backstretch', backstretch);
 
-    backstretch.$inject = ['$rootScope', 'config', 'backstretch', 'logger', '_', '$timeout'];
+    backstretch.$inject = ['$rootScope', 'user', 'backstretch', 'logger', '_', '$timeout'];
 
     /**
      * The directive must have ="value" with value as an array
      */
-    function backstretch ($rootScope, config, backstretch, logger, _, $timeout) {
+    function backstretch ($rootScope, user, backstretch, logger, _, $timeout) {
         
         if (typeof $.fn.backstretch !== 'function')
             throw new Error('ngBackstretch | Please make sure the jquery backstretch plugin is included before this directive is added.');
@@ -47,17 +47,17 @@
                     //resume();
                 }
 
-                function init(){
-                    logger.debug('backstretch create');
-                    element.backstretch(images , {
-                        duration: config.user.backgroundImagesInterval,
-                        fade: 750
-                    });
-                    instance = element.data('backstretch');
+                function init( delay ){
+                    $timeout( function(){
+                        element.backstretch(images , {
+                            duration: user.backgroundImagesInterval,
+                            fade: 750
+                        });
+                        instance = element.data('backstretch');
+                    }, delay);
                 }
 
                 function pause(){
-                    logger.debug('Backstretch pause');
                     // If backstretch was resuming, prevent it to put in pause (again)
                     // With that if user throw multiple pause / resume, it will no resume multiple time and let a latence to user
                     cancelResume();
@@ -75,15 +75,14 @@
                     
                     if(!isResuming){
                         isResuming = true;
-                        logger.debug('backstretch resume');
                         if( instance === null || instance === undefined ){
-                            $timeout(init, delay);
+                            init(500);
                         }
                         else{
                             resumingProcess = setTimeout(function(){
                                 element.backstretch('resume');
                                 isResuming = false;
-                            }, config.user.backgroundImagesInterval);
+                            }, user.backgroundImagesInterval);
                         }
                     }
                 }
@@ -96,7 +95,6 @@
                 }
                 
                 function destroy(){
-                    logger.debug('backstretch destroy');
                     cancelResume();
                     if( instance !== null && instance !== undefined ){
                         element.backstretch("destroy", false /*preserveBackground*/);

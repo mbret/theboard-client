@@ -1,52 +1,49 @@
 (function () {
     'use strict';
 
-    var app = angular.module('app')
-        .config(configureConfig)
+    angular.module('app.core')
         .config(configureToastr)
         .config(configureProviders)
         .config(configureBlocks)
+        .config(configureUser)
         .run(appRun);
 
-    // Configure tha config from server
-    // We add some info here
-    configureConfig.$inject = ['config', '_'];
-    function configureConfig(config, _){
-        // deep merge
-        _.merge(config, {
-            appErrorPrefix: '[Board] ',
-            routes: {
-                templates: config.routes.app + '/views/templates',
-                partials: config.routes.app + '/views/partials'
-            }
-        });
-    }
-
+    
     // Toaster configuration
     // The configuration come from the server
-    configureToastr.$inject = ['toastr', 'config'];
-    function configureToastr(toastr, config) {
-        angular.extend(toastr.options, config.toastr);
+    configureToastr.$inject = ['toastr', 'APP_CONFIG'];
+    function configureToastr(toastr, APP_CONFIG) {
+        angular.extend(toastr.options, APP_CONFIG.toastr);
     }
 
     // Register various providers
     configureProviders.$inject = ['$httpProvider'];
     function configureProviders($httpProvider) {
         $httpProvider.interceptors.push('myHttpInterceptor');
-    };
+    }
 
     // Configure various blocks
     // Blocks are reusable component through different application
     // They usually give a 'provider' because these blocks can be configured
     // and expose an API for application-wide configuration that must be made before the application starts
-    configureBlocks.$inject = ['exceptionHandlerProvider', 'config'];
-    function configureBlocks(exceptionHandlerProvider, config){
-        exceptionHandlerProvider.configure(config.appErrorPrefix);
+    configureBlocks.$inject = ['exceptionHandlerProvider', 'APP_CONFIG'];
+    function configureBlocks(exceptionHandlerProvider, APP_CONFIG){
+        exceptionHandlerProvider.configure(APP_CONFIG.appErrorPrefix);
+    }
+
+    configureUser.$inject = ['APP_CONFIG', 'userProvider'];
+    /**
+     * Configure the user value for all application.
+     * The user object come from server and correspond to the logged user.
+     * This value is set now but can change anytime during process and is share accross modules.
+     */
+    function configureUser(APP_CONFIG, userProvider){
+        userProvider.setData(APP_CONFIG.user);
     }
     
     // Config that must be execute at module run
-    appRun.$inject = ['$rootScope', '$state', '$http', '$log', 'notifService', '$timeout', 'config'];
-    function appRun($rootScope, $state, $http, $log, notifService, $timeout, config){
+    appRun.$inject = ['$rootScope', '$state', '$http', '$log', 'notifService', '$timeout', 'APP_CONFIG'];
+    function appRun($rootScope, $state, $http, $log, notifService, $timeout, APP_CONFIG){
 
         $rootScope.$state = $state;
 
@@ -55,7 +52,7 @@
         // We display it after Pace is hidden.
         // @todo if you have a better idea in order to not use directly Pace here give it
         Pace.on('hide', function(){
-            $http.get(config.routes.flash).then(function(data){
+            $http.get(APP_CONFIG.routes.flash).then(function(data){
                 $log.debug(data.data);
                 var messages = data.data;
 
@@ -75,5 +72,4 @@
         });
 
     };
-
 })();

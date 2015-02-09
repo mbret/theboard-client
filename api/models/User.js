@@ -15,7 +15,8 @@ var User = {
         banner: { type: 'string', required: false }, // default value set in lifecycle callback
 
         settings: { collection:'userSetting', via: 'user' },
-        widgets: {collection:'userWidget', via: 'user'},
+        //widgets: {collection:'userWidget', via: 'user'},
+        profiles: { collection: 'profile', via: 'user' },
         
         /**
          * Return the value of the asked settings
@@ -47,33 +48,13 @@ var User = {
         },
 
         /**
-         * Register a new widget 
-         * This method use a queue so you NEED to call user.save in order to save these change
-         * @param widget
-         */
-        registerWidget: function(widget){
-            var registered = {
-                sizeX: widget.sizeX,
-                sizeY: widget.sizeY,
-                row: widget.row,
-                col: widget.col,
-                widget: widget.id
-            };
-            // fill options
-            var options = {};
-            _.forEach(widget.options, function(option, index){
-               options[option.id] = (option.default) ?  option.default : null;
-            });
-            registered.options = options;
-            this.widgets.add(registered);
-        },
-        
-        /**
          * Return a user object for the view
          * all sensitive data are removed
          */
         toView: function(){
-            var data = this.toObject();
+            
+            // We need to clone it (problem with populate that will not show up on json)
+            var data = _.cloneDeep(this.toObject());
             var that = this;
             
             // Loop over all supposed settings
@@ -83,7 +64,10 @@ var User = {
             _.forEach(sails.config.user.settings, function(setting, key){
                 userSettings[key] =  that.getSettingValue(key);
             });
-            data.config = userSettings;
+            data.settings = userSettings;
+            
+            // @todo check how to only retrieve list of profile id instead of having this because of populate
+            data.profiles = _.map(data.profiles, 'id');
             
             return data;
             

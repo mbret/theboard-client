@@ -5,7 +5,7 @@
         .module('app.controllers')
         .controller('IndexController', IndexController)
 
-    IndexController.$inject = ['backstretch', '$rootScope', '$scope', 'dataservice', '$q', 'config', '$log', 'widgetService', 'geolocationService', 'modalService', 'notifService', '$timeout', 'sidebarService'];
+    IndexController.$inject = ['backstretch', 'user', '$scope', 'dataservice', '$q', 'APP_CONFIG', '$log', 'widgetService', 'geolocationService', 'modalService', 'notifService', '$timeout', 'sidebarService'];
 
     /**
      * IndexController
@@ -14,13 +14,15 @@
      * Controllers should never do DOM manipulation or hold DOM selectors; that's where directives and using ng-model come in. Likewise business logic should live in services, not controllers.
      * Data should also be stored in services, except where it is being bound to the $scope
      */
-    function IndexController(backstretch, $rootScope, $scope, dataservice, $q, config, $log, widgetService, geolocationService, modalService, notifService, $timeout, sidebarService){
+    function IndexController(backstretch, user, $scope, dataservice, $q, APP_CONFIG, $log, widgetService, geolocationService, modalService, notifService, $timeout, sidebarService){
 
         // This var will contain all widget element
         // These widgets will be placed inside iframe and get from server
         $scope.widgets = null;
         $scope.widgetsLocked = false;
-
+        $scope.widgetsBorders = user.getSetting( user.CONST.SETTING_WIDGETS_BORDERS );
+        var widgets;
+            
         // This var save the previous widget state.
         // If widgets are moved then this var contain all widgets before this move
         var widgetsPreviousState = null;
@@ -39,14 +41,13 @@
             widgetService.sendSignal( null, 'start' );
         };
         $scope.reloadWidgets = function(){
-            widgetService.reloadAll();
+            widgetService.reloadAll( widgets );
         };
         $scope.lockOrUnlock = function(){
             $scope.widgetsLocked = !$scope.widgetsLocked;
             if($scope.widgetsLocked){ }
             else{ }
         }
-
 
         /*
          * Widget load and init
@@ -55,8 +56,9 @@
          * - Transform the permissions array into filled object
          *
          */
-        dataservice.getWidgets().then(function(widgets){
+        widgetService.getAll().then(function(widgets){
 
+            widgets = widgets;
             $scope.widgets = widgets;
             
             return (function(){
@@ -93,7 +95,7 @@
 
                             // mail
                             if( widget.permissions &&  widget.permissions.indexOf('email') !== -1  ){
-                                permissions.email = config.user.email;
+                                permissions.email = user.email;
                             }
                             // location (async)
                             // We create a new promise (with anonymous function)
@@ -121,13 +123,7 @@
                                 //console.log(widget);
                                 widget.permissions = permissions; // @todo maybe not useful anymore
 
-                                widget.state = 'loading';
-                                widget.rebuildIframeURL(); // We need to build one time the iframe URL, because it's first time ..
-                                widget.state = 'ready';
-
-                                // Get user pref for specific style for widget
-                                widget.borders = config.user.config.widgetsBorders;
-                                console.log('done1');
+                                widgetService.load(widget);
 
                                 return deferred.resolve();
                             })
@@ -162,7 +158,7 @@
          *
          */
         // Inject to view the gridster configuration
-        $scope.gridsterOpts = config.gridsterOpts;
+        $scope.gridsterOpts = APP_CONFIG.gridsterOpts;
 
         // Set event function when widgets are dragged
         $scope.gridsterOpts.draggable = {

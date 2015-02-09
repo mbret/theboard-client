@@ -8,9 +8,9 @@
         .module('app')
         .factory('backstretch', backstretch);
 
-    backstretch.$inject = ['$http', 'config', 'logger'];
+    backstretch.$inject = ['$http', 'APP_CONFIG', 'logger'];
 
-    function backstretch($http, config, logger) {
+    function backstretch($http, APP_CONFIG, logger) {
         return {
             status: null,
             delay: null,
@@ -22,7 +22,6 @@
                 this.delay = delay;
             },
             toggle: function(){
-                console.log('toggle', this.status);
                 if(this.status === 'resume'){
                     this.status = 'pause';
                 }

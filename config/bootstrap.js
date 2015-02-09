@@ -128,27 +128,39 @@ module.exports.bootstrap = function(cb) {
       // Create user for test
       if( sails.config.environment == 'development' ){
           return User.create({
-              email    : 'user@gmail.com',
-              //backgroundImages: [
-              //    sails.config.dataURL + '/img/board (2).jpg',
-              //    sails.config.dataURL + '/img/board (3).jpg',
-              //    sails.config.dataURL + '/img/board (4).jpg',
-              //    sails.config.dataURL + '/img/board (5).jpg',
-              //    sails.config.dataURL + '/img/board (6).jpg',
-              //    sails.config.dataURL + '/img/board (7).jpg',
-              //    sails.config.dataURL + '/img/board (8).jpg',
-              //    sails.config.dataURL + '/img/board (9).jpg']
+              email    : 'user@gmail.com'
           }).then(function(user){
-              user.settings.add(UserSetting.buildNewSetting('widgetsBorders', false));
-              // Insert widget for this user
-              _.forEach(widgets, function(widget, key){
-                  user.registerWidget(widget);
-              });
               
+              user.settings.add(UserSetting.buildNewSetting('widgetsBorders', false));
+              
+              user.profiles.add( { name: 'Desktop', description: 'For my Desktop, it use a 1920x1080 resolution and is full of widget ;)', activated: true });
+              user.profiles.add( { name: 'TV', activated: false, default: false} );
+
               return user.save().then(function(user){
                   return user;
               });
-          }).then(function(user){
+          })
+            // Fill profiles
+            .then(function(user){
+                return Profile.find({user: user.id}).then(function(profiles){
+
+                    var promises = [];
+                    // Insert widget for this user
+                    _.forEach(profiles, function(profile, key){
+                        // Insert widget for this user
+                        _.forEach(widgets, function(widget, key){
+                            if( !(profile.name === "TV" && widget.identity === "Velib") ){
+                                profile.registerWidget(widget);
+                            }
+                        });
+                        promises.push(profile.save());
+                    });
+                    return Promise.all(promises).then(function(){
+                        return user;
+                    })
+                });
+            })
+              .then(function(user){
               return Passport.create({
                   protocol : 'local',
                   password : 'password',

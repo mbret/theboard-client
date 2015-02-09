@@ -1,4 +1,6 @@
-
+body.modal-open{
+    overflow: auto; /* we display the scroll to avoid element width change */
+}
 .hidden{
     display: none;
 }
@@ -48,15 +50,20 @@
 .widget-iframe-container .widget-loading{
     height: 100%;
 }
-
-.widget-iframe{
+/*
+ * Relative to <iframe>
+ */
+.widget-iframe-container .widget-iframe{
     border: none;
     width: 100%;
     height: 100%;
-    /*border-radius: 3px; *//* fix for little glitch on each corner */
+    visibility: hidden;
+    position: absolute;
 }
-
-
+.widget-iframe-container .widget-iframe.iframe-visible{
+    visibility: visible;
+    position: relative;
+}
 .widget-lock .widget-iframe-lock{
     visibility:visible;
     transition-delay:0s;
@@ -100,6 +107,33 @@
 .gridster .widget-lock .gridster-item:hover .handle-se{
     border-width: 0 0 30px 30px;
 }
+
+/*=================================
+         Widget profiles
+=================================*/
+.ibox.widget-profile{
+    cursor: pointer;
+}
+.ibox.widget-profile.selected{
+    
+}
+.ibox.widget-profile p.description{
+    height: 50px;
+    max-height: 50px;
+}
+.ibox .ibox-content.selected{
+    
+}
+/*.modal-widget-profile .modal-dialog{*/
+    /*width: 150px;*/
+/*}*/
+/*.modal-widget-profile .modal-dialog .modal-content{*/
+    /*border-radius: 40px;*/
+/*}*/
+/*.modal-widget-profile .modal-dialog .modal-body{*/
+    /*border-radius: 40px;*/
+    /*padding: 15px;*/
+/*}*/
 
 
 /*=================================
@@ -214,13 +248,27 @@ h1.logo-name{
  * Form rewrite from theme
  ************************************/
 label.error {
-    font-weight: inherit; /* with open sans the label error was to fat, we reduced the weight */
+    /*font-weight: inherit; *//* with open sans the label error was to fat, we reduced the weight */
+}
+.error-container label.error{
+    display: block; /* we need error to stack and not follow*/
 }
 /* add error support (.form-control.error) from theme to angular */
 .form-control.ng-invalid.ng-dirty {
     border: 1px dotted #cc5965;
 }
-
+#toast-container > .toast-warning:before {
+    content: "\f003";
+}
+#toast-container > .toast-error:before {
+    content: "\f188";
+}
+#toast-container > .toast-info:before {
+    content: "\f005";
+}
+#toast-container > .toast-success:before {
+    content: "\f00C";
+}
 
 
 /*==================================
@@ -248,12 +296,21 @@ label.error {
     -o-transition: visibility 0s linear .5s,opacity .2s ease-in;
     transition: visibility 0s linear .5s,opacity .2s ease-in;
 }
-.pace-progress{
+.pace .pace-progress{
     height:4px;z-index:2;position:relative;
-    /*transition:all .2s;*/
     border-radius: 0;
+    background: #1ab394;
+    position: fixed;
+    z-index: 2000;
+    top: 0px;
+    left: inherit;
+    height: 4px;
+    -webkit-transition: width 1s;
+    -moz-transition: width 1s;
+    -o-transition: width 1s;
+    transition: width 1s;
 }
-.pace-activity{display:none}
+.pace .pace-activity{display:none}
 .cover {
     position: fixed;
     left: 0px;

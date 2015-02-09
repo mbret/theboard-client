@@ -22,29 +22,29 @@
                     </h5>
                 </div>
                 <div class="ibox-content">
-                    <form class="form-horizontal" name="updateAccountForm" ng-submit="updateAccountFormSubmit()">
+                    <form class="form-horizontal" name="userForm" ng-submit="userFormSubmit()">
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">First name</label>
                             <div class="col-sm-5">
-                                <input type="text" class="form-control" name="firstName" ng-model="account.firstName" >
+                                <input type="text" class="form-control" name="firstName" ng-model="user.firstName" >
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Last Name</label>
                             <div class="col-sm-5">
-                                <input type="text" class="form-control" name="lastName" ng-model="account.lastName" >
+                                <input type="text" class="form-control" name="lastName" ng-model="user.lastName" >
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Select</label>
+                            <label class="col-sm-3 control-label">Country</label>
                             <div class="col-sm-5">
-                                <select class="form-control m-b" name="account">
+                                <select class="form-control m-b" name="country">
                                     <option value="option 1">France</option>
-                                    <option value="option 2">English</option>
+                                    <option value="option 2">England</option>
                                 </select>
                             </div>
                         </div>
@@ -78,7 +78,7 @@
                     </h5>
                 </div>
                 <div class="ibox-content">
-                    <form class="form-horizontal" name="updateWidgetsSettingsForm" ng-submit="updateWidgetsSettingsFormSubmit()">
+                    <form class="form-horizontal" name="widgetsForm" ng-submit="widgetsFormSubmit()">
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Borders on widgets</label>
@@ -90,7 +90,7 @@
                         </div>
 
                         <div class="hr-line-dashed"></div>
-                        
+
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
                                 <button class="btn btn-primary" type="submit" >Save changes</button>
@@ -99,6 +99,47 @@
                     </form>
                 </div>
             </div>
+        
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Profile settigns
+                    </h5>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal" name="profileForm" ng-submit="profileFormSubmit()">
+
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <button class="btn btn-primary" type="submit" >Save changes</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Application settigns
+                    </h5>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal" name="applicationForm" ng-submit="applicationFormSubmit()">
+
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <button class="btn btn-primary" type="submit" >Save changes</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
         </div>
     </div>
 

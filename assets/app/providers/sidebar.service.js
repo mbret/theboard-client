@@ -2,7 +2,7 @@
     'use strict';
 
     /**
-     * This is BAAAAAAAAAAAAAD practices
+     * This is BAAAAAAAAAAAAAD practices to use jquery like this
      * @todo animate
      * @todo don't use jquery
      */
@@ -10,27 +10,15 @@
         .module('app')
         .factory('sidebarService', sidebarService);
 
-    sidebarService.$inject = ['$log', '$rootScope'];
+    sidebarService.$inject = ['$log', '$rootScope', 'logger'];
 
-    function sidebarService($log, $rootScope) {
+    function sidebarService($log, $rootScope, logger) {
 
-        return {
+        var service = {
             close: close,
-            open: function( cb ){
-                $rootScope.$broadcast('sidebar.open');
-
-                var $sidebar = $('.sidebar');
-                $sidebar.removeClass('sidebar-closed');
-                $sidebar.addClass('sidebar-open');
-                $('.sidebar-backdrop').addClass('active');
-
-                $sidebar.one(whichTransitionEvent($sidebar), function(e){
-                    $rootScope.$broadcast('sidebar.opened');
-                    $rootScope.$apply();
-                    if(cb) cb();
-                });
-            },
+            open: open,
             toggle: function( cb ){
+                logger.debug('sidebar toggle');
                 var self = this;
                 if ($('.sidebar').hasClass('sidebar-closed')) {
                     self.open( cb );
@@ -42,12 +30,40 @@
             // Put the sidebar in static state (disable backdrop but let open the sidebar)
             putStatic: function(){
                 var self = this;
-                self.open();
+                if(! this.isOpen()) self.open();
                 $('.sidebar-backdrop').removeClass('active');
-            }
+            },
+            isOpen: isOpen
         }
+    
+        return service;
+        
+        function isOpen(){
+            var $sidebar = $('.sidebar');
+            if( $sidebar.hasClass('sidebar-open') ){
+                return true;
+            }
+            return false;
+        }
+        
+        function open( cb ){
+            logger.debug("sidebar open");
+            $rootScope.$broadcast('sidebar.open');
 
+            var $sidebar = $('.sidebar');
+            $sidebar.removeClass('sidebar-closed');
+            $sidebar.addClass('sidebar-open');
+            $('.sidebar-backdrop').addClass('active');
+
+            $sidebar.one(whichTransitionEvent($sidebar), function(e){
+                $rootScope.$broadcast('sidebar.opened');
+                $rootScope.$apply();
+                if(cb) cb();
+            });
+        }
+        
         function close( cb ){
+            logger.debug("sidebar close");
             $rootScope.$broadcast('sidebar.close');
 
             var $sidebar = $('.sidebar');

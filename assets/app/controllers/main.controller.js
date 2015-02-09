@@ -5,15 +5,13 @@
         .module('app.controllers')
         .controller('MainController', MainController)
 
-    MainController.$inject = ['$rootScope', '$scope', '$http', '$state', 'config', '$log', '$animate', 'widgetService', 'geolocationService', 'backstretch', 'test'];
+    MainController.$inject = ['$rootScope', '$scope', '$http', '$state', 'user', '$log', '$animate', 'widgetService', 'geolocationService', 'backstretch'];
 
     /**
      * USE THIS CONTROLLER AS LESS AS POSSIBLE (bad practice)
      * Usually if you need something to go here you should probably make a directive or service !
      */
-    function MainController($rootScope, $scope, $http, $state, config, $log, $animate, widgetService, geolocationService, backstretch, test){
-
-        console.log(test);
+    function MainController($rootScope, $scope, $http, $state, user, $log, $animate, widgetService, geolocationService, backstretch){
 
         /**
          * Lib used: https://github.com/TalAter/annyang
@@ -33,7 +31,7 @@
         // backstretch take an array of url so we take settings
         // and create an array with image and url
         var urls = [];
-        angular.forEach(config.user.backgroundImages, function(image){
+        angular.forEach(user.backgroundImages, function(image){
             urls.push(image);
         });
         $scope.backstretch = urls;
@@ -50,16 +48,16 @@
         
         // We toggle backstretch state when toggling sidebar to reduce (graphical frame drop)
         $rootScope.$on('sidebar.open', function(){
-            if($state.current === 'board') backstretch.pause();
+            if($state.current.name === 'board') backstretch.pause();
         });
         $rootScope.$on('sidebar.opened', function(){
-            if($state.current === 'board') backstretch.resume();
+            if($state.current.name === 'board') backstretch.resume();
         });
         $rootScope.$on('sidebar.close', function(){
-            if($state.current === 'board') backstretch.pause();
+            if($state.current.name === 'board') backstretch.pause();
         });
         $rootScope.$on('sidebar.closed', function(){
-            if($state.current === 'board') backstretch.resume();
+            if($state.current.name === 'board') backstretch.resume();
         });
         
         //annyang.debug();

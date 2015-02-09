@@ -38,9 +38,16 @@ module.exports.routes = {
     'GET /helpers/cor/:url': 'AppController.pipeCOR', // act as proxy for any request out of this domain
     'get /configuration.json': 'AppController.getConfiguration', // return app settings
     
-    'get /widgets': 'AppController.getWidgets',
-    'put /widgets/:id': 'AppController.updateWidget',
+    'get /users/profiles/:profileid/widgets': 'AppController.getWidgets', // specific profile
+    'get /users/widgets': 'AppController.getWidgets', // default activated profile
+    
+    'put /users/profiles/:profileid/widgets/:id': 'AppController.updateProfileWidget', // update for given profile
+    'put /users/widgets/:id': 'AppController.updateProfileWidget', // update for default profile
 
+    'get /users/profiles'       : 'AppController.getProfiles',
+    'put /users/profiles'       : 'AppController.updateProfiles',
+    'put /users/profiles/:id'   : 'AppController.updateProfile',
+    
     'get /account': 'AppController.getAccountData',
     'put /account': 'AppController.updateAccountData',
 

@@ -6,9 +6,17 @@ var validator = require('validator');
 module.exports = {
 
     attributes: {
-        user: {model:'user', required: true},
+        
+        profile: {model: 'profile', required: true},
         widget: {model:'widget', required: true},
+        
+        /*
+         * relative to widget only
+         */
+        // options concern possible options for a widget
         options: {type:'json', defaultsTo: {}},
+        
+        // widget position
         sizeX: {type:'integer', required:true},
         sizeY: {type:'integer', required:true},
         row: {type:'integer', required:true},

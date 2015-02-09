@@ -5,16 +5,16 @@
      *
      */
     angular
-        .module('app')
+        .module('app.services')
         .factory('Widget', Widget);
 
-    Widget.$inject = ['$window', '$http', 'config', 'logger', 'notifService', '$injector'];
+    Widget.$inject = ['$window', '$http', 'APP_CONFIG', 'logger', 'notifService', '$injector'];
 
     /**
      * This is a Widget model factory
      *
      */
-    function Widget($window, $http, config, logger, notifService, $injector) {
+    function Widget($window, $http, APP_CONFIG, logger, notifService, $injector) {
         var Widget = function(widget){
             this.id = widget.id;
             this.iframeURL = widget.iframeURL;
@@ -25,9 +25,26 @@
                 this[prop] = widget[prop];
             }
             
+            var state = null;
+            this.options = widget.options ? widget.options : [];
             this.saveState(); // keep trace of current state
         }
+        Widget.prototype.__defineGetter__("STATE_RELOADING", function(){ return 'reloading' });
+        Widget.prototype.hasOptions = hasOptions;
+        Widget.prototype.saveOptions = saveOptions;
+        Widget.prototype.getOptionValue = getOptionValue;
+        Widget.prototype.getState = getState;
+        Widget.prototype.setState = setState;
+        Widget.prototype.buildIframeURL = buildIframeURL;
+        
+        function setState(state){
 
+        }
+        
+        function getState(){
+            
+        }
+        
         /**
          * Save the current state like position, size etc
          */
@@ -39,6 +56,16 @@
                 col: this.col
             }
         }
+
+        function getOptionValue(id){
+            var optionValue = null;
+            angular.forEach(this.options, function(option){
+                if(option.id === id){
+                    optionValue = option.value;
+                }
+            });
+            return optionValue;
+        };
         
         Widget.prototype.setOptionValue = function(id, value){
             angular.forEach(this.options, function(option){
@@ -59,10 +86,7 @@
             });
         };
 
-        /**
-         * WARNING: if you linked the url to an iframe you will occur an iframe reload
-         */
-        Widget.prototype.rebuildIframeURL = function(){
+        function buildIframeURL(){
             // prepare options for widget
             var options = {};
             angular.forEach(this.options, function(option, index){
@@ -77,15 +101,26 @@
                 permissions: this.permissions,
                 options: options
             };
-            this.iframeURL = $window.URI(this.baseURL).search({widget:JSON.stringify(configuration)}).toString();
-        };
+            var URI = $window.URI(this.baseURL).search({widget:JSON.stringify(configuration)}).toString();
+            this.iframeURL = URI;
+            logger.debug('Widget build its URL', URI);
+        }
+        
+
+        /**
+         * Check if the widget has options
+         * @returns {boolean}
+         */
+        function hasOptions(){
+            return this.options.length > 0;
+        }
 
         /**
          * Save the current widget options
          * Save it to server
          * @returns {*}
          */
-        Widget.prototype.saveOptions = function(){
+        function saveOptions(){
             var that = this;
             return this._save({
                 options: that.options
@@ -119,7 +154,7 @@
             if( this.hasStateChanged() ){
                 return $injector.get('dataservice').updateWidget( that )
                     .then(function( widgetUpdated ){
-                        notifService.success( config.messages.widgets.updated );
+                        notifService.success( APP_CONFIG.messages.widgets.updated );
                         that.saveState();
                     })
                     .catch(function(err){
@@ -141,14 +176,14 @@
          */
 
         Widget.prototype._save = function(data){
-            return $http.put(config.routes.widgets.update + '/' + this.id, data)
+            return $http.put(APP_CONFIG.routes.widgets.update + '/' + this.id, data)
                 .then(function(data) {
                     logger.debug('Widget updated successfully!', data.data);
                     return data.data;
                 })
                 .catch(function(err) {
                     logger.error('Failure while updating widget', err);
-                    throw new Error(config.messages.errors.widgets.unableToUpdate);
+                    throw new Error(APP_CONFIG.messages.errors.widgets.unableToUpdate);
                 });
         };
 

@@ -52,9 +52,17 @@ module.exports = {
             icons: '/app/icons',
             images: '/app/img',
             flash: '/flash',
+            user: {
+                profiles: {
+                    get: '/users/profiles',
+                    update: '/users/profiles'
+                }
+            },
             widgets: {
-                get: '/widgets', // get
-                update: '/widgets' // put
+                getByProfile: '/users/profiles/:id/widgets', // get
+                get: '/users/widgets', // get
+                update: '/users/widgets', // put,
+                updateByProfile: '/users/profiles/:profileid/widgets/:id'
             },
             account: {
                 get: '/account', // get
@@ -66,9 +74,6 @@ module.exports = {
         // @todo this should be done in another way ..
         messages: {
             errors: {
-                form: {
-                    invalid: 'Your form contain some errors, please check it before submit!',
-                },
                 unableToUpdate: 'Sorry but we were unable to update',
                 unableToLoad: 'Sorry but we were unable to load',
                 geolocation: {
@@ -90,7 +95,14 @@ module.exports = {
                     updated: 'Widget updated!'
                 }
             },
+            form: {
+                invalid: 'Your form contain some errors, please check it before submit!',
+            },
             nochange: 'No change',
+            profile:{
+                activated: 'New profile activated!',
+                updated: 'Profile updated',
+            },
             widgets: {
                 updated: 'Widgets updated!'
             }

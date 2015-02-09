@@ -125,12 +125,12 @@ module.exports.http = {
         ], function(err){
             return next(err);
         })
-    }
+    },
 
-    // myRequestLogger: function (req, res, next) {
+    //myRequestLogger: function (req, res, next) {
     //     console.log("Requested :: ", req.method, req.url);
     //     return next();
-    // }
+    //}
 
 
   /***************************************************************************

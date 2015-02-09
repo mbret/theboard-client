@@ -10,25 +10,21 @@
     <!-- Viewport mobile tag for sensible mobile support -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
+    <!--STYLES APP-->
     <link rel="stylesheet" href="/styles/dist/angular-gridster.min.css">
-
-    <!-- Bootstrap and fonts -->
     <link rel="stylesheet" href="/styles/plugins/bootstrap.min.css">
     <link rel="stylesheet" href="/styles/plugins/font-awesome/css/font-awesome.min.css">
-
     <link rel="stylesheet" href="/styles/plugins/iCheck/custom.css">
-    
     <link rel="stylesheet" href="/styles/plugins/toastr/toastr.min.css">
-
-    <!-- Theme + own css -->
     <link rel="stylesheet" href="/styles/plugins/animate.css">
     <link rel="stylesheet" href="/styles/style.theme.css">
     <link rel="stylesheet" href="/styles/style.css">
+    <!--STYLES APP END-->
 
 </head>
 
 
-<body  ng-controller="MainController" class="{{$state.current.name}}" backstretch="{{backstretch}}">
+<body  ng-controller="MainController" class="{{$state.current.name}}" backstretch="{{backstretch}}" backstretch-images="backstretch" backstretch-duration="5000" backstretch-fade="1">
 
     <!-- This preloader is used with pace.js to hide the content of page while rendering is not done -->
     <div class="preloader">
@@ -62,81 +58,70 @@
     <!-- End wrapper-->
 
 
+    <!--SCRIPTS APP-->
     <script src="/js/dependencies/sails.io.js"></script>
+    <script src="/js/dependencies/pace/pace.min.js"></script>
+    <script src="/js/dependencies/URI.js"></script>
+    <script src="/js/dependencies/lodash.js"></script>
     <script src="/js/dependencies/moment.min.js"></script>
     <script src="/js/dependencies/hammer.js"></script>
-
-    <!-- Jquery and Bootstrap -->
+    <script src="/js/dependencies/detect-element-resize.js"></script>
     <script src="/js/dependencies/jquery/jquery-2.1.1.min.js"></script>
     <script src="/js/dependencies/jquery/jquery-ui.min.js"></script>
-    <!--<script src="/js/dependencies/bootstrap/bootstrap.min.js"></script>-->
-
-    <!-- Jquery plugins -->
-    <!-- Metis menu -->
+    <script src="/js/dependencies/bootstrap/bootstrap.min.js"></script>
     <script src="/js/dependencies/metisMenu/jquery.metisMenu.js"></script>
-
     <script src="/js/dependencies/toastr/toastr.min.js"></script>
-
-    <!-- iCheck (http://fronteed.com/iCheck/) -->
     <script src="/js/dependencies/iCheck/icheck.min.js"></script>
-
-    <!-- Pace js (automatic page load progress bar -->
-    <script src="/js/dependencies/pace/pace.min.js"></script>
+    <script src="/js/dependencies/jquery.backstretch.js"></script>
+    <script src="/js/dependencies/angular/angular.js"></script>
+    <script src="/js/dependencies/angular/angular-animate.js"></script>
+    <script src="/js/dependencies/angular/angular-aria.js"></script>
+    <script src="/js/dependencies/angular/angular-route.js"></script>
+    <script src="/js/dependencies/angular/angular-ui-router.js"></script>
+    <script src="/js/dependencies/angular-hammer.js"></script>
+    <script src="/js/dependencies/bootstrap/ui-bootstrap-tpls-0.12.0.min.js"></script>
+    <script src="/js/dependencies/angular-gridster.js"></script>
+    <script src="/app/app.config.module.js"></script>
+    <script src="/app/app.module.js"></script>
+    <script src="/app/blocks/exception/exception.module.js"></script>
+    <script src="/app/blocks/logger/logger.module.js"></script>
+    <script src="/app/blocks/page-title/page-title.module.js"></script>
+    <script src="/app/controllers/controllers.module.js"></script>
+    <script src="/app/core/core.module.js"></script>
+    <script src="/app/directives/directives.module.js"></script>
+    <script src="/app/providers/services.module.js"></script>
+    <script src="/app/app.config.js"></script>
+    <script src="/app/app.constants.js"></script>
+    <script src="/app/blocks/exception/exception-handler.provider.js"></script>
+    <script src="/app/blocks/logger/logger.js"></script>
+    <script src="/app/blocks/page-title/page-title.directive.js"></script>
+    <script src="/app/controllers/index.controller.js"></script>
+    <script src="/app/controllers/main.controller.js"></script>
+    <script src="/app/controllers/profile.controller.js"></script>
+    <script src="/app/controllers/settings.controller.js"></script>
+    <script src="/app/controllers/widget-profiles.controller.js"></script>
+    <script src="/app/core/core.config.js"></script>
+    <script src="/app/core/core.constants.js"></script>
+    <script src="/app/core/core.routes.js"></script>
+    <script src="/app/directives/backstretch.directive.js"></script>
+    <script src="/app/directives/backstretch2.directive.js"></script>
+    <script src="/app/directives/icheck.directive.js"></script>
+    <script src="/app/directives/metis-menu.directive.js"></script>
+    <script src="/app/directives/sidebar.directive.js"></script>
+    <script src="/app/directives/widget-iframe.directive.js"></script>
+    <script src="/app/providers/backstretch.factory.js"></script>
+    <script src="/app/providers/dataservice.service.js"></script>
+    <script src="/app/providers/services.js"></script>
+    <script src="/app/providers/sidebar.service.js"></script>
+    <script src="/app/providers/user.provider.js"></script>
+    <script src="/app/providers/widget.factory.js"></script>
+    <!--SCRIPTS APP END-->
+    
     <script>
         Pace.on("done", function(){
             $(".preloader").addClass('site-loaded');
         });
     </script>
-    
-    <script src="/js/dependencies/detect-element-resize.js"></script>
-    <script src="/js/dependencies/jquery.backstretch.js"></script>
-    <script src="/js/dependencies/URI.js"></script>
-    <script src="/js/dependencies/lodash.js"></script>
-    
-    <!-- Angular dependencies -->
-    <script src="/js/dependencies/angular/angular.js"></script>
-    <script src="/js/dependencies/angular/angular-animate.js"></script>
-    <script src="/js/dependencies/angular/angular-aria.js"></script>
-    <script src="/js/dependencies/angular/angular-ui-router.js"></script>
-
-    <!-- Angular plugins -->
-    <script src="/js/dependencies/angular-hammer.js"></script>
-    <script src="/js/dependencies/bootstrap/ui-bootstrap-tpls-0.12.0.min.js"></script>
-    <script src="/js/dependencies/src/angular-gridster.js"></script>
-
-    <!-- App scripts -->
-    <script src="/app/app.module.js"></script>
-
-    <!--<script src="/app/core/core.module.js"></script>-->
-    <script src="/app/core/core.constants.js"></script>
-    <script src="/app/core/core.config.js"></script>
-    <script src="/app/core/core.route.js"></script>
-    
-    <script src="/app/controllers/controllers.module.js"></script>
-    <script src="/app/controllers/controllers.js"></script>
-    <script src="/app/controllers/main.controller.js"></script>
-    <script src="/app/controllers/index.controller.js"></script>
-    <script src="/app/controllers/profile.controller.js"></script>
-    <script src="/app/controllers/widget-profiles.controller.js"></script>
-
-    <script src="/app/directives/directives.module.js"></script>
-    <script src="/app/directives/directives.js"></script>
-    <script src="/app/directives/backstretch.directive.js"></script>
-    <script src="/app/directives/widget-iframe.directive.js"></script>
-
-    <script src="/app/services/services.js"></script>
-    <script src="/app/services/dataservice.service.js"></script>
-    <script src="/app/services/backstretch.factory.js"></script>
-    <script src="/app/services/sidebar.service.js"></script>
-    <script src="/app/services/widget.factory.js"></script>
-
-    <script src="/app/blocks/exception/exception.module.js"></script>
-    <script src="/app/blocks/exception/exception-handler.provider.js"></script>
-    <script src="/app/blocks/logger/logger.module.js"></script>
-    <script src="/app/blocks/logger/logger.js"></script>
-    <script src="/app/blocks/page-title/page-title.module.js"></script>
-    <script src="/app/blocks/page-title/page-title.directive.js"></script>
-
 
 </body>
 </html>

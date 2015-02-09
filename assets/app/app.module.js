@@ -11,22 +11,13 @@
 	
 	/*
 	 * Define app and its dependencies
+	 * - Will run
+	 *      - constants for each modules
+	 *      - config for each modules in order
+	 *      - run for each modules in order
 	 */
 	var app = angular.module('app',[
-
-		'ui.router',
-		'ui.bootstrap',
-		'ngAnimate',
-		'gridster',
-
-		'blocks.exception', // wrap angular exception handling
-		'blocks.logger', // wrap angular logging
-		'blocks.pageTitle',
-
-		'app.services',
-		'app.controllers',
-		'app.directives',
-
+        'app.core',
 	]);
 
 	/*
@@ -78,13 +69,8 @@
 					stop: function(event, $element, widget) {} // optional callback fired when item is finished dragging
 				}
 			};
-			// Add new constant
-			app.constant('test', 'HAAHAH');
-			app.constant('config', config); // @todo not used for now
-			//app.config(function($provide){
-			//	$provide.constant('config', config);
-			//})
-			window.appConfig = config; // used to pass to other module
+            
+            angular.module('app.config').constant('APP_CONFIG', config);
 			return;
 		})
 		.catch(function(errorResponse) {

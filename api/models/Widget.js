@@ -16,7 +16,9 @@ module.exports = {
         sizeX: 'integer',
         sizeY: 'integer',
         row: 'integer',
-        col: 'integer'
+        col: 'integer',
+        
+        profiles: { collection: 'profile', via: 'widgets' }
     },
 
     beforeCreate: function(values, cb){
