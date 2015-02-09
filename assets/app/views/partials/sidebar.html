@@ -6,13 +6,13 @@
                 <li class="nav-header">
                     <div class="dropdown profile-element">
                         <img alt="image" class="img-circle avatar_48" src="{{user.avatar}}"/>
-                        <a class="dropdown-toggle" href>
-                        <span class="clear">
-                            <span class="block m-t-xs">
-                                <strong class="font-bold">{{user.displayName}}</strong>
-                         </span>
-                            <span class="text-muted text-xs block">User <b class="caret"></b></span>
-                        </span>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#" aria-expanded="true">
+                            <span class="clear">
+                                <span class="block m-t-xs">
+                                    <strong class="font-bold">{{user.displayName}}</strong>
+                             </span>
+                                <span class="text-muted text-xs block">User <b class="caret"></b></span>
+                            </span>
                         </a>
                         <ul class="dropdown-menu animated fadeInRight m-t-xs">
                             <li><a ui-sref="profile">Profile</a></li>

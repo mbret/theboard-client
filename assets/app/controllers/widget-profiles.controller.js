@@ -30,6 +30,15 @@
         });
 
         /**
+         * Create a new profile.
+         */
+        this.newProfile = function(){
+
+            notifService.success("Profile created");
+        }
+        
+        
+        /**
          * Activate a profile
          * @param profile
          */

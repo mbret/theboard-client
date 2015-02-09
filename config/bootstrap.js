@@ -133,8 +133,8 @@ module.exports.bootstrap = function(cb) {
               
               user.settings.add(UserSetting.buildNewSetting('widgetsBorders', false));
               
-              user.profiles.add( { name: 'Desktop', description: 'For my Desktop, it use a 1920x1080 resolution and is full of widget ;)', activated: true });
-              user.profiles.add( { name: 'TV', activated: false, default: false} );
+              user.profiles.add( { name: 'Desktop', description: 'For my Desktop, it use a 1920x1080 resolution and is full of widget ;)'});
+              user.profiles.add( { name: 'TV', default: false} );
 
               return user.save().then(function(user){
                   return user;

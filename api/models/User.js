@@ -75,6 +75,27 @@ var User = {
         
     },
 
+    /**
+     * This function is an alias for user.create.
+     * It will create the user and init all settings relative to application like:
+     *  - default profile
+     *  - default settings
+     *  - etc
+     * @todo transactions , promises
+     * @param data
+     */
+    createAndInit: function( data , cb ){
+        // create user
+        sails.models.user.create(data, function(err, user){
+            if(err) return cb(err);
+
+            user.profiles.add( { name: 'Default', description: 'This is your first and default profile. You can add your own profile or edit / remove this profile.', default: true });
+            user.save(function(err, user){
+                return cb(err, user)
+            });
+        })
+    },
+    
     beforeCreate: function(values, cb){
         // check avatar
         if( _.isUndefined(values.avatar) || _.isNull(values.avatar)){

@@ -118,8 +118,11 @@ body.modal-open{
     
 }
 .ibox.widget-profile p.description{
-    height: 50px;
-    max-height: 50px;
+    height: 100px;
+    max-height: 100px;
+}
+.ibox .ibox-content{
+    height: 300px;
 }
 .ibox .ibox-content.selected{
     

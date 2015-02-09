@@ -124,7 +124,8 @@ var AuthController = {
                 return send( 'Error.Form.Invalid' );
             }
 
-            User.create({
+            // Create the user and init everything necessary for application
+            User.createAndInit({
                 email    : email
             }, function (err, user) {
                 if (err) {
@@ -154,8 +155,13 @@ var AuthController = {
                             return send('Error.Application.Generic');
                         });
                     }
-                    req.flash('success', 'Success.Auth.Register&Login');
-                    return res.redirect('/');
+                    req.login(user, function(err){
+                        if(err){
+                            return send('Error.Application.Generic');
+                        }
+                        req.flash('success', 'Success.Auth.Register&Login');
+                        return res.redirect('/');
+                    });
                 });
             });
         }
