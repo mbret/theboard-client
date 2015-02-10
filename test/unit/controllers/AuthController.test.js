@@ -1,41 +1,72 @@
 var request = require('supertest');
+var agent;
 
 describe('AuthController', function() {
 
-    describe('#login()', function() {
+    before(function(done) {
+        // We use more low lvl superagent to keep cookies http://stackoverflow.com/questions/14001183/how-to-authenticate-supertest-requests-with-passport
+        // So we keep reference of the same agent
+        agent = request.agent(sails.hooks.http.app);
+        done();
+    });
+
+    after(function(done) {
+        done();
+    });
+
+    /**
+     * Login function
+     * /login
+     */
+    describe('login()', function() {
         it('should return 200', function (done){
-            request(sails.hooks.http.app)
+            agent
                 .get('/login')
                 .send()
                 .expect(200, done);
         });
         it('should return 400 because of bad credentials', function(done){
-            request(sails.hooks.http.app)
+            agent
                 .post('/login')
-                .send({ email: 'user@gmail.fr', password: 'password'})
+                .send({ email: 'user@user.fr', password: sails.config.test.user.password})
                 .expect(400, done);
         });
-        it('should redirect to /', function (done){
-            request(sails.hooks.http.app)
+        it('should log and redirect to /', function (done){
+            agent
                 .post('/login')
-                .send({ email: 'user@gmail.com', password: 'password'})
+                .send({ email: sails.config.test.user.email, password: sails.config.test.user.password})
                 .expect(302)
                 .expect('location','/', done);
         });
         it('should return 403 because we are logged in', function (done){
-            request(sails.hooks.http.app)
-                .post('/login')
+            agent
+                .get('/login')
                 .expect(403, done);
         });
     });
 
-    describe('#logout()', function() {
-        it('should redirect to /', function (done){
-            request(sails.hooks.http.app)
+    /**
+     * Logout function
+     * /logout 
+     */
+    describe('logout()', function() {
+        
+        // Test if logout redirect well after logout
+        it('(logged) should logout and redirect to /', function (done){
+            agent
                 .post('/auth/logout')
                 .expect(302)
                 .expect('location','/', done);
         });
+        
+        // Test if we were correctly logged and if redirection is okay
+        it('(not logged) should redirect to login', function (done){
+            agent
+                .get('/logout')
+                .expect(302)
+                .expect('location','/login', done);
+        });
     });
+
 
 });

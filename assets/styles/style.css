@@ -10,7 +10,12 @@ body.modal-open{
     transform: translateY(-50%);
     text-align: center;
 }
-
+/*=================================
+        Login
+=================================*/
+.social-line hr{
+    border-top: 1px solid #D8D4D4;
+}
 
 /*=================================
         Widgets

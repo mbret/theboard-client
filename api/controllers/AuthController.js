@@ -279,7 +279,7 @@ var AuthController = {
    * @param {Object} res
    */
   disconnect: function (req, res) {
-    passport.disconnect(req, res);
+        passport.disconnect(req, res);
   }
 };
 
