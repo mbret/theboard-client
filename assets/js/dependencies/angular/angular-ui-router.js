@@ -170,7 +170,7 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
         return result;
     }
 
-// extracted from underscore.js
+// extracted from lodash.js
 // Return a copy of the object only containing the whitelisted properties.
     function pick(obj) {
         var copy = {};
@@ -181,7 +181,7 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
         return copy;
     }
 
-// extracted from underscore.js
+// extracted from lodash.js
 // Return a copy of the object omitting the blacklisted properties.
     function omit(obj) {
         var copy = {};

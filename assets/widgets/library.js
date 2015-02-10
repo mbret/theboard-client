@@ -1,17 +1,23 @@
-// #{"signal":"init","settings":{}}
-
-
 (function(){
 
-    // Define if the user provide a widget conf for testing (instead of URL)
-    var isTestWidgetProvided = false;
+    'use strict';
+    
+    var that = this;
+    var Widget = window.Widget;
 
+    // Define if the user provide a widget conf for testing (instead of URL)
     var testWidgetProvided = null;
 
-    var logLvl = 'warn'; // warn / debug / info
-
-    var serverURL = 'http://localhost:1337';
-
+    var LOG_LVL = 'warn'; // warn / debug / info
+    var VERSION = '0.0.1';
+    var SERVER_URL = 'http://localhost:1337';
+    var SIGNALS = {
+        INIT: 'init',
+        REFRESH: 'refresh',
+        STOP: 'stop',
+        START: 'start'
+    };
+    
     function WidgetError() {
         var tmp = Error.apply(this, arguments);
         tmp.name = this.name = 'WidgetError'
@@ -34,7 +40,7 @@
      */
     var Utils = {
 
-        serverURL: serverURL,
+        serverURL: SERVER_URL,
 
         messages:{
             error: {
@@ -42,6 +48,13 @@
             }
         },
 
+        init: function(){
+            // Export module
+            //window.WidgetAdapter = WidgetAdapter;
+            window.WidgetUtils = this;
+            return this;
+        },
+        
         handleError: function( err ){
             document.body.innerHTML = '<div class="widget-error">Widget on error!</div>';
             console.error( err );
@@ -100,13 +113,13 @@
 
         log: {
             debug: function(message, obj){
-                if(logLvl == 'debug' || logLvl == 'all'){
+                if( LOG_LVL == 'debug' || LOG_LVL == 'all'){
                     if(obj) console.debug('Widget ' + window.location.pathname + ' -> ' + message, obj);
                     else console.debug('Widget ' + window.location.pathname + ' -> ' + message);
                 }
             },
             warn: function(message, obj){
-                if(logLvl == 'warn' || logLvl == 'debug' || logLvl == 'all'){
+                if( LOG_LVL == 'warn' || LOG_LVL == 'debug' || LOG_LVL == 'all'){
                     if(obj) console.warn('Widget ' + window.location.pathname + ' -> ' + message, obj);
                     else console.warn('Widget ' + window.location.pathname + ' -> ' + message);
                 }
@@ -120,47 +133,62 @@
             return date;
         }
 
-    };
-
-    //var widget = {
-    //    identity: 'Widget Sample',
-    //    settings: {
-    //        userMail: 'user@user.com',
-    //        location: 'France'
-    //    }
-    //};
-    //var other = {test:'foo'};
-    //console.log('?widget='+JSON.stringify(widget) + '&other=' + JSON.stringify(other));
-
-
-    //function readSignal(){
-    //    var hash = window.location.hash.substring(1);
-    //    var obj = JSON.parse(hash);
-    //    console.log(obj);
-    //    return obj.signal;
-    //}
+    }.init();
 
     var WidgetAdapter = {
         signal: null,
         configuration: null // will be fill from url
-
-        // maybe some futures useful method here
-        // ...
     };
 
-    var w = {
+    var Module = new function(){
 
-        signals: {
-            init: 'init',
-            refresh: 'refresh',
-            stop: 'stop',
-            start: 'start'
-        },
+        var widget; // widget instance
 
-        init: function(){
+        WidgetAdapter.configuration = _loadWidgetConfiguration();
+        Utils.log.debug('Widget configuration has been loaded ', WidgetAdapter.configuration);
+        
+        // Intercept first window load
+        // Send the first signal event
+        if(window.location.hash) {
+            window.dispatchEvent(
+                new Event('hash-received')
+            );
+        }
 
-            var vthis = this;
+        Utils.log.debug('Widget has been prepared by library and is calling with init() method');
 
+        if( typeof Widget !== 'function' ){
+            widget = Widget.init(WidgetAdapter.configuration);
+        }
+        else{
+            widget = new Widget( WidgetAdapter.configuration );
+        }
+
+        this.init = function(){
+            _addEventListeners();
+
+            // Set the handler listener for future hash change
+            window.onhashchange = function(){
+                // Check hash
+                if(window.location.hash == null || window.location.hash == ''){
+                    return;
+                }
+                window.dispatchEvent(
+                    new Event('hash-received')
+                );
+            };
+        };
+        
+        this.run = function(){
+
+            
+            
+            widget.start();
+
+        }
+        
+        function _addEventListeners(){
+            
             // Handle hash change
             // Needed to fire widget important events
             window.addEventListener('hash-received', function (e) {
@@ -173,12 +201,12 @@
                 var hashObject = JSON.parse( decodeURIComponent(hash));
 
                 // Fire event refresh when signal received
-                if( hashObject.signal === vthis.signals.refresh  ){
+                if( hashObject.signal === SIGNALS.REFRESH  ){
                     Utils.resetSignal();
 
                     WidgetAdapter.signal = hashObject.signal;
                     try{
-                        Widget.refresh();
+                        widget.refresh();
                     }
                     catch(err){
                         Utils.handleError( new Error('Please add a method (refresh) to your widget!') );
@@ -186,131 +214,73 @@
                 }
 
                 // Fire event refresh when signal received
-                if( hashObject.signal === vthis.signals.stop  ){
+                if( hashObject.signal === SIGNALS.STOP  ){
                     Utils.resetSignal();
                     WidgetAdapter.signal = hashObject.signal;
                     try{
-                        Widget.stop();
+                        widget.stop();
                     }
                     catch(err){
                         Utils.handleError( new Error('Please add a method (refresh) to your widget!') );
                     }
                 }
 
-                if( hashObject.signal === vthis.signals.start  ){
+                if( hashObject.signal === SIGNALS.START  ){
                     Utils.resetSignal();
                     WidgetAdapter.signal = hashObject.signal;
                     try{
-                        Widget.start();
+                        widget.start();
                     }
                     catch(err){
                         Utils.handleError( new Error('Please add a method (refresh) to your widget!') );
                     }
                 }
             }, false);
-            return;
         }
 
+        function _loadWidgetConfiguration(){
+            // ===============
+            // Some init
+            // widgetConfiguration is an object that can be create by widget creator to
+            // overwrite some settings
+            // ===============
+            if( typeof window.widgetConfiguration !== 'undefined' ){
+                Utils.log.debug('Substitute configuration provided by user. Use it instead of default library configuration!');
+                if( window.widgetConfiguration.widget && window.widgetConfiguration.widget.configuration){
+                    testWidgetProvided = window.widgetConfiguration.widget;
+                }
+                if( window.widgetConfiguration.log ){
+                    LOG_LVL = window.widgetConfiguration.log;
+                }
+            }
+            else{
+                Utils.log.debug('No substitute configuration provided by user. Use default library configuration!');
+            }
+            // ===============
+            // STEP 1
+            // ===============
+            // Get eventual settings from application
+            // The first run a settings object may be passed by application
+            var tmp = Utils.getUrlVars();
+
+            // Get and build widget configuration into adapter
+            if( testWidgetProvided ){
+                return testWidgetProvided.configuration;
+            }
+            else{
+                if( !tmp.widget){
+                    throw new WidgetError("No widget configuration specified into URL");
+                }
+                if( ! Utils.checkValidityOfJsonFromUrl( tmp.widget )){
+                    throw new WidgetError("Please specify a valid widget configuration");
+                }
+                return JSON.parse(tmp.widget);
+            }
+        }
     };
-    w.init();
 
+    Module.init();
 
-    // ===============
-    // Some init
-    // widgetConfiguration is an object that can be create by widget creator to 
-    // overwrite some settings
-    // ===============
-    if( typeof widgetConfiguration !== 'undefined' ){
-        Utils.log.debug('Substitute configuration provided by user. Use it instead of default library configuration!');
-        if( widgetConfiguration.widget && widgetConfiguration.widget.configuration){
-            isTestWidgetProvided = true;
-            testWidgetProvided = widgetConfiguration.widget;
-        }
-        if( widgetConfiguration.log ){
-            logLvl = widgetConfiguration.log;
-        }
-    }
-    else{
-        Utils.log.debug('No substitute configuration provided by user. Use default library configuration!');
-    }
-
-
-    try{
-        // ===============
-        // STEP 1
-        // ===============
-        // Get eventual settings from application
-        // The first run a settings object may be passed by application
-        var tmp = Utils.getUrlVars();
-        
-        // Get and build widget configuration into adapter
-        if( testWidgetProvided ){
-            WidgetAdapter.configuration = testWidgetProvided.configuration;
-        }
-        else{
-            if( !tmp.widget){
-                throw new WidgetError("No widget configuration specified into URL");
-            }
-            if( ! Utils.checkValidityOfJsonFromUrl( tmp.widget )){
-                throw new WidgetError("Please specify a valid widget configuration");
-            }
-            WidgetAdapter.configuration = JSON.parse(tmp.widget);
-        }
-        Utils.log.debug('Widget configuration has been loaded ', WidgetAdapter.configuration);
-
-        // ===============
-        // STEP 2
-        // ===============
-        // Intercept first window load
-        // Send the first signal event
-        if(window.location.hash) {
-            window.dispatchEvent(
-                new Event('hash-received')
-            );
-        }
-        // Set the handler listener for future hash change
-        window.onhashchange = function(){
-            // Check hash
-            if(window.location.hash == null || window.location.hash == ''){
-                return;
-            }
-            window.dispatchEvent(
-                new Event('hash-received')
-            );
-        };
-
-        // ===============
-        // STEP 3
-        // ===============
-        // Export module
-        //window.WidgetAdapter = WidgetAdapter;
-        window.WidgetUtils = Utils;
-
-        // ===============
-        // STEP 4
-        // ===============
-        // Run The widget
-        Widget.identity = WidgetAdapter.configuration.identity;
-        //Widget.configuration = WidgetAdapter.configuration;
-        Utils.log.debug('Widget has been prepared by library and is calling with init() method');
-        
-        try{
-            Widget.init( WidgetAdapter.configuration );
-        }
-        catch(e){
-            Utils.log.warn('Widget (' + WidgetAdapter.configuration.identity + ') is on error', e);
-            throw e;
-        }
-    }
-    catch(e){
-        if(e instanceof WidgetError){
-            console.error('A problem occurred when initialising library!', e.message);
-        }else{
-            // If you came here because of an thrown exception then you need to try with another nav. Chrome is bugged and doesn't keep stack.
-            throw e;
-        }
-
-    }
-
+    Module.run()
 
 }).call(this);

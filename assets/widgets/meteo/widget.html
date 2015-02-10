@@ -3,12 +3,12 @@
 
 	<head>
 
-		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
-		<!-- Optional theme -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
-
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+        
 		<!-- Include the possible widget default style -->
 		<link rel="stylesheet" href="/widgets/default.css">
 
@@ -21,27 +21,69 @@
 		<!-- Widget start -->
 		<div class="widget-wrapper">
 			<div class="widget" id="weather">
-				<header class="widget-header">
-					<h1></h1>
-				</header>
 
-				<div class="widget-content">
+                <div class="row m-t text-center">
+                    <div class="col-xs-6">
+                        <canvas id="icon-current-weather" width="98" height="98"></canvas>
+                    </div>
+                    <div class="col-xs-6">
+                        <p class="text-4x">27°</p>
+                        <p>Partly Cloudy Day</p>
+                    </div>
+                </div>
 
-				</div>
 
-				<footer class="widget-footer">
+                <h4 class="mar-no"><span class="glyphicon glyphicon-map-marker" ></span> San Jose, CA</h4>
+                <p class="">Today</p>
 
-					<!-- May be useful to indicate the last widget refresh -->
-					<div class="widget-updated"></div>
-				</footer>
+
+                <hr>
+
+                <ul class="list-unstyled text-center clearfix">
+                    <li class="col-xs-2">
+                        <canvas id="icon-weather-2" width="32" height="32"></canvas>
+                        <p class="text-sm mar-no">Saturday</p>
+                        <p>25 °C</p>
+                    </li>
+                    <li class="col-xs-2">
+                        <canvas id="icon-weather-3" width="32" height="32"></canvas>
+                        <p class="text-sm mar-no">Sunday</p>
+                        <p>22 °C</p>
+                    </li>
+                    <li class="col-xs-2">
+                        <canvas id="icon-weather-4" width="32" height="32"></canvas>
+                        <p class="text-sm mar-no">Monday</p>
+                        <p>20 °C</p>
+                    </li>
+                    <li class="col-xs-2">
+                        <canvas id="icon-weather-5" width="32" height="32"></canvas>
+                        <p class="text-sm mar-no">Tuesday</p>
+                        <p>28 °C</p>
+                    </li>
+                    <li class="col-xs-2">
+                        <canvas id="icon-weather-6" width="32" height="32"></canvas>
+                        <p class="text-sm mar-no">Wednesday</p>
+                        <p>22 °C</p>
+                    </li>
+                    <li class="col-xs-2">
+                        <canvas id="icon-weather-7" width="32" height="32"></canvas>
+                        <p class="text-sm mar-no">Thursday</p>
+                        <p>25 °C</p>
+                    </li>
+                </ul>
+
 			</div>
+
 		</div>
+
+        
 
 		<!-- Here is the widget part -->
 		<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 		<script src="http://momentjs.com/downloads/moment.js"></script>
 		<script src="jquery.simpleWeather.js"></script>
 		<script src="skycons.js"></script>
+		<script src="lodash.js"></script>
 		<script src="widget.js"></script>
 
 		<!-- Include the required widget library -->

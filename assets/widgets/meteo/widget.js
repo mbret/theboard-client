@@ -1,169 +1,166 @@
-// Weather - http://simpleweatherjs.com
+window.widgetConfiguration = {
 
+    widget: {
 
-window.Widget = {
+        configuration: {
+            identity: 'Meteo',
 
-    woeid: '',
-    unit: 'c',
+            // Require information from user without action from user
+            permissions: {
+                location: 'Nancy, France'
+            },
 
-    iconsMapper: {
-        Cloudy: 'Cloud.svg'
-    },
-
-    configuration: null,
-
-    init: function( configuration ){
-        this.configuration = configuration;
-        //console.log(this.configuration.identity + ' is initializing');
-
-        this.start();
-    },
-    start: function(){
-        //console.log(this.configuration.identity + ' is running');
-        this.refreshProcess.start();
-    },
-    stop: function(){
-        //console.log(this.configuration.identity + ' is stopped');
-        $(".widget-content").html('<span class="waiting">Widget is stopped</span>');
-        this.refreshProcess.stop();
-    },
-    refresh: function(){
-        //console.log(this.configuration.identity + ' is refreshing');
-        this.refreshProcess.refresh();
-    },
-
-    /*
-     * Custom function related to the plugin
-     */
-    getIconURL: function( state ){
-        //console.log(state);
-        return 'climacons/SVG/' + this.iconsMapper[state]
-    },
-
-    refreshProcess : {
-        interval: 20000, // 20s
-        process: 0,
-
-        start: function(){
-            if(this.process == 0){
-                Widget.refreshWeather(); // run directly
-                this.process = setInterval( Widget.refreshWeather, this.interval);
+            // Options are information that can be changed by user
+            // As they are used by application you can only specify here the values
+            options: {
+                option1: "Nancy"
             }
-        },
-        stop: function(){
-            clearInterval(this.process);
-            this.process = 0;
-        },
-        refresh: function(){
-            this.stop();
-            this.start();
         }
     },
 
-    /**
-     * Warning: We cannot use 'this' as Widget because of the refreshProcess that add a new scope layer
-     */
-    refreshWeather: function(){
-        //var vthis = this;
-
-        $(".widget-content").html('<span class="waiting widget-component-highlighted">Widget is refreshing</span>');
-        $('.widget-updated').html();
-
-        $(document).ready(function() {
-
-            var location = Widget.configuration.options.defaultLocation;
-            // != check for null & undefined
-            if(Widget.configuration.permissions.location != null) location = Widget.configuration.permissions.location.latitude + ',' + Widget.configuration.permissions.location.longitude;
-
-            $.simpleWeather({
-                location: location,
-                woeid: Widget.woeid,
-                unit: Widget.unit,
-                success: function(weather) {
-
-                    WidgetUtils.log.debug('DATE', weather);
-                    $('.widget-header').html('<h2><canvas id="weather-icon"></canvas> '+weather.temp+'&deg;'+weather.units.temp+'</h2>');
-                    $('.widget-content').html(
-                        '<ul>' +
-                        '<li class="widget-component-highlighted"><span class="glyphicon glyphicon-map-marker" ></span> '+weather.city+', '+weather.country+'</li>'+
-                        '<li class="currently widget-component-highlighted">'+weather.currently+'</li>'+
-                        '</ul>'
-                    );
-                    $('.widget-updated').html('Updated: ' + weather.updated );
-
-                    // Set icon with skycons addon
-                    var skycons = new Skycons({"color": "white"});
-                    var icon = null;
-                    // It's the day if now() is before the sunset date
-                    var day = moment().isBefore( Widget.createDateFromSunset( weather.sunset ) ) && moment().isAfter( Widget.createDateFromSunset( weather.sunrise ) );
-
-                    switch( weather.currently ){
-                        case 'Cloudy':
-                            icon = Skycons.CLOUDY;
-                            break;
-                        case 'Mostly Cloudy':
-                            if( day ) icon = Skycons.PARTLY_CLOUDY_DAY;
-                            else icon = Skycons.PARTLY_CLOUDY_NIGHT;
-                            break;
-                        case 'Partly Cloudy':
-                            if( day ) icon = Skycons.PARTLY_CLOUDY_DAY;
-                            else icon = Skycons.PARTLY_CLOUDY_NIGHT;
-                            break;
-                        case 'Fair':
-                            if( day ) icon = Skycons.CLEAR_DAY;
-                            else icon = Skycons.CLEAR_NIGHT;
-                            break;
-                        case 'Fog':
-                            icon = Skycons.FOG;
-                            break;
-                        case 'Snow':
-                            icon = Skycons.SNOW;
-                            break;
-                        case 'Mist':
-                            icon = Skycons.FOG;
-                            break;
-                        case 'Rain':
-                        case 'Heavy Rain':
-                        case 'Light Rain':
-                            icon = Skycons.RAIN;
-                            break;
-                        default:
-                            icon = Skycons.CLEAR_DAY;
-                            //WidgetUtils.log.debug(weather.currently);
-                            //console.log(weather.currently);
-                            //console.log('weather.currently not recognized, go write this code madafaka!');
-                            break;
-                    }
-                    skycons.set("weather-icon", icon);
-                    skycons.play();
-                },
-                error: function(error) {
-                    $(".weather-widget").html('<p>'+error+'</p>');
-                }
-            });
-        });
-    },
-
-    // Create a date from '5:38 pm' format (this is get by weather.sunset)
-    createDateFromSunset: function( date ){
-        // get date of sunset to compare with our date (day or night for icon)
-        var splittedStr = date.split(":"); // 5:38 pm ['5', '38 pm']
-        var hours = parseInt(splittedStr[0]);
-        var minutes = parseInt(splittedStr[1].split(" ")[0]);
-        var period = splittedStr[1].split(" ")[1];
-        // set correct hour
-        if( period == 'pm' ) hours = 12 + hours;
-        // create sunset complete date
-        var sunsetDate = new Date();
-        sunsetDate.setHours(hours);
-        sunsetDate.setMinutes(minutes);
-        return sunsetDate;
-    },
-
-    displayError: function(){
-        $('.widget-content').html(
-            '<p>Widget on error</p>'
-        );
-        $('.widget-updated').html('');
-    }
+    log: 'debug'
 };
+
+(function(){
+
+    'use strict';
+
+    var Widget = function( conf ){
+
+        var that = this;
+        var process;
+        var configuration = _.assign({
+            process: {
+                interval: 5000
+            }
+        }, conf);
+
+        process = new Process( _fetchData, configuration.process.interval );
+
+        /**
+         * Start the widget functionaries
+         */
+        this.start = function(){
+            WidgetUtils.log.debug(this.identity + ' is running');
+            this.GUI.start();
+            process.start();
+        };
+
+        /**
+         * Stop the widget functionaries
+         */
+        this.stop = function(){
+            WidgetUtils.log.debug(this.identity + ' is stopped');
+            this.GUI.displayStopped();
+            process.stop();
+        };
+
+        /**
+         *
+         */
+        this.refresh = function(){
+            WidgetUtils.log.debug(this.identity + ' is refreshing');
+            process.reset();
+        };
+
+        // This is the 'display refresh method'
+        // This method get the needed data (from API for example)
+        // Then refresh the display
+        function _fetchData(){
+            that.GUI.displayRefreshing();
+            // do some stuff (get info from google API ?)
+            // ...
+            setTimeout( function(){
+                that.GUI.displayContent();
+            }, 1000);
+        };
+
+        // Here is an example of simple 'interval' process
+        // It can be useful for a widget weather for example
+        // Your widget will be refreshed automatically after x seconds
+        function Process( fn, interval ){
+
+            this.interval = interval, // Just use an interval
+                this.process = 0, // init the process
+
+                // Control your process with these three methods below
+                this.start = function(){
+                    if(this.process == 0){
+                        fn();
+                        this.process = setInterval( function(){
+                            fn();
+                        }, this.interval);
+                    }
+                },
+
+                this.stop = function(){
+                    clearInterval(this.process);
+                    this.process = 0;
+                },
+
+                this.reset = function(){
+                    this.stop();
+                    this.start();
+                }
+
+        };
+
+        /**
+         * This object control the GUI
+         * @type {{init: Function, displayContent: Function, displayError: Function, displayRefreshing: Function, displayStopped: Function}}
+         */
+        this.GUI = {
+
+            start: function(){
+                //$('.widget-header').html('<h1>'+ configuration.identity + '</h1>');
+                //$('.widget-content').html(
+                //    '<p>Widget is loading</p>'
+                //);
+                var skycons = new Skycons({"color": "white"});
+                skycons.set("icon-current-weather", Skycons.CLEAR_DAY);
+                skycons.set("icon-weather-1", Skycons.CLEAR_DAY);
+                skycons.set("icon-weather-2", Skycons.CLEAR_DAY);
+                skycons.set("icon-weather-3", Skycons.CLEAR_DAY);
+                skycons.set("icon-weather-4", Skycons.CLEAR_DAY);
+                skycons.set("icon-weather-5", Skycons.CLEAR_DAY);
+                skycons.set("icon-weather-6", Skycons.CLEAR_DAY);
+                skycons.set("icon-weather-7", Skycons.CLEAR_DAY);
+                skycons.play();
+            },
+
+            displayContent: function(){
+                //$('.widget-content').html(
+                //    '<p>Sunday 21 December 2014,'+
+                //    '</br><span class="widget-component-highlighted">Option 1 is: '+ configuration.options.option1+'</span></p>'
+                //);
+                //$('.widget-updated').html('Updated: ' + new Date().toISOString());
+            },
+
+            displayError: function(){
+                //$('.widget-content').html(
+                //    '<p>Widget on error</p>'
+                //);
+                //$('.widget-updated').html('');
+            },
+
+            displayRefreshing: function(){
+                //$('.widget-content').html(
+                //    '<p>Widget is refreshing</p>'
+                //);
+                //$('.widget-updated').html('');
+            },
+
+            displayStopped: function(){
+                //$('.widget-content').html(
+                //    '<p>Widget is stopped</span></p>'
+                //);
+                //$('.widget-updated').html('');
+            }
+        };
+
+    };
+    // export
+    window.Widget = Widget;
+
+})();
+
