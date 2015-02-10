@@ -87,13 +87,15 @@ var User = {
     createAndInit: function( data , cb ){
         // create user
         sails.models.user.create(data, function(err, user){
-            if(err) return cb(err);
+            if(err){
+                return cb(err);
+            }
 
             user.profiles.add( { name: 'Default', description: 'This is your first and default profile. You can add your own profile or edit / remove this profile.', default: true });
             user.save(function(err, user){
-                return cb(err, user)
+                return cb(err, user);
             });
-        })
+        });
     },
     
     beforeCreate: function(values, cb){
@@ -131,7 +133,7 @@ var User = {
     _getDefaultBackgroundImages: function(){
         var bgImages = [];
         _.forEach(sails.config.user.default.backgroundImages, function(image){
-            bgImages.push(sails.config.imagesURL + '/' + image)
+            bgImages.push(sails.config.imagesURL + '/' + image);
         });
         return bgImages;
     },

@@ -31,7 +31,9 @@ module.exports = {
             if(this.options && this.options[name]){
                 return this.options[name];
             }
-            else return null;
+            else{
+                return null;
+            }
         }
     },
     

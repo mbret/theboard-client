@@ -10,6 +10,12 @@ Node on the back and angular on the front ! Release the power !!!
 - Run 'sails lift' to start the server
 - Go to [http://localhost;1337](http://localhost;1337)
 
+# Production process
+- develop
+- run test 'grunt test'. This will run the test series (using mocha, etc)
+- test GUI
+- run check 'grunt check'. this will run jshint to check if js is correctly written
+
 # TODO
 - block bg change when sidebar is open/close (avoid lag)
 - wait for sidebar closed before load iframe (avoid lag)

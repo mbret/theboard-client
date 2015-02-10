@@ -27,8 +27,8 @@ module.exports = function (req, identifier, password, next) {
     }
 
     Passport.findOne({
-      protocol : 'local'
-    , user     : user.id
+      protocol : 'local',
+      user     : user.id
     }, function (err, passport) {
       if (passport) {
         passport.validatePassword(password, function (err, res) {
