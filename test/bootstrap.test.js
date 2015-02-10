@@ -1,14 +1,23 @@
-var Sails = require('sails'),
-    sails;
+var Sails = require('sails');
+var sails;
 
 before(function(done) {
     Sails.lift({
-        // configuration for testing purposes
-    }, function(err, server) {
-        sails = server;
+        log:{
+            level: "error"
+        },
+        models: {
+            migrate: 'drop' // erase database before each launch
+        },
+        environment: 'development',
+        autoLogin: false
+    }, function(err, server){
+        console.log(err);
+
         if (err) return done(err);
-        // here you can load fixtures, etc.
-        done(err, sails);
+        sails = server;
+
+        done(null, sails);
     });
 });
 

@@ -46,7 +46,7 @@ var AuthController = {
                     return send('Error.Application.Generic');
                 }
                 if(!user){
-                    return send(info.error);
+                    return send(info.error, true);
                 }
                 // Create login session
                 req.login(user, function (err) {
@@ -63,9 +63,12 @@ var AuthController = {
             return send();
         }
 
-        function send(err){
+        function send(err, badRequest){
             if(err){
                 req.flash('error', err);
+            }
+            if(badRequest){
+                res.status(400);
             }
             // Render the `auth/login.ext` view
             res.view('auth/login',{

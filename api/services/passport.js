@@ -193,10 +193,9 @@ passport.endpoint = function (req, res) {
   var provider   = req.param('provider');
   var options    = {};
 
-  // If a provider doesn't exist for this endpoint, send the user back to the
-  // login page
+  // If a provider doesn't exist for this endpoint, send 404
   if (!strategies.hasOwnProperty(provider)) {
-    return res.redirect('/login');
+    return res.status(404).end();
   }
 
   // Attach scope if it has been set in the config

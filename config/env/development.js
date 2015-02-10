@@ -21,6 +21,6 @@ module.exports = {
   //   connection: 'someMongodbServer'
   // }
 
-    autoLogin: true
+    autoLogin: false
 
 };
