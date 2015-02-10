@@ -29,7 +29,9 @@
     "request": "^2.51.0",
     "sails": "~0.10.5",
     "sails-disk": "~0.10.0",
-    "validator": "^3.27.0"
+    "validator": "^3.27.0",
+    "grunt-mocha-test": "^0.12.7",
+    "supertest": "^0.15.0"
   },
   "name": "p",
   "private": true,

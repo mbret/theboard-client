@@ -26,7 +26,7 @@ module.exports = {
             if( ! option.required ){
                 option.required = false;
             }
-        })
+        });
         return cb();
     }
 };

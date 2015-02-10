@@ -8,9 +8,9 @@ var UserSetting = {
         user     : { model: 'user' }, // DO NOT use required:true (I don't know why but it crash when update later)
         name     : { type: 'string', required: true }, // simulate enum later
         type : { type: 'string', required: true, enum: ['boolean', 'string', 'number']},
-        valueString    : { type: 'string'},
-        valueBoolean    : { type: 'boolean'},
-        valueNumber    : { type: 'number'},
+        valueString    : { type: 'string' },
+        valueBoolean    : { type: 'boolean' },
+        valueNumber    : { type: 'number' },
         
         getValue: function(){
             switch (this.type){
@@ -43,7 +43,7 @@ var UserSetting = {
             //id: userId + '_' + name,
             name: name,
             type: type
-        }
+        };
         setting[valueKey] = value;
         return setting;
     },

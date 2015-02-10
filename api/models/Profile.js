@@ -20,7 +20,9 @@ var Profile = {
          * @param widget
          */
         registerWidget: function(widget, options){
-            if( typeof options == "undefined" ) options= {};
+            if( typeof options === "undefined" ){
+                options = {};
+            }
             
             var registered = {
                 sizeX: options.sizeX || widget.sizeX,
@@ -30,9 +32,9 @@ var Profile = {
                 widget: widget.id
             };
             // fill options
-            var options = {};
+            var widgetOptions = {};
             _.forEach(widget.options, function(option, index){
-                options[option.id] = (option.default) ?  option.default : null;
+                widgetOptions[option.id] = (option.default) ?  option.default : null;
             });
             registered.options = options;
             this.widgets.add(registered);

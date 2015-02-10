@@ -1,6 +1,6 @@
-var path     = require('path')
-  , url      = require('url')
-  , passport = require('passport');
+var path     = require('path'),
+    url      = require('url'),
+    passport = require('passport');
 
 /**
  * Passport Service
@@ -63,8 +63,8 @@ passport.protocols = require('./protocols');
  * @param {Function} next
  */
 passport.connect = function (req, query, profile, next) {
-  var user = {}
-    , provider;
+  var user = {};
+  var provider;
 
   // Get the authentication provider from the query.
   query.provider = req.param('provider');
@@ -97,8 +97,8 @@ passport.connect = function (req, query, profile, next) {
   }
 
   Passport.findOne({
-    provider   : provider
-  , identifier : query.identifier.toString()
+    provider   : provider,
+    identifier : query.identifier.toString()
   }, function (err, passport) {
     if (err) {
       return next(err);
@@ -189,14 +189,13 @@ passport.connect = function (req, query, profile, next) {
  * @param  {Object} res
  */
 passport.endpoint = function (req, res) {
-  var strategies = sails.config.passport
-    , provider   = req.param('provider')
-    , options    = {};
+  var strategies = sails.config.passport;
+  var provider   = req.param('provider');
+  var options    = {};
 
-  // If a provider doesn't exist for this endpoint, send the user back to the
-  // login page
+  // If a provider doesn't exist for this endpoint, send 404
   if (!strategies.hasOwnProperty(provider)) {
-    return res.redirect('/login');
+    return res.status(404).end();
   }
 
   // Attach scope if it has been set in the config
@@ -221,8 +220,8 @@ passport.endpoint = function (req, res) {
  * @param {Function} next
  */
 passport.callback = function (req, res, next) {
-  var provider = req.param('provider')
-    , action   = req.param('action');
+  var provider = req.param('provider');
+  var action   = req.param('action');
 
   // Passport.js wasn't really built for local user registration, but it's nice
   // having it tied into everything else.
@@ -266,8 +265,8 @@ passport.callback = function (req, res, next) {
  *
  */
 passport.loadStrategies = function () {
-  var self       = this
-    , strategies = sails.config.passport;
+  var self       = this;
+  var strategies = sails.config.passport;
 
   Object.keys(strategies).forEach(function (key) {
     var options = { passReqToCallback: true }, Strategy;
@@ -290,8 +289,8 @@ passport.loadStrategies = function () {
     }
     // FB , Google, etc
     else {
-      var protocol = strategies[key].protocol // auth protocol
-        , callback = strategies[key].callback;
+      var protocol = strategies[key].protocol; // auth protocol
+      var callback = strategies[key].callback;
 
       if (!callback) {
         callback = path.join('auth', key, 'callback');
@@ -332,8 +331,8 @@ passport.loadStrategies = function () {
  * @param  {Object} res
  */
 passport.disconnect = function (req, res, next) {
-  var user     = req.user
-    , provider = req.param('provider');
+  var user     = req.user;
+  var provider = req.param('provider');
 
   Passport.findOne({
       provider : provider,

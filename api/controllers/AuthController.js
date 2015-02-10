@@ -24,8 +24,8 @@ var AuthController = {
     * @param {Object} res
     */
     login: function (req, res) {
-        var strategies = sails.config.passport
-            , providers  = {};
+        var strategies = sails.config.passport;
+        var providers  = {};
 
         // Get a list of available providers for use in your templates.
         Object.keys(strategies).forEach(function (key) {
@@ -46,7 +46,7 @@ var AuthController = {
                     return send('Error.Application.Generic');
                 }
                 if(!user){
-                    return send(info.error);
+                    return send(info.error, true);
                 }
                 // Create login session
                 req.login(user, function (err) {
@@ -63,9 +63,12 @@ var AuthController = {
             return send();
         }
 
-        function send(err){
+        function send(err, badRequest){
             if(err){
                 req.flash('error', err);
+            }
+            if(badRequest){
+                res.status(400);
             }
             // Render the `auth/login.ext` view
             res.view('auth/login',{
@@ -141,9 +144,9 @@ var AuthController = {
                     return send( 'Error.Application.Generic' );
                 }
                 Passport.create({
-                    protocol : 'local'
-                    , password : password
-                    , user     : user.id
+                    protocol : 'local',
+                    password : password,
+                    user     : user.id
                 }, function (err, passport) {
                     if (err) {
                         sails.log.error(err);
@@ -214,7 +217,7 @@ var AuthController = {
 
     function handleError (err) {
 
-      if( !err.code == 'E_VALIDATION' ){
+      if( err.code === 'E_VALIDATION' ){
           sails.log.error('An error occured when authenticate', err);
       }
       else{
