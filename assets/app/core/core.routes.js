@@ -9,6 +9,8 @@
 
     /**
      * @todo read http://www.jvandemo.com/how-to-resolve-application-wide-resources-centrally-in-angularjs-with-ui-router/
+     * @todo read https://github.com/angular-ui/ui-router/wiki/Multiple-Named-Views
+     * @todo read http://www.funnyant.com/angularjs-ui-router/
      * @param $urlRouterProvider
      * @param $stateProvider
      * @param APP_CONFIG
@@ -49,6 +51,12 @@
                 data: {
                     pageTitle: 'Widget profiles'
                 }
+            })
+            .state('widget-profiles-detail', {
+                url: '/widget-profiles/detail/:id',
+                templateUrl: APP_CONFIG.routes.partials + '/widget-profiles.detail.html',
+                controller: 'WidgetProfilesDetailController',
+                controllerAs: 'WidgetProfilesDetailCtl',
             })
     }
 

@@ -45,6 +45,7 @@ module.exports.routes = {
     'put /users/widgets/:id': 'AppController.updateProfileWidget', // update for default profile
 
     'get /users/profiles'       : 'AppController.getProfiles',
+    'get /users/profiles/:id'   : 'AppController.getProfile',
     'put /users/profiles'       : 'AppController.updateProfiles',
     'put /users/profiles/:id'   : 'AppController.updateProfile',
     

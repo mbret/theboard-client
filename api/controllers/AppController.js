@@ -55,6 +55,18 @@
             });
         },
 
+        getProfile: function(req, res){
+            var id = req.param('id', null);
+            Profile.findOne(id).populate('widgets')
+                .then(function(result){
+                    if(!result){
+                        return res.notFound();
+                    }
+                    return res.ok(result);
+                })
+                .catch(res.serverError);
+        },
+        
         /**
          * Update a user profile
          * WARNING this method is not transactional and should be

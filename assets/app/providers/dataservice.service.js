@@ -23,6 +23,7 @@
             getWidgetsByProfile: getWidgetsByProfile,
             updateWidget: updateWidget,
             getProfiles: getProfiles,
+            getProfile: getProfile,
             updateProfile: updateProfile
         };
 
@@ -41,13 +42,27 @@
         }
 
         function getProfiles(){
-            return $http.get(APP_CONFIG.routes.user.profiles.get)
+            var route = APP_CONFIG.routes.user.profiles.get.replace(':id', "");
+            return $http.get(route)
                 .then(function(data) {
                     logger.debug(debugName + ' getProfiles success!', data.data);
                     return data.data;
                 })
                 .catch(function(error) {
                     logger.error(debugName + ' getProfiles failure!', error);
+                    throw new Error(APP_CONFIG.messages.errors.unableToLoad);
+                });
+        }
+        
+        function getProfile(id){
+            var route = APP_CONFIG.routes.user.profiles.get.replace(':id', id);
+            return $http.get(route)
+                .then(function(data) {
+                    logger.debug(debugName + ' getProfile success!', data.data);
+                    return data.data;
+                })
+                .catch(function(error) {
+                    logger.error(debugName + ' getProfile failure!', error);
                     throw new Error(APP_CONFIG.messages.errors.unableToLoad);
                 });
         }

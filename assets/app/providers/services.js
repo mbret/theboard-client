@@ -176,16 +176,20 @@ angular
     .factory('profilesService', function(dataservice){
         return {
             update: update,
-            getAll: getAll
+            getAll: getAll,
+            get: get
         }
         
         function getAll(){
             return dataservice.getProfiles();
-            
         }
         
         function update(profile){
             return dataservice.updateProfile(profile);
+        }
+        
+        function get(id){
+            return dataservice.getProfile(id);
         }
         
     })

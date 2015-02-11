@@ -17,14 +17,14 @@
         <div ng-repeat="profile in widgetProfilesCtl.profiles">
             
             <div class="col-lg-3" >
-                <div class="ibox widget-profile" ng-class="{selected: profile.selected}" ng-click="widgetProfilesCtl.openChoice()">
+                <div class="ibox widget-profile" ng-class="{selected: profile.selected}" ng-click="widgetProfilesCtl.detail(profile)">
                     <div class="ibox-content" ng-class="{'navy-bg': profile.selected}">
                         <h3><strong>{{profile.name}}</strong></h3>
                         <p><b>Created:</b> {{profile.createdAt}}</p>
                         <p><b>Widgets:</b> {{profile.widgets.length}}</p>
                         <p class="description">{{profile.description}}</p>
-                        <button ng-if="!profile.selected" class="btn btn-success m-t" ng-click="widgetProfilesCtl.activate(profile)"><i class="fa fa-check"></i> Activate</button>
-                        <button class="btn btn-warning m-t" ng-click="widgetProfilesCtl.configure(profile)"><i class="fa fa-link"></i> Configure</button>
+                        <button ng-if="!profile.selected" class="btn btn-success m-t" ng-click="widgetProfilesCtl.activate($event, profile)"><i class="fa fa-check"></i> Activate</button>
+                        <button class="btn btn-warning m-t" ng-click="widgetProfilesCtl.configure($event, profile)"><i class="fa fa-link"></i> Configure</button>
                     </div>
                 </div>
             </div>
@@ -42,6 +42,7 @@
         </div>
         
     </div>
+
 
 </div>
 

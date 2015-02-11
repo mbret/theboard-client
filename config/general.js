@@ -54,7 +54,7 @@ module.exports = {
             flash: '/flash',
             user: {
                 profiles: {
-                    get: '/users/profiles',
+                    get: '/users/profiles/:id',
                     update: '/users/profiles'
                 }
             },

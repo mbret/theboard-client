@@ -26,7 +26,7 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
-    '*': ['sessionAuth'],
+    '*': ['sessionAuth'], // ok or 403
 
   /***************************************************************************
   *                                                                          *
@@ -35,7 +35,11 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
     'auth':{
-        'login': ['notAuthenticated'],
-        'register': ['notAuthenticated']
+        'login': ['notAuthenticated'], // not logged or redirect to /
+        'logout': ['sessionAuthOrRedirect'], // ok or redirect login
+        'register': ['notAuthenticated'] // not logged or redirect to /
+    },
+    'app':{
+        'index': ['sessionAuthOrRedirect'] // ok or redirect login
     }
 };

@@ -41,7 +41,8 @@ describe('AuthController', function() {
         it('should return 403 because we are logged in', function (done){
             agent
                 .get('/login')
-                .expect(403, done);
+                .expect(302)
+                .expect('location','/', done);
         });
     });
 

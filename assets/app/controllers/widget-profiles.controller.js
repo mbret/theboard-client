@@ -3,14 +3,14 @@
 
     angular
         .module('app.controllers')
-        .controller('WidgetProfilesController', WidgetProfilesController);
-
-    WidgetProfilesController.$inject = ['APP_CONFIG', '$modal', 'profilesService', 'notifService', 'user', 'modalService'];
+        .controller('WidgetProfilesController', WidgetProfilesController)
+        .controller('WidgetProfilesDetailController', WidgetProfilesDetailController);
 
     /**
      *
      */
-    function WidgetProfilesController(APP_CONFIG, $modal, profilesService, notifService, user, modalService){
+    WidgetProfilesController.$inject = ['APP_CONFIG', '$modal', 'profilesService', 'notifService', 'user', '$state'];
+    function WidgetProfilesController(APP_CONFIG, $modal, profilesService, notifService, user, $state){
 
         var that = this;
         var vm = this; // view model
@@ -29,20 +29,25 @@
             });
         });
 
+        this.detail = function(profile){
+            $state.go('widget-profiles-detail', {id:profile.id});
+        }
+        
         /**
          * Create a new profile.
          */
         this.newProfile = function(){
-
             notifService.success("Profile created");
         }
-        
-        
+
         /**
          * Activate a profile
          * @param profile
          */
-        this.activate = function(profile){
+        this.activate = function(event, profile){
+            // We stop propagation because there are ng-click on parent elt
+            event.stopPropagation();
+            
             profilesService.update({
                 id: profile.id,
                 activate: true
@@ -65,7 +70,10 @@
          * The modal will update the profile passed via resolve itself. No need to check modal results.
          * @param profile
          */
-        this.configure = function(profile){
+        this.configure = function(event, profile){
+            // We stop propagation because there are ng-click on parent elt
+            event.stopPropagation();
+            
             $modal.open({
                 templateUrl: APP_CONFIG.routes.templates + '/modals/widget-profile-settings.html',
                 controller: ModalInstanceCtrl,
@@ -80,14 +88,34 @@
 
     };
 
-    ModalInstanceCtrl.$inject = ['$scope', '$modalInstance' ,'profile', 'notifService', 'APP_CONFIG', 'profilesService'];
+    /**
+     *  https://github.com/angular-ui/ui-router/wiki/Nested-States-%26-Nested-Views
+     */
+    WidgetProfilesDetailController.$inject = ['$stateParams', 'profilesService', '$state'];
+    function WidgetProfilesDetailController($stateParams, profilesService, $state){
+        var id = $stateParams.id;
 
+        var self = this;
+        self.profile;
+        
+        // Get profile from server
+        // In case of error redirect to profiles (user could put shit in url)
+        profilesService.get(id)
+            .then(function(profile){
+                self.profile = profile;
+            })
+            .catch(function(err){
+                $state.go('widget-profiles');
+            })
+    }
+    
     /**
      * Modal that handle the profile settings
      * The modal take a profile from resolve and return the updated profile.
      * The profile is directly updated if success. No need to treat the modal result.
      * @constructor
      */
+    ModalInstanceCtrl.$inject = ['$scope', '$modalInstance' ,'profile', 'notifService', 'APP_CONFIG', 'profilesService'];
     function ModalInstanceCtrl ($scope, $modalInstance, profile, notifService, APP_CONFIG, profilesService) {
         
         var that = this;
@@ -103,6 +131,8 @@
             $modalInstance.dismiss('cancel');
         };
 
+        
+        
         /**
          * Form.
          * This form take into account click on button ok and enter key

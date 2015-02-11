@@ -13,7 +13,7 @@ module.exports = function(req, res, next) {
     // because the redirect could send to location that also match this policy
     // and it could catch a infinite loop.
     if (req.isAuthenticated()) {
-        return res.forbidden();
+        return res.redirect('/');
     }
 
     return next();
