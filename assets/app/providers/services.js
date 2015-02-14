@@ -5,29 +5,6 @@
 angular
     .module('app.services')
 
-    /**
-     * Account service
-     */
-    .factory('userService', ['$http', '$injector', 'APP_CONFIG', '$log', '_', function($http, $injector, APP_CONFIG, $log, _){
-
-        return {
-
-            update: function( data ){
-                var that = this;
-                return $http.put(APP_CONFIG.routes.account.update, data)
-                    .then(function(data) {
-                        $log.debug('User updated successfully!', data.data);
-                        return data.data;
-                    })
-                    .catch(function(err) {
-                        $log.error('Failure while updating user', err);
-                        throw new Error(APP_CONFIG.messages.errors.unableToUpdate);
-                    });
-            }
-        }
-
-    }])
-
     .factory('modalService', ['$rootScope', 'APP_CONFIG', '$injector', function($rootScope, APP_CONFIG, $injector){
         var $modal = $injector.get('$modal');
         return {
@@ -45,6 +22,10 @@ angular
                         $modalInstance.close();
                     };
                 };
+            },
+
+            error: function(message){
+                return this.simpleError(message);
             },
 
             success: function(message){
@@ -197,14 +178,20 @@ angular
     /**
      * Good doc to read http://www.webdeveasy.com/interceptors-in-angularjs-and-useful-examples/
      **/
-    .factory('myHttpInterceptor', function($log, $injector, $q) {
+    .factory('myHttpInterceptor', function($log, $injector, $q, $window, APP_CONFIG) {
+        var $localStorage = $window.localStorage;
         //var modalService = $injector.get('modalService');
         return {
             // optional method
-            'request': function(APP_CONFIG) {
-                //$log.debug('A request has been made');
-                // do something on success
-                return APP_CONFIG;
+            'request': function(config) {
+                
+                // Inject token to each requests
+                config.headers = config.headers || {};
+                if ($localStorage.token) {
+                    config.headers.Authorization = 'Bearer ' + $localStorage.token;
+                }
+                
+                return config;
             },
 
             // optional method
@@ -246,7 +233,12 @@ angular
              * @returns {Promise}
              */
             responseError: function(rejection) {
-                console.log(rejection);
+                
+                // Case of token became invalid
+                // Request rejected because of no authorized or forbidden
+                if(rejection.status === 401 || rejection.status === 403) {
+
+                }
 
                 // We can define here if we handle or not depending of the request
                 var shouldHandle = (rejection && rejection.config && rejection.config.headers);
@@ -265,6 +257,33 @@ angular
         };
     })
 
+    .factory('tokenRefresh', function($interval, $http){
+        
+        return {
+            start: start,
+            stop: stop
+        }    
+        
+        var process;
+        
+        function start(){
+            process = $interval(function(){
+                $http.get('/auth/token/refresh')
+                    .then(function(data){
+                        var data = data.data;
+                        localStorage.token = data.token;
+                    })
+                    .catch(function(err){
+                        console.error(err);
+                    });
+            }, 600000); // 1hmn
+        }
+        
+        function stop(){
+            clearInterval(process);
+        }
+    })
+    
     .factory('geolocationService', ['$q','$rootScope','$window','APP_CONFIG',function ($q,$rootScope,$window,APP_CONFIG) {
         return {
             getLocation: function (opts) {

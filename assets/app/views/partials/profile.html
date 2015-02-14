@@ -15,118 +15,24 @@
 
     <div class="row">
 
-        <div class="col-lg-5">
-
-            <div class="row">
-
-                <div class="col-lg-12">
-                    <div class="contact-box">
-                        <a ui-sref="profile">
-                            <div class="col-sm-4">
-                                <div class="text-center">
-                                    <img alt="image" class="img-circle m-t-xs img-responsive" src="{{user.avatar}}">
-
-                                    <div class="m-t-xs font-bold">{{user.job}}</div>
-                                </div>
-                            </div>
-                            <div class="col-sm-8">
-                                <h3><strong>{{user.displayName}}</strong></h3>
-
-                                <p><i class="fa fa-map-marker"></i> {{user.address}}</p>
-                                <address>
-                                    <strong>{{user.email}}</strong><br>
-                                    <abbr title="Phone">P:</abbr> {{user.phone}}
-                                </address>
-                            </div>
-                            <div class="clearfix"></div>
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="row">
-
-                <div class="col-lg-6">
-                    <div class="widget style1 yellow-bg">
-                        <div class="row vertical-align">
-                            <div class="col-xs-3">
-                                <i class="fa fa-user fa-3x"></i>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <h2 class="font-bold">217</h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-lg-6">
-                    <div class="widget style1 navy-bg">
-                        <div class="row vertical-align">
-                            <div class="col-xs-3">
-                                <h2 class="font-bold">Widgets</h2>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <h2 class="font-bold">12</h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-            </div>
-
-
-        </div>
-
-        <div class="col-md-7">
+        <div class="col-md-5">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>Profile Detail</h5>
+                    <div ibox-tools="" class="ng-scope"><div class="ibox-tools dropdown" dropdown="">
+                        <button ui-sref="settings.account" class="btn btn-white btn-xs btn-bitbucket"><i class="fa fa-wrench"></i> Edit</button>
+                    </div></div>
                 </div>
                 <div>
                     <div class="ibox-content no-padding border-left-right">
-                        <img alt="image" class="img-responsive" src="{{user.banner}}">
+                        <img alt="image" class="img-responsive" src="{{accountCtl.user.banner}}">
                     </div>
                     <div class="ibox-content profile-content">
-                        <h4><strong>Monica Smith</strong></h4>
+                        <h4><strong>{{accountCtl.user.smartName}}</strong></h4>
+                        <p><i class="fa fa-map-marker"></i> {{accountCtl.user.address}}</p>
+                        <h5>About me</h5>
+                        <p>{{accountCtl.user.aboutMe}}</p>
 
-                        <p><i class="fa fa-map-marker"></i> Riviera State 32/106</p>
-                        <h5>
-                            About me
-                        </h5>
-
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                            exercitat.
-                        </p>
-
-                        <div class="row m-t-lg">
-                            <div class="col-md-4">
-                                <bar-chart data="main.BarChart3.data" options="main.BarChart3.options" class="ng-isolate-scope">
-                                    <h5><strong>169</strong> Posts</h5>
-                                    <span class="" style="display: none;">5,3,2,-1,-3,-2,2,3,5,2</span><svg class="peity" height="16" width="32"><rect fill="#1ab394" x="0" y="0" width="2.3" height="10"></rect><rect fill="#d7d7d7" x="3.3" y="4" width="2.3" height="6"></rect><rect fill="#1ab394" x="6.6" y="6" width="2.3" height="4"></rect><rect fill="#d7d7d7" x="9.899999999999999" y="10" width="2.3" height="2"></rect><rect fill="#1ab394" x="13.2" y="10" width="2.3" height="6"></rect><rect fill="#d7d7d7" x="16.5" y="10" width="2.3" height="4"></rect><rect fill="#1ab394" x="19.799999999999997" y="6" width="2.3" height="4"></rect><rect fill="#d7d7d7" x="23.099999999999998" y="4" width="2.3" height="6"></rect><rect fill="#1ab394" x="26.4" y="0" width="2.3" height="10"></rect><rect fill="#d7d7d7" x="29.7" y="6" width="2.3" height="4"></rect></svg></bar-chart></div>
-                            <div class="col-md-4">
-                                <line-chart data="main.LineChart.data" options="main.LineChart.options" class="ng-isolate-scope">
-                                    <h5><strong>28</strong> Following</h5>
-                                    <span class="" style="display: none;">5,9,7,3,5,2,5,3,9,6,5,9,4,7,3,2,9,8,7,4,5,1,2,9,5,4,7</span><svg class="peity" height="16" width="64"><polygon fill="#1ab394" points="0 15 0 7.166666666666666 2.4615384615384617 0.5 4.923076923076923 3.833333333333332 7.384615384615385 10.5 9.846153846153847 7.166666666666666 12.307692307692308 12.166666666666666 14.76923076923077 7.166666666666666 17.230769230769234 10.5 19.692307692307693 0.5 22.153846153846153 5.5 24.615384615384617 7.166666666666666 27.07692307692308 0.5 29.53846153846154 8.833333333333332 32 3.833333333333332 34.46153846153847 10.5 36.92307692307693 12.166666666666666 39.38461538461539 0.5 41.84615384615385 2.166666666666666 44.30769230769231 3.833333333333332 46.769230769230774 8.833333333333332 49.23076923076923 7.166666666666666 51.69230769230769 13.833333333333334 54.15384615384616 12.166666666666666 56.61538461538462 0.5 59.07692307692308 7.166666666666666 61.53846153846154 8.833333333333332 64 3.833333333333332 64 15"></polygon><polyline fill="transparent" points="0 7.166666666666666 2.4615384615384617 0.5 4.923076923076923 3.833333333333332 7.384615384615385 10.5 9.846153846153847 7.166666666666666 12.307692307692308 12.166666666666666 14.76923076923077 7.166666666666666 17.230769230769234 10.5 19.692307692307693 0.5 22.153846153846153 5.5 24.615384615384617 7.166666666666666 27.07692307692308 0.5 29.53846153846154 8.833333333333332 32 3.833333333333332 34.46153846153847 10.5 36.92307692307693 12.166666666666666 39.38461538461539 0.5 41.84615384615385 2.166666666666666 44.30769230769231 3.833333333333332 46.769230769230774 8.833333333333332 49.23076923076923 7.166666666666666 51.69230769230769 13.833333333333334 54.15384615384616 12.166666666666666 56.61538461538462 0.5 59.07692307692308 7.166666666666666 61.53846153846154 8.833333333333332 64 3.833333333333332" stroke="#169c81" stroke-width="1" stroke-linecap="square"></polyline></svg></line-chart></div>
-                            <div class="col-md-4">
-                                <bar-chart data="main.BarChart2.data" options="main.BarChart2.options" class="ng-isolate-scope">
-                                    <h5><strong>240</strong> Followers</h5>
-                                    <span class="" style="display: none;">5,3,9,6,5,9,7,3,5,2</span><svg class="peity" height="16" width="32"><rect fill="#1ab394" x="0" y="7.111111111111111" width="2.3" height="8.88888888888889"></rect><rect fill="#d7d7d7" x="3.3" y="10.666666666666668" width="2.3" height="5.333333333333333"></rect><rect fill="#1ab394" x="6.6" y="0" width="2.3" height="16"></rect><rect fill="#d7d7d7" x="9.899999999999999" y="5.333333333333334" width="2.3" height="10.666666666666666"></rect><rect fill="#1ab394" x="13.2" y="7.111111111111111" width="2.3" height="8.88888888888889"></rect><rect fill="#d7d7d7" x="16.5" y="0" width="2.3" height="16"></rect><rect fill="#1ab394" x="19.799999999999997" y="3.555555555555557" width="2.3" height="12.444444444444443"></rect><rect fill="#d7d7d7" x="23.099999999999998" y="10.666666666666668" width="2.3" height="5.333333333333333"></rect><rect fill="#1ab394" x="26.4" y="7.111111111111111" width="2.3" height="8.88888888888889"></rect><rect fill="#d7d7d7" x="29.7" y="12.444444444444445" width="2.3" height="3.5555555555555554"></rect></svg></bar-chart></div>
-                        </div>
-                        <div class="user-button">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <button type="button" class="btn btn-primary btn-sm btn-block"><i class="fa fa-envelope"></i> Send Message</button>
-                                </div>
-                                <div class="col-md-6">
-                                    <button type="button" class="btn btn-default btn-sm btn-block"><i class="fa fa-coffee"></i> Buy a coffee</button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

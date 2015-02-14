@@ -15,8 +15,7 @@
       <link href="/styles/style.css" rel="stylesheet">
       
       <script language="JavaScript">
-          // Clean url if we come from angular
-          window.location.hash = '';
+
       </script>
 
   </head>
@@ -36,10 +35,14 @@
 
     <%- body %>
 
+    <script src="<%= routes.configurationJS %>"></script>
+    
     <!-- Mainly scripts -->
     <script src="/js/dependencies/jquery/jquery-2.1.1.min.js"></script>
     <script src="/js/dependencies/bootstrap/bootstrap.min.js"></script>
 
+    <script src="/js/dependencies/jquery.cookie.js"></script>
+    
     <!-- iCheck -->
     <script src="/js/dependencies/iCheck/icheck.min.js"></script>
 

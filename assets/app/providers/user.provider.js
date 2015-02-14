@@ -26,13 +26,13 @@
             userData = data;
         }
 
-        userFactory.$inject = ['_', '$injector', 'userService'];
+        userFactory.$inject = ['_', '$injector', 'dataservice'];
         /**
          * Build a user object that come will useful method.
          * This object represent logged user so there is only one.
          * SINGLETON
          */
-        function userFactory(_, $injector, userService) {
+        function userFactory(_, $injector, dataservice) {
 
             var User = function( data ){
 
@@ -81,7 +81,7 @@
                         lastName: this.lastName,
                         settings: this.settings
                     };
-                    return userService.update( data );
+                    return dataservice.updateAccount(data);
                 }
 
                 /**

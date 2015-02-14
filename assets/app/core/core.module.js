@@ -10,6 +10,8 @@
         'ngAnimate',
         'gridster',
 
+        'angular-jwt',
+        
         'blocks.exception', // wrap angular exception handling
         'blocks.logger', // wrap angular logging
         'blocks.pageTitle',

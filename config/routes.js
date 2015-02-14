@@ -32,39 +32,45 @@ module.exports.routes = {
     *                                                                          *
     ***************************************************************************/
 
+    
+    'get /api/users/widgets': 'api/WidgetController.findAll', // default activated profile
+    'put /api/users/widgets/:id': 'api/WidgetController.updateProfileWidget', // update for default profile
+    'get /api/users/profiles/:profileid/widgets': 'api/WidgetController.findAll', // specific profile
+    'put /api/users/profiles/:profileid/widgets/:id': 'api/WidgetController.updateProfileWidget', // update for given profile
+
+    'get /api/users/profiles'       : 'api/ProfileController.findAll',
+    'get /api/users/profiles/:id'   : 'api/ProfileController.find',
+    'put /api/users/profiles'       : 'api/ProfileController.updateAll',
+    'put /api/users/profiles/:id'   : 'api/ProfileController.update',
+
+    'get /api/account': 'api/AccountController.me',
+    'put /api/account': 'api/AccountController.update',
+
+    // ==============
+    // Auth part
+    // ==============
+    // Views
+    'get /signin': 'app/ViewController.signin',
+    'get /signup': 'app/ViewController.signup',
+    
+    'get /auth/logout': 'app/AuthController.logout',
+    // local auth
+    'get  /auth/token/refresh'   : 'app/AuthController.issueToken',
+    'post /auth/signin'         : 'app/AuthController.signin',
+    'post /auth/signup'         : 'app/AuthController.signup',
+    
+    // Providers auth
+    'get /auth/:provider': 'app/AuthController.provider',
+    'get /auth/:provider/callback': 'app/AuthController.callback',
+    'get /auth/:provider/:action': 'app/AuthController.callback',
+
     // ==============
     // App routes
     // ==============
-    'GET /helpers/cor/:url': 'AppController.pipeCOR', // act as proxy for any request out of this domain
-    'get /configuration.json': 'AppController.getConfiguration', // return app settings
-    
-    'get /users/profiles/:profileid/widgets': 'AppController.getWidgets', // specific profile
-    'get /users/widgets': 'AppController.getWidgets', // default activated profile
-    
-    'put /users/profiles/:profileid/widgets/:id': 'AppController.updateProfileWidget', // update for given profile
-    'put /users/widgets/:id': 'AppController.updateProfileWidget', // update for default profile
-
-    'get /users/profiles'       : 'AppController.getProfiles',
-    'get /users/profiles/:id'   : 'AppController.getProfile',
-    'put /users/profiles'       : 'AppController.updateProfiles',
-    'put /users/profiles/:id'   : 'AppController.updateProfile',
-    
-    'get /account': 'AppController.getAccountData',
-    'put /account': 'AppController.updateAccountData',
-
-    'get /flash': 'AppController.getFlashMessages',
-    
-    // Login & register
-    '/login': 'AuthController.login', // login form
-    '/register': 'AuthController.register',
-    'get /logout': 'AuthController.logout',
-    // Authentication via providers
-    //'post /auth/local': 'AuthController.callback',
-    //'post /auth/local/:action': 'AuthController.callback',
-    'get /auth/:provider': 'AuthController.provider',
-    'get /auth/:provider/callback': 'AuthController.callback',
-    'get /auth/:provider/:action': 'AuthController.callback',
-
-    'get /': 'AppController.index' // Home (start point of front end app)
+    'get /helpers/cor/:url': 'app/ViewController.pipeCOR', // act as proxy for any request out of this domain
+    'get /configuration.json': 'app/ViewController.configurationJSON', // return app settings
+    'get /configuration.js': 'app/ViewController.configurationJS', // return app settings
+    'get /flash': 'app/ViewController.flash',
+    'get /': 'app/ViewController.index' // Home (start point of front end app)
 
 };

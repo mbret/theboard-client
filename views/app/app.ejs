@@ -37,7 +37,6 @@
         <!-- Navigation -->
         <div ng-include="'app/views/partials/sidebar.html'"></div>
 
-
         <!-- Page wraper -->
         <!-- ng-class with current state name give you the ability to extended customization your view -->
         <div id="page-wrapper" class="gray-bg {{$state.current.name}}">
@@ -57,7 +56,8 @@
     </div>
     <!-- End wrapper-->
 
-
+    <script src="<%= routes.configurationJS %>"></script>
+    
     <!--SCRIPTS APP-->
     <script src="/js/dependencies/sails.io.js"></script>
     <script src="/js/dependencies/pace/pace.min.js"></script>
@@ -78,9 +78,10 @@
     <script src="/js/dependencies/angular/angular-aria.js"></script>
     <script src="/js/dependencies/angular/angular-route.js"></script>
     <script src="/js/dependencies/angular/angular-ui-router.js"></script>
-    <script src="/js/dependencies/angular-hammer.js"></script>
-    <script src="/js/dependencies/bootstrap/ui-bootstrap-tpls-0.12.0.min.js"></script>
-    <script src="/js/dependencies/angular-gridster.js"></script>
+    <script src="/js/dependencies/angular-plugins/angular-gridster.js"></script>
+    <script src="/js/dependencies/angular-plugins/angular-hammer.js"></script>
+    <script src="/js/dependencies/angular-plugins/angular-jwt/angular-jwt.min.js"></script>
+    <script src="/js/dependencies/angular-plugins/bootstrap/ui-bootstrap-tpls-0.12.0.min.js"></script>
     <script src="/app/app.config.module.js"></script>
     <script src="/app/app.module.js"></script>
     <script src="/app/blocks/exception/exception.module.js"></script>
@@ -95,9 +96,9 @@
     <script src="/app/blocks/exception/exception-handler.provider.js"></script>
     <script src="/app/blocks/logger/logger.js"></script>
     <script src="/app/blocks/page-title/page-title.directive.js"></script>
+    <script src="/app/controllers/account.controller.js"></script>
     <script src="/app/controllers/index.controller.js"></script>
     <script src="/app/controllers/main.controller.js"></script>
-    <script src="/app/controllers/profile.controller.js"></script>
     <script src="/app/controllers/settings.controller.js"></script>
     <script src="/app/controllers/widget-profiles.controller.js"></script>
     <script src="/app/core/core.config.js"></script>

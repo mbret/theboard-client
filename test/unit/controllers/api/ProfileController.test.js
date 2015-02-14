@@ -1,9 +1,9 @@
 var request = require('supertest');
-var utils   = require('../../utils.js');
+var utils   = require('../../../utils.js');
 var app;
 var agent;
 
-describe('AppController', function() {
+describe('ProfileController', function() {
 
     var profiles;
     
@@ -28,33 +28,13 @@ describe('AppController', function() {
             .catch(next);
     });
 
-    /**
-     * Index function.
-     * Return the app index page.
-     * /
-     */
-    describe('index()', function() {
-        it('should return index (logged)', function (done){
-            agent
-                .get('/')
-                .send()
-                .expect(200, done);
-        });
-        it('should redirect to /login (not logged)', function (done){
-            request(app)
-                .get('/')
-                .send()
-                .expect(302)
-                .expect('location', '/login', done);
-        });
-    });
 
     /**
      * Unit test for getProfile function.
      * Function that return a specified profile passed in param.
      */
-    describe('getProfile()', function() {
-        var route = "/users/profiles";
+    describe('find', function() {
+        var route = "/api/users/profiles";
         it('should redirect to /login (not logged)', function (done){
             request(app)
                 .get(route + "/1")

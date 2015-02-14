@@ -95,9 +95,7 @@ var jsFilesToInjectApp = [
     'js/dependencies/angular/**/*.js',
     
     // Angular plugins
-    'js/dependencies/angular-hammer.js',
-    'js/dependencies/bootstrap/ui-bootstrap-tpls-0.12.0.min.js',
-    'js/dependencies/angular-gridster.js',
+    'js/dependencies/angular-plugins/**/*.js',
 
     // App
     // we need to load all modules

@@ -18,7 +18,7 @@
                             <li><a ui-sref="profile">Profile</a></li>
                             <li><a ui-sref="settings">Settings</a></li>
                             <li class="divider"></li>
-                            <li><a href="/logout">Logout</a></li>
+                            <li><a ng-href="" ng-click="logout();">Logout</a></li>
                         </ul>
                     </div>
                     <div class="logo-element">
@@ -38,8 +38,16 @@
                     <a ui-sref="profile"><i class="fa fa-user"></i> <span class="nav-label">Profile</span></a>
                 </li>
 
-                <li ui-sref-active="active">
-                    <a ui-sref="settings"><i class="fa fa-cogs"></i> <span class="nav-label">Settings</span></a>
+                <li ng-class="{active: $state.includes('settings')}">
+                    <a><i class="fa fa-cogs"></i> <span class="nav-label">Settings<span class="fa arrow"></span></span></a>
+                    <ul class="nav nav-second-level" ng-class="{in: $state.includes('settings')}">
+                        <li ui-sref-active="active"><a ui-sref="settings.general">General</a></li>
+                        <li ui-sref-active="active"><a ui-sref="settings.account">Account</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a><i class="fa fa-flag"></i> <span class="nav-label">Repository</span></a>
                 </li>
 
             </ul>

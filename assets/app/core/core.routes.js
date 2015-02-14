@@ -28,17 +28,35 @@
                 }
             })
             .state('settings', {
+                abstract: true,
                 url: '/settings',
                 templateUrl: APP_CONFIG.routes.partials + '/settings.html',
                 controller: 'SettingsController',
+                controllerAs: 'settingsCtl'
+            })
+            .state('settings.general', {
+                url: '/general',
+                templateUrl: APP_CONFIG.routes.partials + '/settings.general.html',
+                controller: 'SettingsGeneralController',
+                controllerAs: 'settingsGeneralCtl',
                 data: {
-                    pageTitle: 'Settings'
+                    pageTitle: 'General settings'
+                }
+            })
+            .state('settings.account', {
+                url: '/account',
+                templateUrl: APP_CONFIG.routes.partials + '/settings.account.html',
+                controller: 'SettingsAccountController',
+                controllerAs: 'settingsAccountCtl',
+                data: {
+                    pageTitle: 'Account settings'
                 }
             })
             .state('profile', {
                 url: '/profile',
                 templateUrl: APP_CONFIG.routes.partials + '/profile.html',
-                controller: 'ProfileController',
+                controller: 'AccountController',
+                controllerAs: 'accountCtl',
                 data: {
                     pageTitle: 'Profile'
                 }

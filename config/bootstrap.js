@@ -13,10 +13,13 @@ var fs = require('fs');
 
 module.exports.bootstrap = function(cb) {
 
+    //sails.services.oauth2orize.createServer();
+
     // Load passport providers on startup
     // Will add to passport.use() all the strategy
     sails.services.passport.loadStrategies();
 
+    
     // Create data dir if it doesnt exist (with app rights)
     FileService.createDataDir(function(err){
         if(err){

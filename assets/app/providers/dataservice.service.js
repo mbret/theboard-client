@@ -24,11 +24,27 @@
             updateWidget: updateWidget,
             getProfiles: getProfiles,
             getProfile: getProfile,
-            updateProfile: updateProfile
+            updateProfile: updateProfile,
+            updateAccount: updateAccount
         };
 
+        function updateAccount( data ){
+            var route = APP_CONFIG.routes.api.account.update;
+            return $http.put(route, data)
+                .then(function(data){
+                    logger.debug(debugName + ' updateAccount success!', data.data);
+                    return data.data;
+                })
+                .catch(function(error){
+                    logger.error(debugName + ' updateAccount failure!', error);
+                    throw error; // important to call superior catch
+                });
+            
+        }
+        
         function updateProfile( profile ){
-            return $http.put(APP_CONFIG.routes.user.profiles.update + '/' + profile.id, profile)
+            var route = APP_CONFIG.routes.api.profiles.update.replace(':id', profile.id);
+            return $http.put(route, profile)
                 .then(function(data){
                     var profile = data.data;
                     logger.debug(debugName + ' updateProfile success!', data.data);
@@ -42,7 +58,7 @@
         }
 
         function getProfiles(){
-            var route = APP_CONFIG.routes.user.profiles.get.replace(':id', "");
+            var route = APP_CONFIG.routes.api.profiles.getAll;
             return $http.get(route)
                 .then(function(data) {
                     logger.debug(debugName + ' getProfiles success!', data.data);
@@ -55,7 +71,7 @@
         }
         
         function getProfile(id){
-            var route = APP_CONFIG.routes.user.profiles.get.replace(':id', id);
+            var route = APP_CONFIG.routes.api.profiles.get.replace(':id', id);
             return $http.get(route)
                 .then(function(data) {
                     logger.debug(debugName + ' getProfile success!', data.data);
@@ -68,7 +84,7 @@
         }
 
         function getWidgets(){
-            var route = APP_CONFIG.routes.widgets.get;
+            var route = APP_CONFIG.routes.api.widgets.getAll;
             return $http.get(route)
                 .then(function(data) {
                     logger.debug('Widgets loaded successfully!', data.data);
@@ -82,7 +98,7 @@
         }
 
         function getWidgetsByProfile( profileID ){
-            var route = APP_CONFIG.routes.widgets.getByProfile.replace(':id', profileID);
+            var route = APP_CONFIG.routes.api.widgets.getByProfile.replace(':id', profileID);
             return $http.get(route)
                 .then(function(data) {
                     logger.debug('Widgets loaded successfully!', data.data);
@@ -105,7 +121,8 @@
         }
 
         function update(id, data){
-            return $http.put(APP_CONFIG.routes.widgets.update + '/' + id, data).then(function(data) {
+            var route = APP_CONFIG.routes.api.widgets.update.replace(':id', id);
+            return $http.put(route, data).then(function(data) {
                 logger.debug('Widget updated successfully!', data.data);
                 return data.data;
             })

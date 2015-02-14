@@ -17,14 +17,19 @@
          * Control the sidebar component
          * For now it only reset the state when route change. In that way the sidebar is always reset when user leave the /board state
          */
-        .directive('sidebar', ['$rootScope', '$timeout', 'APP_CONFIG', 'sidebarService', 'user',
-            function($rootScope, $timeout, APP_CONFIG, sidebarService, user){
+        .directive('sidebar', ['$rootScope', '$timeout', 'APP_CONFIG', 'sidebarService', 'user', '$window', '$location',
+            function($rootScope, $timeout, APP_CONFIG, sidebarService, user, $window, $location){
                 return {
                     restrict: 'A',
                     link: function(scope, element, attrs) {
 
                         scope.close = function(){
                             sidebarService.close();
+                        }
+                        
+                        scope.logout = function(){
+                            delete $window.localStorage.token;
+                            $window.location.replace(APP_CONFIG.routes.signin);
                         }
 
                         scope.user = {

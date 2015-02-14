@@ -3,9 +3,10 @@ var User = {
     schema: true,
     
     attributes: {
-        email     : { type: 'email',  unique: true },
-        passports : { collection: 'Passport', via: 'user' },
-
+        email       : { type: 'email',  unique: true },
+        passports   : { collection: 'Passport', via: 'user' },
+        //token       : { type: 'string' },
+        
         firstName: { type: 'string' },
         lastName: { type: 'string' },
         backgroundImagesInterval: { type: 'integer' },
@@ -13,9 +14,9 @@ var User = {
         locale: { type:'string', defaultTo: 'en_US' },
         avatar: { type: 'string', required: false }, // default value set in lifecycle callback
         banner: { type: 'string', required: false }, // default value set in lifecycle callback
-
+        address: { type: 'string', required: false },
+        
         settings: { collection:'userSetting', via: 'user' },
-        //widgets: {collection:'userWidget', via: 'user'},
         profiles: { collection: 'profile', via: 'user' },
         
         /**

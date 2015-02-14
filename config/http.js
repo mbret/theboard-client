@@ -38,7 +38,6 @@ module.exports.http = {
        'cookieParser',
        'session',
        'passport',
-       'myRequestLogger',
        'bodyParser',
        'handleBodyParserError',
        'compress',
@@ -126,11 +125,6 @@ module.exports.http = {
             return next(err);
         })
     },
-
-    //myRequestLogger: function (req, res, next) {
-    //     console.log("Requested :: ", req.method, req.url);
-    //     return next();
-    //}
 
 
   /***************************************************************************

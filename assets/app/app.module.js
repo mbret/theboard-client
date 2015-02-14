@@ -23,59 +23,99 @@
 	/*
 	 * Bootstrap application
 	 */
+    // Load server configuration first
 	loadServerConfig()
-		.then(function() {
-			angular.element(document).ready(function() {
-				angular.bootstrap(document, ["app"]);
-			});
+        // Then check authenticated user
+		.then(function( config ){
+            return checkAuth( config).then(function(user){
+                config.user = user;
+                return config;
+            });
 		})
+        // Then bootstrap application
+        .then(function( config ){
+            angular.module('app.config').constant('APP_CONFIG', config);
+            angular.element(document).ready(function() {
+                angular.bootstrap(document, ["app"]);
+            });
+        })
 		.catch(function(err){
 			display500();
 		});
 
+    /**
+     * Check the authentication of user.
+     * To access the application a token must be available and valid
+     * in order to retrieve current logged user. 
+     * @param config
+     * @returns {*}
+     */
+    function checkAuth(config){
+
+        //var APP_CONFIG = config;
+        var initInjector = angular.injector(["ng"]);
+        var $http = initInjector.get("$http");
+        //var $log = initInjector.get('$log');
+        //var $window = initInjector.get('$window');
+        //var $localStorage = $window.localStorage;
+        //var token = $localStorage.token;
+
+        // No token redirect
+        //if( ! token ){
+        //    redirectToLogin();
+        //}
+        //else{
+            // check token
+            return $http.get( config.routes.api.me)
+                .then(function(response){
+                    console.log('SZASA');
+
+                    var data = response.data;
+                    var user = data;
+                    return user;
+                });
+                //.catch(function(err){
+                    //if(err.status === 403){
+                    //    console.log('redirect');
+                    //    redirectToLogin();
+                    //}
+                    //else{
+                    //    throw err;
+                    //}
+                //});
+        //}
+        
+        //function redirectToLogin(){
+        //    window.location.replace('https://localhost:1337' + '/signin' + '?source=');
+        //}
+        
+    }
+    
 	/**
 	 * Load the app configuration from server
 	 * Return the $get promise 
 	 * @returns {*}
 	 */
 	function loadServerConfig() {
-		var initInjector = angular.injector(["ng"]);
-		var $http = initInjector.get("$http");
-		var $log = initInjector.get('$log');
+        var initInjector = angular.injector(["ng"]);
+        var $http = initInjector.get("$http");
+        var $log = initInjector.get('$log');
+        var $q = initInjector.get('$q');
+        return $q(function(resolve, reject) {
+            resolve(window.APP_CONFIG);
+        });
 
-		return $http.get("/configuration.json").then(function(response) {
-			
-			var config = response.data;
-			// Add gridster configuration
-			config.gridsterOpts = {
-				columns: 6, // the width of the grid, in columns
-				width: 'auto', // can be an integer or 'auto'. 'auto' scales gridster to be the full width of its containing element
-				colWidth: 300, // can be an integer or 'auto'.  'auto' uses the pixel width of the element divided by 'columns'
-				margins: [20, 20], // the pixel distance between each widget
-				outerMargin: true, // whether margins apply to outer edges of the grid,
-				floating: true, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
-				resizable: {
-					enabled: false,
-					handles: ['n', 'e', 's', 'w', 'ne', 'se', 'sw', 'nw'],
-					start: function(event, $element, widget) {}, // optional callback fired when resize is started,
-					resize: function(event, $element, widget) {}, // optional callback fired when item is resized,
-					stop: function(event, $element, widget) {} // optional callback fired when item is finished resizing
-				},
-				draggable: {
-					enabled: false, // whether dragging items is supported
-					handle: '.gridster-draggable', // optional selector for resize handle
-					start: function(event, $element, widget) {}, // optional callback fired when drag is started,
-					drag: function(event, $element, widget) {}, // optional callback fired when item is moved,
-					stop: function(event, $element, widget) {} // optional callback fired when item is finished dragging
-				}
-			};
-            
-            angular.module('app.config').constant('APP_CONFIG', config);
-			return;
-		})
-		.catch(function(errorResponse) {
-			throw errorResponse;
-		});
+		
+        //
+		//return $http.get("/configuration.json").then(function(response) {
+		//
+		//	var config = response.data;
+
+		//	return config;
+		//})
+		//.catch(function(errorResponse) {
+		//	throw errorResponse;
+		//});
 	}
 
 	/**

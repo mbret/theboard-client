@@ -126,7 +126,7 @@ body.modal-open{
     height: 100px;
     max-height: 100px;
 }
-.ibox .ibox-content{
+.ibox.widget-profile .ibox-content{
     height: 300px;
 }
 .ibox .ibox-content.selected{

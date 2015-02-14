@@ -26,20 +26,33 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
-    '*': ['sessionAuth'], // ok or 403
+    // Revoke all by default
+    '*': false, //['sessionAuth'], // ok or 403
 
-  /***************************************************************************
-  *                                                                          *
-  * Here's an example of mapping some policies to run before a controller    *
-  * and its actions                                                          *
-  *                                                                          *
-  ***************************************************************************/
-    'auth':{
-        'login': ['notAuthenticated'], // not logged or redirect to /
-        'logout': ['sessionAuthOrRedirect'], // ok or redirect login
-        'register': ['notAuthenticated'] // not logged or redirect to /
+    // Views are accessible but some part are revoked when logged or not
+    'app/view': {
+        'index': ['sessionAuthOrRedirect'],
+        'configurationJSON': true,
+        'configurationJS': true,
+        'flash': ['sessionAuth'],
+        'signin': ['notAuthenticated'],
+        'signup': ['notAuthenticated']
     },
-    'app':{
-        'index': ['sessionAuthOrRedirect'] // ok or redirect login
+    //
+    'app/auth': {
+        'signin': true,
+        'signup': true,
+        'logout': ['sessionAuthOrRedirect']
+    },
+    
+    // Only available for logged user
+    'api/profile': {
+        '*': ['sessionAuth']
+    },
+    'api/widget': {
+        '*': ['sessionAuth']
+    },
+    'api/account': {
+        '*': ['sessionAuth']
     }
 };

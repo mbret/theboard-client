@@ -1,112 +1,123 @@
-var path = require('path');
-
-/**
- *
- */
-module.exports = {
-
-    dataPath: __dirname + '/../data',
-    dataURL: '/public',
-    imagesURL: '/images',
+(function(){
+    'use strict';
     
-    user: {
-        default: {
-            avatar: 'avatar.jpg',
-            banner: 'user_banner.jpg',
-            backgroundImages: [ 'board_wall_default.jpg', 'board_wall1_default.jpg', 'board_wall2_default.jpg' ],
-            backgroundImagesInterval: 5000,
+    var path = require('path');
+    var _ = require('lodash');
+    
+    /**
+     *
+     */
+    var config = {
+
+        general: {
+
+            // Routes as a variable to be used everywhere without need to refactor
+            // Use these variable in backend and front end instead of write directly
+            routes: routes('server')
+        },
+
+        // SSL configuration
+        // http://www.cert-depot.com/
+        // http://www.mobilefish.com/services/ssl_certificates/ssl_certificates.php
+        ssl: {
+            ca: require('fs').readFileSync(__dirname + '/ssl/app.csr'),
+            key: require('fs').readFileSync(__dirname + '/ssl/app.private.key'),
+            cert: require('fs').readFileSync(__dirname + '/ssl/app.cert')
+        },
+
+        dataPath: __dirname + '/../data',
+        dataURL: '/public',
+        imagesURL: '/images',
+
+        user: {
+            default: {
+                avatar: 'avatar.jpg',
+                banner: 'user_banner.jpg',
+                backgroundImages: [ 'board_wall_default.jpg', 'board_wall1_default.jpg', 'board_wall2_default.jpg' ],
+                backgroundImagesInterval: 5000,
+                settings: {
+                    widgetsBorders: false
+                }
+            },
             settings: {
-                widgetsBorders: false
+                widgetsBorders: {
+                    type: 'boolean'
+                }
+
             }
         },
-        settings: {
-            widgetsBorders: {
-                type: 'boolean'
-            }
-            
-        }
-    },
 
-    general: {
-        // Web site copy
-        copy: 'The Board &copy; 2014'
-    },
+        // Correspond to the settings of the front side app
+        // These settings are retrieved by app on bootstrap
+        app: {
+            copy: 'The Board &copy; 2014',
+            pageTitle: 'Board',
+            environment: process.env.NODE_ENV || 'development',
+            user: {}, // This attribute is filled with the current logged user
+
+            // configuration for toaster plugin
+            // https://github.com/Foxandxss/angular-toastr
+            toastr: {
+                positionClass: 'toast-top-right',
+            },
+
+            routes: routes('app')
+        }
+    };
     
-    // Correspond to the settings of the front side app
-    // These settings are retrieved by app on bootstrap
-    frontApp: {
-        pageTitle: 'Board',
-        environment: process.env.NODE_ENV || 'development',
-        user: {}, // This attribute is filled with the current logged user
+    function routes(label){
+        var routes = {
+            default: {
+                signin: '/signin',
+                app: '/'
+            },
+            server: {
 
-        // configuration for toaster plugin
-        // https://github.com/Foxandxss/angular-toastr
-        toastr: {
-            positionClass: 'toast-top-right',
-        },
-        
-        // Define all routes needed by the front side
-        routes: {
-            app: '/app',
-            server: '/',
-            icons: '/app/icons',
-            images: '/app/img',
-            flash: '/flash',
-            user: {
-                profiles: {
-                    get: '/users/profiles/:id',
-                    update: '/users/profiles'
-                }
             },
-            widgets: {
-                getByProfile: '/users/profiles/:id/widgets', // get
-                get: '/users/widgets', // get
-                update: '/users/widgets', // put,
-                updateByProfile: '/users/profiles/:profileid/widgets/:id'
-            },
-            account: {
-                get: '/account', // get
-                update: '/account' // put
-            }
-        },
-        
-        // There are the list of all message the app could use
-        // @todo this should be done in another way ..
-        messages: {
-            errors: {
-                unableToUpdate: 'Sorry but we were unable to update',
-                unableToLoad: 'Sorry but we were unable to load',
-                geolocation: {
-                    unsupportedBrowser:'Browser does not support location services',
-                    permissionDenied:'You have rejected access to your location',
-                    positionUnavailable:'Unable to determine your location',
-                    timeout:'Service timeout has been reached'
-                },
-                widgets: {
-                    unableToUpdate: 'Sorry but we were unable to save your new widget organization!',
-                    unableToLoad: 'Sorry but we were unable to load your widgets!'
-                }
-            },
-            success: {
-                form:{
-                    updated: 'Update completed successfully!'
-                },
-                widget: {
-                    updated: 'Widget updated!'
-                }
-            },
-            form: {
-                invalid: 'Your form contain some errors, please check it before submit!',
-            },
-            nochange: 'No change',
-            profile:{
-                activated: 'New profile activated!',
-                updated: 'Profile updated',
-            },
-            widgets: {
-                updated: 'Widgets updated!'
-            }
-        }
+            app: {
+                views: '/app/views',
+                server: '/',
+                icons: '/app/icons',
+                images: '/app/img',
+                flash: '/flash',
+                signup: '/signup',
+                logout: '/auth/logout',
+                configurationJS: '/configuration.js',
+                api: {
+                    auth: {
+                        signin: '/auth/signin',
+                        signup: '/auth/signup'
+                    },
+                    me: '/api/account',
+                    user: {
 
+                    },
+                    profiles: {
+                        get: '/api/users/profiles/:id',
+                        getAll: '/api/users/profiles',
+                        update: '/api/users/profiles'
+                    },
+                    widgets: {
+                        getByProfile: '/api/users/profiles/:id/widgets', // get
+                        get: '/api/users/widgets/:id', // get
+                        getAll: '/api/users/widgets',
+                        updateAll: '/api/users/widgets', // put,
+                        update: '/api/users/widgets/:id',
+                        updateByProfile: '/api/users/profiles/:profileid/widgets/:id'
+                    },
+                    account: {
+                        get: '/api/account', // get
+                        update: '/api/account' // put
+                    }
+                }
+            }
+
+        };
+        
+        return _.assign(routes.default, routes[label]);
     }
-};
+    
+
+    module.exports = config;
+})();
+
