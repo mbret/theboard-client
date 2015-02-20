@@ -5,7 +5,7 @@
         .module('app.controllers')
         .controller('IndexController', IndexController)
 
-    IndexController.$inject = ['backstretch', 'user', '$scope', 'dataservice', '$q', 'APP_CONFIG', '$log', 'widgetService', 'geolocationService', 'modalService', 'notifService', '$timeout', 'sidebarService'];
+    IndexController.$inject = ['backstretch', 'user', '$scope', '$rootScope', '$q', 'APP_CONFIG', '$log', 'widgetService', 'geolocationService', 'modalService', 'notifService', '$timeout', 'sidebarService'];
 
     /**
      * IndexController
@@ -14,7 +14,7 @@
      * Controllers should never do DOM manipulation or hold DOM selectors; that's where directives and using ng-model come in. Likewise business logic should live in services, not controllers.
      * Data should also be stored in services, except where it is being bound to the $scope
      */
-    function IndexController(backstretch, user, $scope, dataservice, $q, APP_CONFIG, $log, widgetService, geolocationService, modalService, notifService, $timeout, sidebarService){
+    function IndexController(backstretch, user, $scope, $rootScope, $q, APP_CONFIG, $log, widgetService, geolocationService, modalService, notifService, $timeout, sidebarService){
 
         // This var will contain all widget element
         // These widgets will be placed inside iframe and get from server
@@ -27,6 +27,32 @@
         // If widgets are moved then this var contain all widgets before this move
         var widgetsPreviousState = null;
 
+        // backstretch take an array of url so we take settings
+        // and create an array with image and url
+        var urls = [];
+        angular.forEach(user.backgroundImages, function(image){
+            urls.push(image);
+        });
+        $scope.backstretch = {
+            duration: user.getSetting(user.CONST.SETTING_BACKGROUND_IMAGES_INTERVAL),
+            images: urls
+        };
+        backstretch.resume();
+
+        // We toggle backstretch state when toggling sidebar to reduce (graphical frame drop)
+        $rootScope.$on('sidebar.open', function(){
+            if($state.current.name === 'board') backstretch.pause();
+        });
+        $rootScope.$on('sidebar.opened', function(){
+            if($state.current.name === 'board') backstretch.resume();
+        });
+        $rootScope.$on('sidebar.close', function(){
+            if($state.current.name === 'board') backstretch.pause();
+        });
+        $rootScope.$on('sidebar.closed', function(){
+            if($state.current.name === 'board') backstretch.resume();
+        });
+        
         // Function for menu button
         $scope.toggleMenu = function () {
             sidebarService.toggle();

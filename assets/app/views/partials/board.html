@@ -1,11 +1,11 @@
-
-	<div class="row">
-		<button class="navbar-minimalize minimalize-styl-2 btn btn-primary " ng-click="toggleMenu()"><i class="fa fa-bars"></i></button>
-		<button class="navbar-minimalize minimalize-styl-2 btn btn-success btn-circle" ng-click="stopWidgets()"><i class="fa fa-stop"></i></button>
-		<button class="navbar-minimalize minimalize-styl-2 btn btn-success btn-circle  " ng-click="startWidgets()"><i class="fa fa-play"></i></button>
-		<button class="navbar-minimalize minimalize-styl-2 btn btn-success btn-circle " ng-click="refreshWidgets()"><i class="fa fa-undo"></i></button>
-		<button class="navbar-minimalize minimalize-styl-2 btn btn-warning btn-circle " ng-click="reloadWidgets()"><i class="fa fa-undo"></i></button>
-		<button class="navbar-minimalize minimalize-styl-2 btn btn-warning btn-circle " ng-click="lockOrUnlock()">
+<div >
+    <div class="row">
+        <button class="navbar-minimalize minimalize-styl-2 btn btn-primary " ng-click="toggleMenu()"><i class="fa fa-bars"></i></button>
+        <button class="navbar-minimalize minimalize-styl-2 btn btn-success btn-circle" ng-click="stopWidgets()"><i class="fa fa-stop"></i></button>
+        <button class="navbar-minimalize minimalize-styl-2 btn btn-success btn-circle  " ng-click="startWidgets()"><i class="fa fa-play"></i></button>
+        <button class="navbar-minimalize minimalize-styl-2 btn btn-success btn-circle " ng-click="refreshWidgets()"><i class="fa fa-undo"></i></button>
+        <button class="navbar-minimalize minimalize-styl-2 btn btn-warning btn-circle " ng-click="reloadWidgets()"><i class="fa fa-undo"></i></button>
+        <button class="navbar-minimalize minimalize-styl-2 btn btn-warning btn-circle " ng-click="lockOrUnlock()">
 			<span ng-switch on="widgetsLocked">
 				<span ng-switch-when="true">
 					<i class="fa fa-lock"></i>
@@ -14,37 +14,38 @@
 					<i class="fa fa-unlock"></i>
 				</span>
 			</span>
-		</button>
-	</div>
-
-	
-	<div class="row">
-		
-		<!-- 
-			Gridster plugin
-			Will organize the gridster-item itself
-		-->
-		<div gridster="gridsterOpts" class="widgets-iframes-container">
-			<ul  ng-class="{'widget-lock': widgetsLocked}">
-				<li gridster-item="widget"
-					ng-repeat="widget in widgets">
-				<!-- ng-controller="WidgetController"-->
-
-					<!--
-						widgetIfram directive:
-						handle the UI control of the widget
-					-->
-					<widget-iframe 
-							id="{{widget.identityHTML}}-container" 
-							class="widget-iframe-container yellow-bg"
-							widget="widget"
-							ng-class="{'with-border': widgetsBorders}" >
-
-					</widget-iframe><!-- end: widget container -->
-				</li>
-			</ul>
-		</div><!-- end: gridster -->
-	</div>
+        </button>
+    </div>
 
 
+    <div class="row">
+
+        <!--
+            Gridster plugin
+            Will organize the gridster-item itself
+        -->
+        <div gridster="gridsterOpts" class="widgets-iframes-container">
+            <ul  ng-class="{'widget-lock': widgetsLocked}">
+                <li gridster-item="widget"
+                    ng-repeat="widget in widgets">
+                    <!-- ng-controller="WidgetController"-->
+
+                    <!--
+                        widgetIfram directive:
+                        handle the UI control of the widget
+                    -->
+                    <widget-iframe
+                            id="{{widget.identityHTML}}-container"
+                            class="widget-iframe-container yellow-bg"
+                            widget="widget"
+                            ng-class="{'with-border': widgetsBorders}" >
+
+                    </widget-iframe><!-- end: widget container -->
+                </li>
+            </ul>
+        </div><!-- end: gridster -->
+    </div>
+    
+    <backstretch backstretch-images="{{backstretch.images}}" backstretch-duration="{{backstretch.duration}}" backstretch-fade="1"></backstretch>
+</div>
 

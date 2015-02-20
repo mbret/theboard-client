@@ -9,7 +9,6 @@ var User = {
         
         firstName: { type: 'string' },
         lastName: { type: 'string' },
-        backgroundImagesInterval: { type: 'integer' },
         backgroundImages: { type: 'array', required:false },
         locale: { type:'string', defaultTo: 'en_US' },
         avatar: { type: 'string', required: false }, // default value set in lifecycle callback
@@ -18,6 +17,13 @@ var User = {
         
         settings: { collection:'userSetting', via: 'user' },
         profiles: { collection: 'profile', via: 'user' },
+        
+        addBackgroundImage: function( file ){
+            var fdSplitted = file.fd.split('\\');
+            var url = require('util').format('%s/user/background/%s', sails.getBaseUrl() + '/' + sails.config.dataURL, fdSplitted[fdSplitted.length-1]);
+            this.backgroundImages.push(url);
+            return url;
+        },
         
         /**
          * Return the value of the asked settings
@@ -32,14 +38,19 @@ var User = {
             return _.isUndefined(setting) ? sails.config.user.default.settings[settingName] : setting.getValue();
         },
 
-        setSettingValueOrCreate: function(settingName, value){
+        /**
+         * Set the settings with this key for the user.
+         * @param settingName
+         * @param value
+         */
+        setSettingValueOrCreate: function(key, value){
             var setting = _.find(this.settings, function(obj){
-                return obj.name === settingName;
+                return obj.name === key;
             });
             // No setting yet
             // Add the setting only if it's a possible setting
             if(_.isUndefined(setting)){
-                var newSetting = UserSetting.buildNewSetting(settingName, value);
+                var newSetting = UserSetting.buildNewSetting(key, value);
                 this.settings.add(newSetting);
             }
             // setting found
@@ -112,10 +123,6 @@ var User = {
         if(_.isUndefined(values.backgroundImages) || _.isEmpty(values.backgroundImages)){
             values.backgroundImages = this._getDefaultBackgroundImages();
         }
-        // Check backgroundImagesInterval
-        if( _.isUndefined(values.backgroundImagesInterval) || _.isNull(values.backgroundImagesInterval)){
-            values.backgroundImagesInterval = this._getDefaultBackgroundImagesInterval();
-        }
         return cb();
     },
 
@@ -139,9 +146,6 @@ var User = {
         return bgImages;
     },
 
-    _getDefaultBackgroundImagesInterval: function(){
-        return sails.config.user.default.backgroundImagesInterval;
-    }
 };
 
 module.exports = User;

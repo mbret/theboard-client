@@ -5,7 +5,7 @@
             <ul metis-menu class="nav" id="side-menu">
                 <li class="nav-header">
                     <div class="dropdown profile-element">
-                        <img alt="image" class="img-circle avatar_48" src="{{user.avatar}}"/>
+                        <img alt="image" class="img-circle avatar_48" ng-src="{{user.avatar}}"/>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#" aria-expanded="true">
                             <span class="clear">
                                 <span class="block m-t-xs">
@@ -42,6 +42,7 @@
                     <a><i class="fa fa-cogs"></i> <span class="nav-label">Settings<span class="fa arrow"></span></span></a>
                     <ul class="nav nav-second-level" ng-class="{in: $state.includes('settings')}">
                         <li ui-sref-active="active"><a ui-sref="settings.general">General</a></li>
+                        <li ui-sref-active="active"><a ui-sref="settings.board">Board</a></li>
                         <li ui-sref-active="active"><a ui-sref="settings.account">Account</a></li>
                     </ul>
                 </li>

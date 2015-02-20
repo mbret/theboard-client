@@ -5,7 +5,7 @@
      *
      */
     angular
-        .module('app')
+        .module('blocks.backstretch')
         .factory('backstretch', backstretch);
 
     backstretch.$inject = ['$http', 'APP_CONFIG', 'logger'];

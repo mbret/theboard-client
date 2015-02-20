@@ -6,15 +6,15 @@
      * http://srobbin.com/jquery-plugins/backstretch/
      */
     angular
-        .module('app.directives')
+        .module('blocks.backstretch')
         .directive('backstretch', backstretch);
 
-    backstretch.$inject = ['$rootScope', 'user', 'backstretch', 'logger', '_', '$timeout'];
+    backstretch.$inject = ['$rootScope', 'backstretch', 'logger', '_', '$timeout'];
 
     /**
      * The directive must have ="value" with value as an array
      */
-    function backstretch ($rootScope, user, backstretch, logger, _, $timeout) {
+    function backstretch ($rootScope, backstretch, logger, _, $timeout) {
         
         if (typeof $.fn.backstretch !== 'function')
             throw new Error('ngBackstretch | Please make sure the jquery backstretch plugin is included before this directive is added.');
@@ -25,35 +25,36 @@
 
                 var isResuming = false;
                 var resumingProcess;
-                var images;
+                var images = scope.$eval(attrs.backstretchImages);
+                var duration = attrs.backstretchDuration;
                 var instance;
+                var backstretchContainer = angular.element("body");
                 
                 // Attach API to watch status
                 scope.api = backstretch;
                 
                 // Watch for API call (controller, etc)
                 scope.$watch('api.status', watchStatus);
+
+                scope.$on('$destroy', function() {
+                    destroy();
+                });
                 
                 // Watch for new images inserted in directive
-                scope.$watch(attrs.backstretch, imagesChanges);
-
-                function imagesChanges(value) {
-                    if( value instanceof Array){
-                        images = value;
-                    }
-                    else{
-                        images = [];
-                    }
-                    //resume();
-                }
+                //scope.$watch(attrs.backstretchImages, imagesChanges);
+                //
+                //function imagesChanges(value) {
+                //    console.log('images changed', value);
+                //    images = value;
+                //}
 
                 function init( delay ){
                     $timeout( function(){
-                        element.backstretch(images , {
-                            duration: user.backgroundImagesInterval,
+                        backstretchContainer.backstretch(images , {
+                            duration: duration,
                             fade: 750
                         });
-                        instance = element.data('backstretch');
+                        instance = backstretchContainer.data('backstretch');
                     }, delay);
                 }
 
@@ -62,7 +63,7 @@
                     // With that if user throw multiple pause / resume, it will no resume multiple time and let a latence to user
                     cancelResume();
                     if( instance !== null && instance !== undefined ){
-                        element.backstretch('pause');
+                        backstretchContainer.backstretch('pause');
                     }
                 }
 
@@ -80,9 +81,9 @@
                         }
                         else{
                             resumingProcess = setTimeout(function(){
-                                element.backstretch('resume');
+                                backstretchContainer.backstretch('resume');
                                 isResuming = false;
-                            }, user.backgroundImagesInterval);
+                            }, duration);
                         }
                     }
                 }
@@ -97,7 +98,7 @@
                 function destroy(){
                     cancelResume();
                     if( instance !== null && instance !== undefined ){
-                        element.backstretch("destroy", false /*preserveBackground*/);
+                        backstretchContainer.backstretch("destroy", false /*preserveBackground*/);
                         instance = null;
                     }
                 };

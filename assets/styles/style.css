@@ -10,6 +10,17 @@ body.modal-open{
     transform: translateY(-50%);
     text-align: center;
 }
+.cancel-animation{
+    -webkit-animation: none;
+}
+
+.dropzone {
+    position: relative;
+    border: 2px dashed #0087F7;
+    border-radius: 5px;
+    background: white;
+}
+
 /*=================================
         Login
 =================================*/
@@ -143,6 +154,18 @@ body.modal-open{
     /*padding: 15px;*/
 /*}*/
 
+/*=================================
+         Board settings
+=================================*/
+.settings.board .bg-gallery .item{
+    position: relative;
+    display: inline-block;
+}
+.settings.board .bg-gallery .item .btn{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
 
 /*=================================
         Sidebar

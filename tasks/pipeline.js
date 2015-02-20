@@ -28,13 +28,11 @@ var cssFilesToInjectApp = [
 
     // Bootstrap
     'styles/plugins/bootstrap.min.css',
-    'styles/plugins/font-awesome/css/font-awesome.min.css',
     
-    'styles/plugins/iCheck/custom.css',
-    'styles/plugins/toastr/toastr.min.css',
-    
+    // Plugins
+    'styles/plugins/**/*.css',
+
     // Theme and own style
-    'styles/plugins/animate.css',
     'styles/style.theme.css',
     'styles/style.css',
 ];
@@ -67,12 +65,10 @@ var jsFilesToInjectApp = [
     'js/dependencies/pace/pace.min.js',
     'js/dependencies/URI.js',
     'js/dependencies/lodash.js',
-    
-    // Dependencies like sails.io.js, jQuery, or Angular
-    // are brought in here
     'js/dependencies/moment.min.js',
     'js/dependencies/hammer.js',
     'js/dependencies/detect-element-resize.js',
+    'js/dependencies/dropzone.js',
     
     // Jquery
     'js/dependencies/jquery/jquery-2.1.1.min.js',
@@ -82,14 +78,8 @@ var jsFilesToInjectApp = [
     'js/dependencies/bootstrap/bootstrap.min.js',
 
     // Jquery plugins
-    'js/dependencies/metisMenu/jquery.metisMenu.js',
-    'js/dependencies/toastr/toastr.min.js',
-    'js/dependencies/iCheck/icheck.min.js',
-    'js/dependencies/jquery.backstretch.js',
-    'js/dependencies/jquery.backstretch.js',
-    'js/dependencies/detect-element-resize.js',
-    'js/dependencies/iCheck/icheck.min.js',
-    
+    'js/dependencies/jquery-plugins/**/*.js',
+
     // Angular
     'js/dependencies/angular/angular.js',
     'js/dependencies/angular/**/*.js',

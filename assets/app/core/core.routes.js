@@ -43,6 +43,15 @@
                     pageTitle: 'General settings'
                 }
             })
+            .state('settings.board', {
+                url: '/board',
+                templateUrl: APP_CONFIG.routes.partials + '/settings.board.html',
+                controller: 'SettingsBoardController',
+                controllerAs: 'settingsBoardCtl',
+                data: {
+                    pageTitle: 'Board settings'
+                }
+            })
             .state('settings.account', {
                 url: '/account',
                 templateUrl: APP_CONFIG.routes.partials + '/settings.account.html',

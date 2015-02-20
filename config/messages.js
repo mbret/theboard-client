@@ -53,7 +53,8 @@
                     },
                     widget: {
                         updated: 'Widget updated!'
-                    }
+                    },
+                    deleted: 'Deleted with success!'
                 },
                 form: {
                     invalid: 'Your form contain some errors, please check it before submit!',

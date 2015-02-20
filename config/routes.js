@@ -32,17 +32,18 @@ module.exports.routes = {
     *                                                                          *
     ***************************************************************************/
 
-    
     'get /api/users/widgets': 'api/WidgetController.findAll', // default activated profile
     'put /api/users/widgets/:id': 'api/WidgetController.updateProfileWidget', // update for default profile
     'get /api/users/profiles/:profileid/widgets': 'api/WidgetController.findAll', // specific profile
     'put /api/users/profiles/:profileid/widgets/:id': 'api/WidgetController.updateProfileWidget', // update for given profile
 
+    'get /api/users/'               : 'api/ProfileController.find',
     'get /api/users/profiles'       : 'api/ProfileController.findAll',
     'get /api/users/profiles/:id'   : 'api/ProfileController.find',
     'put /api/users/profiles'       : 'api/ProfileController.updateAll',
     'put /api/users/profiles/:id'   : 'api/ProfileController.update',
-
+    'post /api/users/backgroudimages': 'api/AccountController.uploadBackgroundImage',
+    
     'get /api/account': 'api/AccountController.me',
     'put /api/account': 'api/AccountController.update',
 

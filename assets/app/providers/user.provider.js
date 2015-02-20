@@ -36,21 +36,22 @@
 
             var User = function( data ){
 
+                var self = this;
+                
                 /*
                  * Attributes
                  */
-                this.profiles = angular.copy(data.profiles);
+                self.profiles = angular.copy(data.profiles);
                 // array of settings with their values
-                this.settings = angular.copy(data.settings);
-                this.id = data.id;
-                this.email = data.email;
-                this.backgroundImages = angular.copy(data.backgroundImages);
-                this.backgroundImagesInterval = data.backgroundImagesInterval;
-                this.avatar = data.avatar;
-                this.banner = data.banner;
-                this.profile = data.profile;
-                this.firstName = data.firstName;
-                this.lastName = data.lastName;
+                self.settings = angular.copy(data.settings);
+                self.id = data.id;
+                self.email = data.email;
+                self.backgroundImages = angular.copy(data.backgroundImages);
+                self.avatar = data.avatar;
+                self.banner = data.banner;
+                self.profile = data.profile;
+                self.firstName = data.firstName;
+                self.lastName = data.lastName;
 
                 /*
                  * Constants
@@ -58,18 +59,27 @@
                  * Use them inside controller etc and change only here when server changed. 
                  */
                 User.prototype.CONST = {
-                    SETTING_WIDGETS_BORDERS : 'widgetsBorders'
-                }
+                    SETTING_WIDGETS_BORDERS : 'widgetsBorders',
+                    SETTING_BACKGROUND_IMAGES_INTERVAL : 'backgroundImagesInterval'
+                };
                 
-                /*
-                 * Methods
-                 */
+                User.prototype.addBackgroundImage = function( key ){
+                    self.backgroundImages.push(key);
+                };
+                
+                User.prototype.removeBackgroundImage = function( key ){
+                    self.backgroundImages = _.remove(self.backgroundImages, function(n) {
+                        return key !== n;
+                    });
+                    console.log(self.backgroundImages);
+                };
+                
                 /**
                  * Use this function to set new active profile as local.
                  */
                 User.prototype.setActiveProfile = function( id ){
-                    this.profile = id;
-                }
+                    self.profile = id;
+                };
 
                 /**
                  *  
@@ -77,9 +87,10 @@
                  */
                 User.prototype.save = function(){
                     var data = {
-                        firstName: this.firstName,
-                        lastName: this.lastName,
-                        settings: this.settings
+                        firstName: self.firstName,
+                        lastName: self.lastName,
+                        settings: self.settings,
+                        backgroundImages: self.backgroundImages
                     };
                     return dataservice.updateAccount(data);
                 }
@@ -90,7 +101,7 @@
                  * @param value
                  */
                 User.prototype.setSetting = function( id, value ){
-                    this.settings[id] = value;
+                    self.settings[id] = value;
                 }
 
                 /**
@@ -99,7 +110,7 @@
                  * @returns {*}
                  */
                 User.prototype.getSetting = function( id ){
-                    return this.settings[id];
+                    return self.settings[id];
                 }
             };
 

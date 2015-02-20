@@ -42,9 +42,11 @@
     }
     
     // Config that must be execute at module run
-    appRun.$inject = ['$rootScope', '$state', '$http', '$log', 'notifService', '$timeout', 'APP_CONFIG'];
-    function appRun($rootScope, $state, $http, $log, notifService, $timeout, APP_CONFIG){
+    appRun.$inject = ['$rootScope', '$state', '$http', '$log', 'notifService', '$timeout', 'APP_CONFIG', 'user'];
+    function appRun($rootScope, $state, $http, $log, notifService, $timeout, APP_CONFIG, user){
 
+        window.user = user;
+        
         $rootScope.$state = $state;
 
         // Check for flash message from server

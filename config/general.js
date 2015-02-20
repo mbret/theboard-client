@@ -26,24 +26,27 @@
         },
 
         dataPath: __dirname + '/../data',
-        dataURL: '/public',
-        imagesURL: '/images',
+        dataPublicPath: __dirname + '/../data/statics/public',
+        dataURL: 'public',
+        imagesURL: 'images',
 
         user: {
             default: {
                 avatar: 'avatar.jpg',
                 banner: 'user_banner.jpg',
                 backgroundImages: [ 'board_wall_default.jpg', 'board_wall1_default.jpg', 'board_wall2_default.jpg' ],
-                backgroundImagesInterval: 5000,
                 settings: {
-                    widgetsBorders: false
+                    widgetsBorders: false,
+                    backgroundImagesInterval: 5000
                 }
             },
             settings: {
                 widgetsBorders: {
                     type: 'boolean'
+                },
+                backgroundImagesInterval: {
+                    type: 'integer'
                 }
-
             }
         },
 

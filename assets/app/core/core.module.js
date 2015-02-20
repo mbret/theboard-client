@@ -14,6 +14,7 @@
         
         'blocks.exception', // wrap angular exception handling
         'blocks.logger', // wrap angular logging
+        'blocks.backstretch',
         'blocks.pageTitle',
         
         'app.controllers',

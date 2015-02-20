@@ -11,12 +11,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <!--STYLES APP-->
-    <link rel="stylesheet" href="/styles/dist/angular-gridster.min.css">
     <link rel="stylesheet" href="/styles/plugins/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles/plugins/angular-gridster.min.css">
+    <link rel="stylesheet" href="/styles/plugins/animate.css">
+    <link rel="stylesheet" href="/styles/plugins/blueimp-gallery/css/blueimp-gallery.min.css">
+    <link rel="stylesheet" href="/styles/plugins/dropzone/dropzone.css">
+    <link rel="stylesheet" href="/styles/plugins/font-awesome/css/font-awesome.css">
     <link rel="stylesheet" href="/styles/plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/styles/plugins/iCheck/custom.css">
     <link rel="stylesheet" href="/styles/plugins/toastr/toastr.min.css">
-    <link rel="stylesheet" href="/styles/plugins/animate.css">
     <link rel="stylesheet" href="/styles/style.theme.css">
     <link rel="stylesheet" href="/styles/style.css">
     <!--STYLES APP END-->
@@ -24,7 +27,9 @@
 </head>
 
 
-<body  ng-controller="MainController" class="{{$state.current.name}}" backstretch="{{backstretch}}" backstretch-images="backstretch" backstretch-duration="5000" backstretch-fade="1">
+<body ng-controller="MainController" class="{{$state.current.name}}" >
+
+    <!--<backstretch backstretch-images="{{backstretch.images}}" backstretch-duration="{{backstretch.duration}}" backstretch-fade="1" ></backstretch>-->
 
     <!-- This preloader is used with pace.js to hide the content of page while rendering is not done -->
     <div class="preloader">
@@ -35,7 +40,7 @@
     <div id="wrapper" class="">
 
         <!-- Navigation -->
-        <div ng-include="'app/views/partials/sidebar.html'"></div>
+        <div ng-include="'app/views/common/sidebar.html'"></div>
 
         <!-- Page wraper -->
         <!-- ng-class with current state name give you the ability to extended customization your view -->
@@ -48,7 +53,7 @@
             <div ui-view></div>
 
             <!-- Footer -->
-            <div ng-include="'app/views/partials/footer.html'"></div>
+            <div ng-include="'app/views/common/footer.html'"></div>
 
         </div>
         <!-- End page wrapper-->
@@ -66,13 +71,16 @@
     <script src="/js/dependencies/moment.min.js"></script>
     <script src="/js/dependencies/hammer.js"></script>
     <script src="/js/dependencies/detect-element-resize.js"></script>
+    <script src="/js/dependencies/dropzone.js"></script>
     <script src="/js/dependencies/jquery/jquery-2.1.1.min.js"></script>
     <script src="/js/dependencies/jquery/jquery-ui.min.js"></script>
     <script src="/js/dependencies/bootstrap/bootstrap.min.js"></script>
-    <script src="/js/dependencies/metisMenu/jquery.metisMenu.js"></script>
-    <script src="/js/dependencies/toastr/toastr.min.js"></script>
-    <script src="/js/dependencies/iCheck/icheck.min.js"></script>
-    <script src="/js/dependencies/jquery.backstretch.js"></script>
+    <script src="/js/dependencies/jquery-plugins/blueimp-gallery.min.js"></script>
+    <script src="/js/dependencies/jquery-plugins/iCheck/icheck.min.js"></script>
+    <script src="/js/dependencies/jquery-plugins/jquery.backstretch.js"></script>
+    <script src="/js/dependencies/jquery-plugins/jquery.cookie.js"></script>
+    <script src="/js/dependencies/jquery-plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/js/dependencies/jquery-plugins/toastr/toastr.min.js"></script>
     <script src="/js/dependencies/angular/angular.js"></script>
     <script src="/js/dependencies/angular/angular-animate.js"></script>
     <script src="/js/dependencies/angular/angular-aria.js"></script>
@@ -84,6 +92,7 @@
     <script src="/js/dependencies/angular-plugins/bootstrap/ui-bootstrap-tpls-0.12.0.min.js"></script>
     <script src="/app/app.config.module.js"></script>
     <script src="/app/app.module.js"></script>
+    <script src="/app/blocks/backstretch/backstretch.module.js"></script>
     <script src="/app/blocks/exception/exception.module.js"></script>
     <script src="/app/blocks/logger/logger.module.js"></script>
     <script src="/app/blocks/page-title/page-title.module.js"></script>
@@ -93,6 +102,8 @@
     <script src="/app/providers/services.module.js"></script>
     <script src="/app/app.config.js"></script>
     <script src="/app/app.constants.js"></script>
+    <script src="/app/blocks/backstretch/backstretch.directive.js"></script>
+    <script src="/app/blocks/backstretch/backstretch.service.js"></script>
     <script src="/app/blocks/exception/exception-handler.provider.js"></script>
     <script src="/app/blocks/logger/logger.js"></script>
     <script src="/app/blocks/page-title/page-title.directive.js"></script>
@@ -104,13 +115,14 @@
     <script src="/app/core/core.config.js"></script>
     <script src="/app/core/core.constants.js"></script>
     <script src="/app/core/core.routes.js"></script>
-    <script src="/app/directives/backstretch.directive.js"></script>
     <script src="/app/directives/backstretch2.directive.js"></script>
+    <script src="/app/directives/blueimp.directive.js"></script>
+    <script src="/app/directives/dropzone.directive.js"></script>
     <script src="/app/directives/icheck.directive.js"></script>
     <script src="/app/directives/metis-menu.directive.js"></script>
+    <script src="/app/directives/ng-confirm-click.js"></script>
     <script src="/app/directives/sidebar.directive.js"></script>
     <script src="/app/directives/widget-iframe.directive.js"></script>
-    <script src="/app/providers/backstretch.factory.js"></script>
     <script src="/app/providers/dataservice.service.js"></script>
     <script src="/app/providers/services.js"></script>
     <script src="/app/providers/sidebar.service.js"></script>
