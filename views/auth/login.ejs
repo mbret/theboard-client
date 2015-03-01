@@ -3,17 +3,15 @@
         <div>
             <h1 class="logo-name">The Board</h1>
         </div>
-        <h3>Welcome to The Board</h3>
-        <p>Tired to wait information ? Give a try to the board and stay informed all the time!</p>
-        <p>Login in. To see it in action.</p>
+        <%- __('i18n_login_welcome_text') %>
         <form class="m-t" role="form" id="form-login" action="#" method="post">
             <div class="form-group">
-                <input type="email" name="email" class="form-control" placeholder="Email" required="">
+                <input type="email" name="email" class="form-control" placeholder="<%= __('i18n_Email') %>" required="">
             </div>
             <div class="form-group">
-                <input type="password" name="password" class="form-control" placeholder="Password" required="">
+                <input type="password" name="password" class="form-control" placeholder="<%= __('i18n_Password') %>" required="">
             </div>
-            <button type="submit" class="btn btn-primary block full-width m-b-sm">Login</button>
+            <button type="submit" class="btn btn-primary block full-width m-b-sm"><%= __('i18n_Login') %></button>
 
             <div class="row m-b-sm social-line">
                 <div class="col-xs-5"><hr></div>

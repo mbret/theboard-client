@@ -19,26 +19,29 @@ module.exports.bootstrap = function(cb) {
     // Will add to passport.use() all the strategy
     sails.services.passport.loadStrategies();
 
-    // Create data dir if it doesnt exist (with app rights)
-    FileService.createDataDir(function(err){
-        if(err){
-            return next(err);
-        }
+    
+    async.series([
 
-        if( sails.config.environment === "development" ){
-            DbService.initDev()
-                .then(function(){
-                    next();
-                })
-                .catch(next);
+        // Create data dir if it doesnt exist (with app rights)
+        function(cb){
+            FileService.createDataDir(cb);
+        },
+        
+        function(cb){
+            
+            if( sails.config.fillDb === true ){
+                DbService.initDev()
+                    .then(function(){
+                        cb();
+                    })
+                    .catch(cb);
+            }
+            else{
+                return cb();
+            }
         }
-        else{
-            return next();
-        }
-
-        function next(err){
-            return cb(err);
-        }
-
+        
+    ], function(error){
+        return cb(error);
     });
 };

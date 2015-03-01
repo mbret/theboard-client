@@ -30,29 +30,29 @@ module.exports.policies = {
     '*': false, //['sessionAuth'], // ok or 403
 
     // Views are accessible but some part are revoked when logged or not
-    'app/view': {
+    'view': {
         'index': ['sessionAuthOrRedirect'],
         'configurationJSON': true,
         'configurationJS': true,
         'flash': ['sessionAuth'],
         'signin': ['notAuthenticated'],
-        'signup': ['notAuthenticated']
+        'signup': ['notAuthenticated'],
     },
     //
-    'app/auth': {
+    'auth': {
         'signin': true,
         'signup': true,
         'logout': ['sessionAuthOrRedirect']
     },
     
     // Only available for logged user
-    'api/profile': {
+    'profile': {
         '*': ['sessionAuth']
     },
-    'api/widget': {
+    'widget': {
         '*': ['sessionAuth']
     },
-    'api/account': {
+    'account': {
         '*': ['sessionAuth']
     }
 };

@@ -48,7 +48,7 @@ module.exports = function serverError (data, options) {
 
 
   // Prepare data for view
-  var title = (data.title ? data.title : 'The Board | Error');
+  var title = (data.title ? data.title : ViewsService.buildTitle(req.__('i18n_Internal server error')));
   var message = (data.message) ? data.message : null;
   
   // If a view was provided in options, serve it.

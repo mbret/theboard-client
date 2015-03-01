@@ -1,13 +1,9 @@
 <div class="middle-box text-center animated fadeInDown">
     <h1>500</h1>
-    <h3 class="font-bold">Internal Server Error</h3>
+    <h3 class="font-bold"><%= __('i18n_Internal server error') %></h3>
 
     <div class="error-desc">
-        <% if ( typeof message != 'undefined' && message) {%>
-            <%= message %>
-        <% } else { %>
-            The server encountered something unexpected that didn't allow it to complete the request. We apologize.
-        <% } %>
-        <br/>You can go back to main page: <br/><a href="/" class="btn btn-primary m-t">Home</a>
+        <p><%= __('i18n_500_server_crash') %></p>
+        <br/><%= __('i18n_500_can_go_back_home') %> <br/><a href="/" class="btn btn-primary m-t"><%= __('i18n_Home') %></a>
     </div>
 </div>

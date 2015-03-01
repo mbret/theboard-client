@@ -28,7 +28,6 @@ module.exports = function(grunt) {
 				'views/**/*.ejs': require('../pipeline').jsFilesToInject
 			}
 		},
-
 		devJsRelative: {
 			options: {
 				startTag: '<!--SCRIPTS-->',
@@ -118,7 +117,6 @@ module.exports = function(grunt) {
 				'views/**/*.ejs': require('../pipeline').cssFilesToInject
 			}
 		},
-
 		devStylesRelative: {
 			options: {
 				startTag: '<!--STYLES-->',

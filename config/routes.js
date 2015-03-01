@@ -33,47 +33,47 @@ var routes = {
     *                                                                          *
     ***************************************************************************/
 
-    'get /api/users/widgets': 'api/WidgetController.findAll', // default activated profile
-    'put /api/users/widgets/:id': 'api/WidgetController.updateProfileWidget', // update for default profile
-    'get /api/users/profiles/:profileid/widgets': 'api/WidgetController.findAll', // specific profile
-    'put /api/users/profiles/:profileid/widgets/:id': 'api/WidgetController.updateProfileWidget', // update for given profile
-
-    'get /api/users/'               : 'api/ProfileController.find',
-    'get /api/users/profiles'       : 'api/ProfileController.findAll',
-    'get /api/users/profiles/:id'   : 'api/ProfileController.find',
-    'put /api/users/profiles'       : 'api/ProfileController.updateAll',
-    'put /api/users/profiles/:id'   : 'api/ProfileController.update',
-    'post /api/users/backgroudimages': 'api/AccountController.uploadBackgroundImage',
+    'get /api/users/'               : 'ProfileController.find',
+    'get /api/users/profiles'       : 'ProfileController.findAll',
+    'get /api/users/profiles/:id'   : 'ProfileController.find',
+    'put /api/users/profiles'       : 'ProfileController.updateAll',
+    'put /api/users/profiles/:id'   : 'ProfileController.update',
+    'post /api/users/backgroudimages': 'AccountController.uploadBackgroundImage',
     
-    'get /api/account': 'api/AccountController.me',
-    'put /api/account': 'api/AccountController.update',
+    'get /api/users/widgets': 'WidgetController.findAll', // default activated profile
+    'put /api/users/widgets/:id': 'WidgetController.updateProfileWidget', // update for default profile
+    'get /api/users/profiles/:profileid/widgets': 'WidgetController.findAll', // specific profile
+    'put /api/users/profiles/:profileid/widgets/:id': 'WidgetController.updateProfileWidget', // update for given profile
+
+    'get /api/account': 'AccountController.me',
+    'put /api/account': 'AccountController.update',
 
     // ==============
     // Auth part
     // ==============
     // Views
-    'get /signin': 'app/ViewController.signin',
-    'get /signup': 'app/ViewController.signup',
+    'get /signin': 'ViewController.signin',
+    'get /signup': 'ViewController.signup',
     
-    'get /auth/logout': 'app/AuthController.logout',
+    'get /auth/logout': 'AuthController.logout',
     // local auth
-    'get  /auth/token/refresh'   : 'app/AuthController.issueToken',
-    'post /auth/signin'         : 'app/AuthController.signin',
-    'post /auth/signup'         : 'app/AuthController.signup',
+    'get  /auth/token/refresh'   : 'AuthController.issueToken',
+    'post /auth/signin'         : 'AuthController.signin',
+    'post /auth/signup'         : 'AuthController.signup',
     
     // Providers auth
-    'get /auth/:provider': 'app/AuthController.provider',
-    'get /auth/:provider/callback': 'app/AuthController.callback',
-    'get /auth/:provider/:action': 'app/AuthController.callback',
+    'get /auth/:provider': 'AuthController.provider',
+    'get /auth/:provider/callback': 'AuthController.callback',
+    'get /auth/:provider/:action': 'AuthController.callback',
 
     // ==============
     // App routes
     // ==============
-    'get /helpers/cor/:url': 'app/ViewController.pipeCOR', // act as proxy for any request out of this domain
-    'get /configuration.json': 'app/ViewController.configurationJSON', // return app settings
-    'get /configuration.js': 'app/ViewController.configurationJS', // return app settings
-    'get /flash': 'app/ViewController.flash',
-    'get /': 'app/ViewController.index' // Home (start point of front end app)
+    'get /helpers/cor/:url': 'ViewController.pipeCOR', // act as proxy for any request out of this domain
+    'get /configuration.json': 'ViewController.configurationJSON', // return app settings
+    'get /configuration.js': 'ViewController.configurationJS', // return app settings
+    'get /flash': 'ViewController.flash',
+    'get /': 'ViewController.index' // Home (start point of front end app)
 
 };
 

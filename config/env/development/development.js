@@ -12,7 +12,8 @@
 
 module.exports = {
 
+    autoLogin: false,
 
-    autoLogin: false
-
+    fillDb: true
+    
 };

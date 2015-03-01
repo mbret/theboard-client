@@ -26,21 +26,17 @@ var cssFilesToInjectApp = [
 // (uses Grunt-style wildcard/glob/splat expressions)
 var jsFilesToInject = [
 
-      // Load sails.io before everything else
-      'js/dependencies/**/sails.io.js',
+    // Load sails.io before everything else
+    'js/dependencies/**/sails.io.js',
 
-      // Dependencies like sails.io.js, jQuery, or Angular
-      // are brought in here
-      'js/dependencies/dist/jquery.js',
-      'js/dependencies/hammer.js',
-      'js/dependencies/detect-element-resize.js',
-      'js/dependencies/jquery.backstretch.js',
-      'js/dependencies/URI.js',
-      'js/dependencies/**/*.js',
-
-      // All of the rest of your client-side js files
-      // will be injected here in no particular order.
-      'js/**/*.js',
+    'js/dependencies/jquery/jquery-2.1.1.min.js',
+    'js/dependencies/jquery/jquery-ui.min.js',
+    'js/dependencies/bootstrap/bootstrap.min.js',
+    'js/dependencies/jquery-plugins/jquery.cookie.min.js',
+    'js/dependencies/jquery-plugins/iCheck/icheck.min.js',
+    'js/dependencies/jquery-plugins/toastr/toastr.min.js',
+    'js/dependencies/jquery-plugins/validate/jquery.validate.min.js',
+    'js/script.auth.js',
 ];
 
 var jsFilesToInjectApp = [
@@ -108,8 +104,10 @@ module.exports.jsFilesToInject = jsFilesToInject.map(function(path) {
 module.exports.templateFilesToInject = templateFilesToInject.map(function(path) {
     return 'assets/' + path;
 });
+
+// APP relative injectors
 module.exports.jsFilesToInjectApp = jsFilesToInjectApp.map(function(path){
-    return '.tmp/public//' + path;
+    return '.tmp/public/' + path;
 });
 module.exports.cssFilesToInjectApp = cssFilesToInjectApp.map(function(path){
     return '.tmp/public/' + path;

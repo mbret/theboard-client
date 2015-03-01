@@ -6,11 +6,9 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title><%= title %></title>
 
-      <link href="/styles/plugins/bootstrap.min.css" rel="stylesheet">
-      <link href="/styles/plugins/font-awesome/css/font-awesome.css" rel="stylesheet">
-      <link href="/styles/plugins/animate.css" rel="stylesheet">
-      <link href="/styles/style.theme.css" rel="stylesheet">
-      <link href="/styles/style.css" rel="stylesheet">
+      <!--STYLES-->
+      <link rel="stylesheet" href="/styles/importer.css">
+      <!--STYLES END-->
 
       <script>
           // Clean url if we come from angular
@@ -23,9 +21,16 @@
 
     <%- body %>
 
-    <!-- Mainly scripts -->
+    <!--SCRIPTS-->
+    <script src="/js/dependencies/sails.io.js"></script>
     <script src="/js/dependencies/jquery/jquery-2.1.1.min.js"></script>
+    <script src="/js/dependencies/jquery/jquery-ui.min.js"></script>
     <script src="/js/dependencies/bootstrap/bootstrap.min.js"></script>
+    <script src="/js/dependencies/jquery-plugins/iCheck/icheck.min.js"></script>
+    <script src="/js/dependencies/jquery-plugins/toastr/toastr.min.js"></script>
+    <script src="/js/dependencies/jquery-plugins/validate/jquery.validate.min.js"></script>
+    <script src="/js/script.auth.js"></script>
+    <!--SCRIPTS END-->
 
 </body>
 

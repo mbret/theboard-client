@@ -1,5 +1,5 @@
 var request = require('supertest');
-var utils   = require('../../../utils.js');
+var utils   = require('../../../testUtils.js');
 var agent;
 var app;
 
@@ -12,7 +12,7 @@ describe('AuthController', function() {
         // So we keep reference of the same agent
         // This agent is logged at this point
         agent = request.agent(app);
-        utils(agent).login(done);
+        utils.login(agent, done);
         
     });
 
@@ -28,13 +28,13 @@ describe('AuthController', function() {
         it('should return 400 because of bad credentials', function(done){
             agent
                 .post('/auth/signin')
-                .send({ email: 'user@user.fr', password: sails.config.test.user.password})
+                .send({ email: 'user@user.fr', password: sails.config.user.password})
                 .expect(400, done);
         });
         it('should log', function (done){
             agent
                 .post('/auth/signin')
-                .send({ email: sails.config.test.user.email, password: sails.config.test.user.password})
+                .send({ email: sails.config.user.email, password: sails.config.user.password})
                 .expect(200)
                 .end(function(err, res){
                     if (err) return done(err);
@@ -53,7 +53,7 @@ describe('AuthController', function() {
         it('should return 400 because of bad email', function(done){
             agent
                 .post('/auth/signup')
-                .send({ email: 'user@dfg', password: sails.config.test.user.password})
+                .send({ email: 'user@dfg', password: sails.config.user.password})
                 .expect(400, done);
         });
         it('should return 400 because of bad password', function(done){
@@ -65,7 +65,7 @@ describe('AuthController', function() {
         it('should return 400 because this email is taken', function (done){
             agent
                 .post('/auth/signup')
-                .send({ email: sails.config.test.user.email, password: sails.config.test.user.password})
+                .send({ email: sails.config.user.email, password: sails.config.user.password})
                 .expect(400, done);
         });
         it('should register', function (done){

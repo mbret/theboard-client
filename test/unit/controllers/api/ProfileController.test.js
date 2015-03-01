@@ -1,17 +1,18 @@
 var request = require('supertest');
-var utils   = require('../../../utils.js');
+var utils   = require('../../../testUtils.js');
 var app;
 var agent;
+var profiles;
 
 describe('ProfileController', function() {
 
-    var profiles;
+    
     
     before(function(next) {
         app = sails.hooks.http.app;
         // this agent is logged
         agent = request.agent(sails.hooks.http.app);
-        utils(agent).login(next);
+        utils.login(agent, next);
     });
 
     after(function(done) {
@@ -33,24 +34,26 @@ describe('ProfileController', function() {
      * Unit test for getProfile function.
      * Function that return a specified profile passed in param.
      */
-    describe('find', function() {
+    describe('forOne', function() {
         var route = "/api/users/profiles";
         it('should redirect to /login (not logged)', function (done){
             request(app)
-                .get(route + "/1")
-                .send()
+                .get(route + "/" + profiles[0].id)
                 .expect(403, done);
         });
         it('should return 404 bad id (logged)', function (done){
-            agent
-                .get(route + "/1")
-                .send()
-                .expect(404, done);
+            async.series([
+                function(cb){
+                    agent.get(route + "/9999").expect(404, cb);
+                },
+                function(cb){
+                    agent.get(route + "/a").expect(404, cb);
+                }
+            ], done);
         });
         it('should return correct profile (logged)', function (done){
             agent
                 .get(route + "/" + profiles[0].id)
-                .send()
                 .expect(200)
                 .end(function(err, res){
                     if (err) return done(err);

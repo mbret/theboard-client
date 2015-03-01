@@ -10,9 +10,9 @@
          * Return the app page
          */
         index: function (req, res) {
-            return res.view('app/app', {
+            return res.ok({
                 routes: sails.config.app.routes
-            });
+            }, 'app/app');
         },
 
         signin: function (req, res) {
@@ -31,25 +31,25 @@
             });
 
             // Render the `auth/login.ext` view
-            res.view('auth/login',{
-                title: 'Board | Login',
+            res.ok({
+                title: 'Login',
                 layout: 'auth/layout-auth',
                 errors    : req.flash('error'),
                 successes : req.flash('success'),
                 copy: sails.config.app.copy,
                 providers: providers,
                 routes: sails.config.app.routes
-            });
+            }, 'auth/login');
         },
 
         signup: function (req, res) {
-            res.view('auth/register',{
+            res.ok({
                 title: 'Board | Register',
                 layout: 'auth/layout-auth',
                 errors: req.flash('error'),
                 copy: sails.config.app.copy,
                 routes: sails.config.app.routes
-            });
+            }, 'auth/register');
         },
         
         flash: function(req, res){
@@ -81,7 +81,6 @@
             res.setHeader('Expires', 0);
             res.send('window.APP_CONFIG = ' + JSON.stringify( AppHelperService.generateConfiguration() ) + ';');
         },
-
         
         pipeCOR: function (req, res) {
 
@@ -98,9 +97,8 @@
             //});
             require('request').get(req.param('url')).pipe(res);
 
+        },
 
-
-        }
     };
 
 })();
