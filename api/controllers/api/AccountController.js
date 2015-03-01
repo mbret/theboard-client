@@ -46,7 +46,7 @@
 
         uploadBackgroundImage: function(req, res){
             req.file('uploadfile').upload({
-                dirname: sails.config.dataPublicPath + '/user/background',
+                dirname: sails.config.paths.publicData + '/user/background',
                 // don't allow the total upload size to exceed ~10MB
                 maxBytes: 10000000
                 

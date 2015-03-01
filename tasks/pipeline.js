@@ -15,26 +15,11 @@
 // (if you're using LESS with the built-in default config, you'll want
 //  to change `assets/styles/importer.less` instead.)
 var cssFilesToInject = [
-
-  'styles/**/angular*.css',
-  'styles/**/*.css',
-
-  'app/css/**/*.css'
+    'styles/importer.css',
 ];
 
 var cssFilesToInjectApp = [
-
-    'styles/dist/angular-gridster.min.css',
-
-    // Bootstrap
-    'styles/plugins/bootstrap.min.css',
-    
-    // Plugins
-    'styles/plugins/**/*.css',
-
-    // Theme and own style
-    'styles/style.theme.css',
-    'styles/style.css',
+    'styles/importer-app.css'
 ];
 
 // Client-side javascript files to inject in order

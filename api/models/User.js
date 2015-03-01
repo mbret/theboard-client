@@ -20,7 +20,7 @@ var User = {
         
         addBackgroundImage: function( file ){
             var fdSplitted = file.fd.split('\\');
-            var url = require('util').format('%s/user/background/%s', sails.getBaseUrl() + '/' + sails.config.dataURL, fdSplitted[fdSplitted.length-1]);
+            var url = require('util').format('%s/user/background/%s', sails.getBaseUrl() + '/' + sails.config.routes.data, fdSplitted[fdSplitted.length-1]);
             this.backgroundImages.push(url);
             return url;
         },
@@ -131,20 +131,20 @@ var User = {
     },
 
     _getDefaultAvatar: function(){
-        return sails.config.imagesURL + '/' + sails.config.user.default.avatar;
+        return sails.getBaseUrl() + sails.config.routes.images + '/' + sails.config.user.default.avatar;
     },
 
     _getDefaultBanner: function(){
-        return sails.config.imagesURL + '/' + sails.config.user.default.banner;
+        return sails.getBaseUrl() + sails.config.routes.images + '/' + sails.config.user.default.banner;
     },
 
     _getDefaultBackgroundImages: function(){
         var bgImages = [];
         _.forEach(sails.config.user.default.backgroundImages, function(image){
-            bgImages.push(sails.config.imagesURL + '/' + image);
+            bgImages.push(sails.getBaseUrl() + sails.config.routes.images + '/' + image);
         });
         return bgImages;
-    },
+    }
 
 };
 

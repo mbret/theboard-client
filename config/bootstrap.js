@@ -19,7 +19,6 @@ module.exports.bootstrap = function(cb) {
     // Will add to passport.use() all the strategy
     sails.services.passport.loadStrategies();
 
-    
     // Create data dir if it doesnt exist (with app rights)
     FileService.createDataDir(function(err){
         if(err){
