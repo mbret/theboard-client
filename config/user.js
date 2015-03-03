@@ -5,7 +5,7 @@ module.exports.user = {
     default: {
         avatar: 'avatar.jpg',
         banner: 'user_banner.jpg',
-        backgroundImages: [ 'board_wall_default.jpg', 'board_wall1_default.jpg', 'board_wall2_default.jpg' ],
+        backgroundImages: [ 'bg-sample (1).jpg', 'bg-sample (2).jpg', 'bg-sample (3).jpg' ],
         settings: {
             widgetsBorders: false,
             backgroundImagesInterval: 5000

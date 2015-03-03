@@ -1,0 +1,10 @@
+{
+  "name"        : "theboard-webapp",
+  "script"      : "/usr/share/nginx/www/theboard-webapp/app.js",
+  "ignoreWatch" : [".tmp", "data", "node_modules"],
+  "watch"       : true,
+  "log_date_format"  : "YYYY-MM-DD HH:mm Z",
+  "env": {
+    "NODE_ENV": "development"
+  }
+}

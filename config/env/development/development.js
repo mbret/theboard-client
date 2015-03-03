@@ -12,7 +12,9 @@
 
 module.exports = {
 
-    autoLogin: false,
+    port: process.env.PORT || 1338,
+    
+    autoLogin: true,
 
     fillDb: true
     

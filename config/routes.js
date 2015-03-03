@@ -82,9 +82,7 @@ module.exports = {
     app: {
         routes: getRoutes('app')
     },
-    general: {
-        routes: getRoutes('server')
-    }
+    urls: getRoutes('server')
 };
 
 function getRoutes(label){
@@ -95,6 +93,7 @@ function getRoutes(label){
         },
         server: {
             data: 'public',
+            userBackgroundImages: '/public/users/backgrounds',
             images: 'images'
         },
         app: {
@@ -118,7 +117,8 @@ function getRoutes(label){
                 profiles: {
                     get: '/api/users/profiles/:id',
                     getAll: '/api/users/profiles',
-                    update: '/api/users/profiles'
+                    updateAll: '/api/users/profiles',
+                    update: '/api/users/profiles/:id'
                 },
                 widgets: {
                     getByProfile: '/api/users/profiles/:id/widgets', // get

@@ -38,10 +38,13 @@ module.exports.policies = {
         'signin': ['notAuthenticated'],
         'signup': ['notAuthenticated'],
     },
+    
     //
     'auth': {
         'signin': true,
         'signup': true,
+        'provider': true,
+        'callback': true,
         'logout': ['sessionAuthOrRedirect']
     },
     

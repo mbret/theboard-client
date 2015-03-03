@@ -66,10 +66,8 @@
         //}
         //else{
             // check token
-            return $http.get( config.routes.api.me)
+            return $http.get( config.routes.api.me )
                 .then(function(response){
-                    console.log('SZASA');
-
                     var data = response.data;
                     var user = data;
                     return user;

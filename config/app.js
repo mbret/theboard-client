@@ -7,9 +7,8 @@
 module.exports.app = {
     
     copy: 'The Board &copy; 2014',
-        pageTitle: 'Board',
-        environment: process.env.NODE_ENV || 'development',
-        user: {}, // This attribute is filled with the current logged user
+    pageTitle: 'Board',
+    environment: process.env.NODE_ENV || 'development',
 
     // configuration for toaster plugin
     // https://github.com/Foxandxss/angular-toastr

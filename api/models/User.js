@@ -1,3 +1,5 @@
+var fse = require('fs-extra');
+
 var User = {
     // Enforce model schema in the case of schemaless databases
     schema: true,
@@ -9,10 +11,10 @@ var User = {
         
         firstName: { type: 'string' },
         lastName: { type: 'string' },
-        backgroundImages: { type: 'array', required:false },
+        backgroundImages: { type: 'array', required: false },
         locale: { type:'string', defaultTo: 'en_US' },
-        avatar: { type: 'string', required: false }, // default value set in lifecycle callback
-        banner: { type: 'string', required: false }, // default value set in lifecycle callback
+        avatar: { type: 'string', required: true }, // default value set in lifecycle callback
+        banner: { type: 'string', required: true }, // default value set in lifecycle callback
         address: { type: 'string', required: false },
         
         settings: { collection:'userSetting', via: 'user' },
@@ -20,7 +22,8 @@ var User = {
         
         addBackgroundImage: function( file ){
             var fdSplitted = file.fd.split('\\');
-            var url = require('util').format('%s/user/background/%s', sails.getBaseUrl() + '/' + sails.config.routes.data, fdSplitted[fdSplitted.length-1]);
+            //var url = require('util').format('%s/user/background/%s', sails.getBaseUrl() + '/' + sails.config.urls.data, fdSplitted[fdSplitted.length-1]);
+            var url = require('util').format('%s/user/background/%s', '/' + sails.config.urls.data, fdSplitted[fdSplitted.length-1]);
             this.backgroundImages.push(url);
             return url;
         },
@@ -108,42 +111,6 @@ var User = {
                 return cb(err, user);
             });
         });
-    },
-    
-    beforeCreate: function(values, cb){
-        // check avatar
-        if( _.isUndefined(values.avatar) || _.isNull(values.avatar)){
-            values.avatar = this._getDefaultAvatar();
-        }
-        // Check banner
-        if( _.isUndefined(values.banner) || _.isNull(values.banner)){
-            values.banner = this._getDefaultBanner();
-        }
-        // Check backgroundImages
-        if(_.isUndefined(values.backgroundImages) || _.isEmpty(values.backgroundImages)){
-            values.backgroundImages = this._getDefaultBackgroundImages();
-        }
-        return cb();
-    },
-
-    beforeUpdate: function(values, cb){
-        return cb();
-    },
-
-    _getDefaultAvatar: function(){
-        return sails.getBaseUrl() + sails.config.routes.images + '/' + sails.config.user.default.avatar;
-    },
-
-    _getDefaultBanner: function(){
-        return sails.getBaseUrl() + sails.config.routes.images + '/' + sails.config.user.default.banner;
-    },
-
-    _getDefaultBackgroundImages: function(){
-        var bgImages = [];
-        _.forEach(sails.config.user.default.backgroundImages, function(image){
-            bgImages.push(sails.getBaseUrl() + sails.config.routes.images + '/' + image);
-        });
-        return bgImages;
     }
 
 };

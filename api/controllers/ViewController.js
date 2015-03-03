@@ -9,7 +9,8 @@
         /**
          * Return the app page
          */
-        index: function (req, res) {
+        index: function (req, res){
+            console.log(sails.getBaseUrl());
             return res.ok({
                 routes: sails.config.app.routes
             }, 'app/app');

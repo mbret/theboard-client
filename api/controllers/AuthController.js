@@ -27,11 +27,12 @@ var AuthController = {
                 if (err){
                     return res.serverError(err);
                 }
+                req.flash('success', 'Success.Auth.Login');
                 var token = sails.services.auth.generateToken(user);
                 return res.ok({
                     token: token,
                     user: user.toView(),
-                    redirect: sails.config.general.routes.app
+                    redirect: sails.config.urls.app
                 });
             });
         })(req, res);
@@ -57,10 +58,13 @@ var AuthController = {
             return res.badRequest();
         }
     
+        // Get default values like avatar / banner etc
+        var values = _.assign(UsersService.prepareDefaultUserValues(), {
+            email: email
+        });
+
         // Create the user and init everything necessary for application
-        User.createAndInit({
-            email    : email
-        }, function (err, user) {
+        User.createAndInit(values, function (err, user) {
             if (err) {
                 if (err.code === 'E_VALIDATION') {
                     if (err.invalidAttributes.email) {
@@ -86,6 +90,11 @@ var AuthController = {
                         return res.serverError(err);
                     });
                 }
+                
+                // prepare instance
+                // copy bg samples ...
+                UsersService.prepareInstance(user);
+                
                 req.login(user, function(err){
                     if(err){
                         return res.serverError(err);
@@ -94,7 +103,7 @@ var AuthController = {
                     return res.ok({
                         token: token,
                         user: user.toView(),
-                        redirect: sails.config.general.routes.app
+                        redirect: sails.config.urls.app
                     });
                 });
             });
@@ -109,7 +118,7 @@ var AuthController = {
     logout: function (req, res) {
         req.logout();
         req.flash('success', 'Success.Auth.Logout');
-        res.redirect( sails.config.general.routes.signin );
+        res.redirect( sails.config.urls.signin );
     },
     
     /**
@@ -156,63 +165,63 @@ var AuthController = {
     */
     callback: function (req, res) {
 
-    var action = req.param('action');
+        var action = req.param('action');
 
-    function handleError (err) {
+        function handleError (err) {
 
-      if( err.code === 'E_VALIDATION' ){
-          sails.log.error('An error occured when authenticate', err);
-      }
-      else{
-        sails.log.debug('An error occured during register form', err);
-      }
+          if( err.code === 'E_VALIDATION' ){
+              sails.log.error('An error occured when authenticate', err);
+          }
+          else{
+            sails.log.debug('An error occured during register form', err);
+          }
 
-      // Only certain error messages are returned via req.flash('error', someError)
-      // because we shouldn't expose internal authorization errors to the user.
-      // We do return a generic error and the original request body.
-      var flashError = req.flash('error')[0];
+          // Only certain error messages are returned via req.flash('error', someError)
+          // because we shouldn't expose internal authorization errors to the user.
+          // We do return a generic error and the original request body.
+          var flashError = req.flash('error')[0];
 
-      if (err && !flashError ) {
-        req.flash('error', 'Error.Passport.Generic');
-      } else if (flashError) {
-        req.flash('error', flashError);
-      }
-      req.flash('form', req.body);
+          if (err && !flashError ) {
+            req.flash('error', 'Error.Passport.Generic');
+          } else if (flashError) {
+            req.flash('error', flashError);
+          }
+          req.flash('form', req.body);
 
-      // If an error was thrown, redirect the user to the
-      // login, register or disconnect action initiator view.
-      // These views should take care of rendering the error messages.
-      switch (action) {
-        case 'register':
-          res.redirect('/register');
-          break;
-        case 'disconnect':
-          res.redirect('back');
-          break;
-        default:
-          res.redirect('/login');
-      }
-    }
-
-    // Authenticate
-    passport.callback(req, res, function (err, user) {
-      if (err) {
-        return handleError(err);
-      }
-
-      // Create login session
-      req.login(user, function (err) {
-        if (err) {
-          return handleError(err);
+          // If an error was thrown, redirect the user to the
+          // login, register or disconnect action initiator view.
+          // These views should take care of rendering the error messages.
+          switch (action) {
+            case 'register':
+              res.redirect('/register');
+              break;
+            case 'disconnect':
+              res.redirect('back');
+              break;
+            default:
+              res.redirect('/login');
+          }
         }
 
-        req.flash('success', 'You have been logged');
-        sails.log.debug('User ', user, ' logged!');
-        // Upon successful login, send the user to the homepage were req.user
-        // will available.
-        res.redirect('/');
-      });
-    });
+        // Authenticate
+        passport.callback(req, res, function (err, user) {
+          if (err) {
+            return handleError(err);
+          }
+
+          // Create login session
+          req.login(user, function (err) {
+            if (err) {
+              return handleError(err);
+            }
+
+            req.flash('success', 'You have been logged');
+            sails.log.debug('User ', user, ' logged!');
+            // Upon successful login, send the user to the homepage were req.user
+            // will available.
+            res.redirect('/');
+          });
+        });
   },
 
     /**

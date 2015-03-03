@@ -48,7 +48,7 @@
                 .then(function(data){
                     var profile = data.data;
                     logger.debug(debugName + ' updateProfile success!', data.data);
-                    if(!profile.id) throw new Error(debugName + 'Invalid response for profile');
+                    if(!profile.id) throw new Error(debugName + ' Invalid response for profile ' + route);
                     return data.data;
                 })
                 .catch(function(error){
