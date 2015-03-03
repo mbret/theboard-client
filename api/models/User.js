@@ -20,6 +20,7 @@ var User = {
         settings: { collection:'userSetting', via: 'user' },
         profiles: { collection: 'profile', via: 'user' },
         
+        // @todo put inside user service
         addBackgroundImage: function( file ){
             var fdSplitted = file.fd.split('\\');
             //var url = require('util').format('%s/user/background/%s', sails.getBaseUrl() + '/' + sails.config.urls.data, fdSplitted[fdSplitted.length-1]);
