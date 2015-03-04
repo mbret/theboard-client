@@ -13,8 +13,8 @@ var User = {
         lastName: { type: 'string' },
         backgroundImages: { type: 'array', required: false },
         locale: { type:'string', defaultTo: 'en_US' },
-        avatar: { type: 'string', required: true }, // default value set in lifecycle callback
-        banner: { type: 'string', required: true }, // default value set in lifecycle callback
+        avatar: { type: 'string', required: false },
+        banner: { type: 'string', required: false },
         address: { type: 'string', required: false },
         
         settings: { collection:'userSetting', via: 'user' },

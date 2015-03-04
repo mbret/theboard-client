@@ -42,6 +42,14 @@
                 $this.find("li.active").has("ul").children("a").addClass("doubleTapToGo");
             }
 
+            // When we click on li that is not a dropdown menu
+            // hide all sibling dropdown menu
+            $this.find("li:not(:has(ul))").children("a").on("click" + "." + pluginName, function(e){
+                if ($toggle) {
+                    $(this).parent("li").siblings().removeClass("active").children("ul.in").collapse("hide");
+                }
+            });
+
             $this.find("li").has("ul").children("a").on("click" + "." + pluginName, function(e) {
                 e.preventDefault();
 
@@ -58,9 +66,10 @@
 
                 $(this).parent("li").toggleClass("active").children("ul").collapse("toggle");
 
-                if ($toggle) {
-                    $(this).parent("li").siblings().removeClass("active").children("ul.in").collapse("hide");
-                }
+                // When we click on drop li do not hide previous selected li
+                //if ($toggle) {
+                //    $(this).parent("li").siblings().removeClass("active").children("ul.in").collapse("hide");
+                //}
 
             });
         },
