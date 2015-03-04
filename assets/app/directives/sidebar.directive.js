@@ -26,14 +26,14 @@
                         scope.close = function(){
                             sidebarService.close();
                         }
-                        
+
                         scope.logout = function(){
                             delete $window.localStorage.token;
                             $window.location.replace(APP_CONFIG.routes.signin);
                         }
 
                         scope.user = {
-                            avatar: user.avatar,
+                            avatar: user.avatar || APP_CONFIG.user.default.avatar,
                             email: user.email,
                             firstName: user.firstName,
                             lastName: user.lastName,
@@ -59,6 +59,3 @@
             }
         ]);
 })();
-
-
-

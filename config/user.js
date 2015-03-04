@@ -3,7 +3,7 @@
  */
 module.exports.user = {
     default: {
-        avatar: 'avatar.jpg',
+        avatar: 'sample-user-avatar.jpg',
         banner: 'sample-user-banner.jpg',
         backgroundImages: [ 'bg-sample (1).jpg', 'bg-sample (2).jpg', 'bg-sample (3).jpg' ],
         settings: {

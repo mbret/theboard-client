@@ -108,15 +108,15 @@ module.exports = {
         ]).then(function(widgets) {
 
             // Get default values like avatar / banner etc
-            var values = _.assign(UsersService.prepareDefaultUserValues(), {
+            var values = {
                 email: 'user@gmail.com'
-            });
-            
+            };
+
             // Create user for test
             return User.create(values).then(function (user) {
 
-                UsersService.prepareInstance(user);
-                
+                // UsersService.prepareInstance(user);
+
                 user.settings.add(UserSetting.buildNewSetting('widgetsBorders', false));
                 user.profiles.add({
                     name: 'Desktop',

@@ -25,7 +25,7 @@ module.exports = {
             backgroundImages: this.prepareSampleBackgroundImages()
         }
     },
-    
+
     prepareSampleAvatar: function(){
         //return sails.getBaseUrl() + '/' + sails.config.urls.images + '/' + sails.config.user.default.avatar;
         return '/' + sails.config.urls.images + '/' + sails.config.user.default.avatar;
@@ -48,6 +48,15 @@ module.exports = {
             bgImages.push('/images/board-bg-sample/' + image);
         });
         return bgImages;
-    }
-    
+    },
+
+    // @todo put inside user service
+    addBackgroundImage: function( file ){
+        var fdSplitted = file.fd.split('\\');
+        //var url = require('util').format('%s/user/background/%s', sails.getBaseUrl() + '/' + sails.config.urls.data, fdSplitted[fdSplitted.length-1]);
+        var url = require('util').format('%s/user/background/%s', '/' + sails.config.urls.data, fdSplitted[fdSplitted.length-1]);
+        this.backgroundImages.push(url);
+        return url;
+    },
+
 };
