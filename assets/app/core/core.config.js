@@ -8,7 +8,7 @@
         .config(configureUser)
         .run(appRun);
 
-    
+
     // Toaster configuration
     // The configuration come from the server
     configureToastr.$inject = ['toastr', 'APP_CONFIG'];
@@ -38,15 +38,15 @@
      * This value is set now but can change anytime during process and is share accross modules.
      */
     function configureUser(APP_CONFIG, userProvider){
-        userProvider.setData(APP_CONFIG.user);
+        userProvider.setData(APP_CONFIG.userLogged);
     }
-    
+
     // Config that must be execute at module run
     appRun.$inject = ['$rootScope', '$state', '$http', '$log', 'notifService', '$timeout', 'APP_CONFIG', 'user'];
     function appRun($rootScope, $state, $http, $log, notifService, $timeout, APP_CONFIG, user){
 
         window.user = user;
-        
+
         $rootScope.$state = $state;
 
         // Check for flash message from server

@@ -47,21 +47,21 @@ var AuthController = {
     signup: function(req, res){
         var email = req.param('email');
         var password = req.param('password');
-    
+
         // Email
         if( !validator.isEmail(email) ){
             return res.badRequest();
         }
-    
+
         // Password must have at least 3 char
         if ( !validator.isLength(password, 3)) {
             return res.badRequest();
         }
-    
+
         // Get default values like avatar / banner etc
-        var values = _.assign(UsersService.prepareDefaultUserValues(), {
-            email: email
-        });
+        var values = {
+          email: email
+        };
 
         // Create the user and init everything necessary for application
         User.createAndInit(values, function (err, user) {
@@ -90,11 +90,7 @@ var AuthController = {
                         return res.serverError(err);
                     });
                 }
-                
-                // prepare instance
-                // copy bg samples ...
-                UsersService.prepareInstance(user);
-                
+
                 req.login(user, function(err){
                     if(err){
                         return res.serverError(err);
@@ -120,12 +116,12 @@ var AuthController = {
         req.flash('success', 'Success.Auth.Logout');
         res.redirect( sails.config.urls.signin );
     },
-    
+
     /**
      * Issue a new valid token.
      * Need a previous valid token
      * The deletion of previous token can be make later, there is possible optimization here.
-     * 
+     *
      * So this method is called only if user is token authenticated so no need to more check
      */
     issueToken: function(req, res){
@@ -136,7 +132,7 @@ var AuthController = {
             token: user.token
         });
     },
-    
+
     /**
     * Create a third-party authentication endpoint
     *

@@ -8,7 +8,7 @@
  */
 
 (function () {
-	
+
 	/*
 	 * Define app and its dependencies
 	 * - Will run
@@ -28,7 +28,7 @@
         // Then check authenticated user
 		.then(function( config ){
             return checkAuth( config).then(function(user){
-                config.user = user;
+                config.userLogged = user;
                 return config;
             });
 		})
@@ -46,7 +46,7 @@
     /**
      * Check the authentication of user.
      * To access the application a token must be available and valid
-     * in order to retrieve current logged user. 
+     * in order to retrieve current logged user.
      * @param config
      * @returns {*}
      */
@@ -82,16 +82,16 @@
                     //}
                 //});
         //}
-        
+
         //function redirectToLogin(){
         //    window.location.replace('https://localhost:1337' + '/signin' + '?source=');
         //}
-        
+
     }
-    
+
 	/**
 	 * Load the app configuration from server
-	 * Return the $get promise 
+	 * Return the $get promise
 	 * @returns {*}
 	 */
 	function loadServerConfig() {
@@ -103,7 +103,7 @@
             resolve(window.APP_CONFIG);
         });
 
-		
+
         //
 		//return $http.get("/configuration.json").then(function(response) {
 		//

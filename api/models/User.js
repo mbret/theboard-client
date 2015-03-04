@@ -3,32 +3,23 @@ var fse = require('fs-extra');
 var User = {
     // Enforce model schema in the case of schemaless databases
     schema: true,
-    
+
     attributes: {
         email       : { type: 'email',  unique: true },
         passports   : { collection: 'Passport', via: 'user' },
         //token       : { type: 'string' },
-        
+
         firstName: { type: 'string' },
         lastName: { type: 'string' },
         backgroundImages: { type: 'array', required: false },
         locale: { type:'string', defaultTo: 'en_US' },
-        avatar: { type: 'string', required: true }, // default value set in lifecycle callback
-        banner: { type: 'string', required: true }, // default value set in lifecycle callback
+        avatar: { type: 'string', required: false }, // default value set in lifecycle callback
+        banner: { type: 'string', required: false }, // default value set in lifecycle callback
         address: { type: 'string', required: false },
-        
+
         settings: { collection:'userSetting', via: 'user' },
         profiles: { collection: 'profile', via: 'user' },
-        
-        // @todo put inside user service
-        addBackgroundImage: function( file ){
-            var fdSplitted = file.fd.split('\\');
-            //var url = require('util').format('%s/user/background/%s', sails.getBaseUrl() + '/' + sails.config.urls.data, fdSplitted[fdSplitted.length-1]);
-            var url = require('util').format('%s/user/background/%s', '/' + sails.config.urls.data, fdSplitted[fdSplitted.length-1]);
-            this.backgroundImages.push(url);
-            return url;
-        },
-        
+
         /**
          * Return the value of the asked settings
          * Return the default value if the setting is not yet set
@@ -68,11 +59,11 @@ var User = {
          * all sensitive data are removed
          */
         toView: function(){
-            
+
             // We need to clone it (problem with populate that will not show up on json)
             var data = _.cloneDeep(this.toObject());
             var that = this;
-            
+
             // Loop over all supposed settings
             // Fill setting with user value
             // In that way the settings array returned to app contain all settings (with possible default values)
@@ -81,14 +72,23 @@ var User = {
                 userSettings[key] =  that.getSettingValue(key);
             });
             data.settings = userSettings;
-            
+
             // @todo check how to only retrieve list of profile id instead of having this because of populate
             data.profiles = _.map(data.profiles, 'id');
-            
+
             return data;
-            
+
         }
-        
+
+    },
+
+    beforeCreate: function(values, cb){
+        // if(!values.profiles){
+        //     console.log('add default profile');
+        //     values.profiles = [];
+        //     values.profiles.push({ name: 'Default', description: 'This is your first and default profile. You can add your own profile or edit / remove this profile.', default: true })
+        // }
+        return cb();
     },
 
     /**
