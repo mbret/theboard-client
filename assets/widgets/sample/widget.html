@@ -22,23 +22,56 @@
 		-->
 		<div class="widget-wrapper">
 			<div class="widget" id="widget-sample">
-
-				<header class="widget-header">
-					<h1></h1>
-				</header>
-
-				<div class="widget-content">
-
-				</div>
-
-				<footer class="widget-footer">
-
-					<!-- May be useful to indicate the last widget refresh -->
-					<div class="widget-updated"></div>
-				</footer>
+                <div id="tpl-target">
+                    <!--Templates will be inserted here-->
+                </div>
 			</div>
 		</div>
 
+        <!--Templates-->
+        <script type="text/template" id="tpl-loaded">
+            <header class="widget-header">
+                <h1><%= title %></h1>
+            </header>
+            <div class="widget-content">
+                <p>
+                    Sunday 21 December 2014,
+                    </br><span class="widget-component-highlighted">Option 1 is: <%= option1 %></span></p>
+                </p>
+            </div>
+            <footer class="widget-footer">
+                <div class="widget-updated">
+                    Updated <%= updated %>
+                </div>
+            </footer>
+        </script>
+
+        <script type="text/template" id="tpl-refreshing">
+            <header class="widget-header">
+                <h1><%= title %></h1>
+            </header>
+            <div class="widget-content">
+                <p>Widget is refreshing</p>
+            </div>
+        </script>
+
+        <script type="text/template" id="tpl-error">
+            <header class="widget-header">
+                <h1><%= title %></h1>
+            </header>
+            <div class="widget-content">
+                <p>Widget is on error</p>
+            </div>
+        </script>
+
+        <script type="text/template" id="tpl-stop">
+            <header class="widget-header">
+                <h1><%= title %></h1>
+            </header>
+            <div class="widget-content">
+                <p>Widget is stopped</p>
+            </div>
+        </script>
 
 		<!-- Here is the widget part -->
 		<!-- We use jquery to make it more simple -->
@@ -46,9 +79,29 @@
 		<script src="lodash.js"></script>
 		<script src="widget.js"></script>
 
-		<!-- Include the required widget library -->
-		<script src="/widgets/library.js"></script>
-
+        <!-- Include the required widget library -->
+        <!-- Use default configuration when using standalone -->
+        <script>
+            // Here is an object that you can use for test.
+            // The library will use it instead of url (which is filled by application automatically)
+            window.widgetConfiguration = {
+                widget: {
+                    configuration: {
+                        identity: 'Velib Nancy',
+                        // Require information from user without action from user
+                        permissions: {
+                            location: 'Nancy, France'
+                        },
+                        // Options are information that can be changed by user
+                        // As they are used by application you can only specify here the values
+                        options: {
+                            option1: "Nancy"
+                        }
+                    }
+                },
+            };
+        </script>
+        <script src="/widgets/library.js"></script>
 
 	</body>
 

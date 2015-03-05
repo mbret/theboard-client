@@ -2,13 +2,7 @@
 
     'use strict';
     
-    var that = this;
-    var Widget = window.Widget;
-
-    // Define if the user provide a widget conf for testing (instead of URL)
-    var testWidgetProvided = null;
-
-    var LOG_LVL = 'warn'; // warn / debug / info
+    var self = this;
     var VERSION = '0.0.1';
     var SERVER_URL = 'http://localhost:1337';
     var SIGNALS = {
@@ -17,23 +11,6 @@
         STOP: 'stop',
         START: 'start'
     };
-    
-    function WidgetError() {
-        var tmp = Error.apply(this, arguments);
-        tmp.name = this.name = 'WidgetError'
-
-        this.message = tmp.message
-        /*this.stack = */Object.defineProperty(this, 'stack', { // getter for more optimizy goodness
-            get: function() {
-                return tmp.stack
-            }
-        });
-
-        return this
-    }
-    var IntermediateInheritor = function() {}
-    IntermediateInheritor.prototype = Error.prototype;
-    WidgetError.prototype = new IntermediateInheritor();
 
     /**
      * This is util for library and widget
@@ -111,21 +88,6 @@
             }
         },
 
-        log: {
-            debug: function(message, obj){
-                if( LOG_LVL == 'debug' || LOG_LVL == 'all'){
-                    if(obj) console.debug('Widget ' + window.location.pathname + ' -> ' + message, obj);
-                    else console.debug('Widget ' + window.location.pathname + ' -> ' + message);
-                }
-            },
-            warn: function(message, obj){
-                if( LOG_LVL == 'warn' || LOG_LVL == 'debug' || LOG_LVL == 'all'){
-                    if(obj) console.warn('Widget ' + window.location.pathname + ' -> ' + message, obj);
-                    else console.warn('Widget ' + window.location.pathname + ' -> ' + message);
-                }
-            }
-        },
-
         convertUnixTsToDate: function( unixTS ){
             // create a new javascript Date object based on the timestamp
             // multiplied by 1000 so that the argument is in milliseconds, not seconds
@@ -135,122 +97,92 @@
 
     }.init();
 
-    var WidgetAdapter = {
-        signal: null,
-        configuration: null // will be fill from url
-    };
-
     var Module = new function(){
 
-        var widget; // widget instance
-
-        WidgetAdapter.configuration = _loadWidgetConfiguration();
-        Utils.log.debug('Widget configuration has been loaded ', WidgetAdapter.configuration);
+        // Handle hash change
+        // Needed to fire widget important events
+        document.addEventListener('widget.hash.received', onHashReceived, false);
         
-        // Intercept first window load
-        // Send the first signal event
-        if(window.location.hash) {
-            window.dispatchEvent(
-                new Event('hash-received')
-            );
-        }
-
-        Utils.log.debug('Widget has been prepared by library and is calling with init() method');
-
-        if( typeof Widget !== 'function' ){
-            widget = Widget.init(WidgetAdapter.configuration);
-        }
-        else{
-            widget = new Widget( WidgetAdapter.configuration );
-        }
-
         this.init = function(){
-            _addEventListeners();
 
+            // Intercept first window load
+            // Send the first signal event
+            if(window.location.hash){
+                document.dispatchEvent(
+                    new Event('widget.hash.received')
+                );
+            }
+            
             // Set the handler listener for future hash change
             window.onhashchange = function(){
                 // Check hash
                 if(window.location.hash == null || window.location.hash == ''){
                     return;
                 }
-                window.dispatchEvent(
-                    new Event('hash-received')
+                document.dispatchEvent(
+                    new Event('widget.hash.received')
                 );
             };
+
+            // Prepare configuration for the widget
+            // the config is loaded from url and created as an object
+            var configuration = _loadWidgetConfiguration();
+            document.dispatchEvent(
+                new CustomEvent('widget.init', {detail: configuration })
+            );
         };
         
         this.run = function(){
-
             
-            
-            widget.start();
+            // Dispatch event to tell widget to run
+            document.dispatchEvent( 
+                new Event('widget.start')
+            );
+        };
 
+        function onHashReceived(e){
+            // Received hash is an stringified object
+            // #(obj)
+            var hash = window.location.hash.substring(1);
+            var hashObject = JSON.parse( decodeURIComponent(hash));
+
+            // When refresh signal is received
+            // Send refresh event to widget
+            if( hashObject.signal === SIGNALS.REFRESH  ){
+                Utils.resetSignal();
+                document.dispatchEvent(
+                    new Event('widget.refresh')
+                );
+            }
+
+            // Fire event refresh when signal received
+            if( hashObject.signal === SIGNALS.STOP  ){
+                Utils.resetSignal();
+                document.dispatchEvent(
+                    new Event('widget.stop')
+                );
+            }
+
+            if( hashObject.signal === SIGNALS.START  ){
+                Utils.resetSignal();
+                document.dispatchEvent(
+                    new Event('widget.start')
+                );
+            }
         }
         
-        function _addEventListeners(){
-            
-            // Handle hash change
-            // Needed to fire widget important events
-            window.addEventListener('hash-received', function (e) {
-
-                //console.log('New hash received ', window.location.hash);
-
-                // Received hash is an stringified object
-                // #(obj)
-                var hash = window.location.hash.substring(1);
-                var hashObject = JSON.parse( decodeURIComponent(hash));
-
-                // Fire event refresh when signal received
-                if( hashObject.signal === SIGNALS.REFRESH  ){
-                    Utils.resetSignal();
-
-                    WidgetAdapter.signal = hashObject.signal;
-                    try{
-                        widget.refresh();
-                    }
-                    catch(err){
-                        Utils.handleError( new Error('Please add a method (refresh) to your widget!') );
-                    }
-                }
-
-                // Fire event refresh when signal received
-                if( hashObject.signal === SIGNALS.STOP  ){
-                    Utils.resetSignal();
-                    WidgetAdapter.signal = hashObject.signal;
-                    try{
-                        widget.stop();
-                    }
-                    catch(err){
-                        Utils.handleError( new Error('Please add a method (refresh) to your widget!') );
-                    }
-                }
-
-                if( hashObject.signal === SIGNALS.START  ){
-                    Utils.resetSignal();
-                    WidgetAdapter.signal = hashObject.signal;
-                    try{
-                        widget.start();
-                    }
-                    catch(err){
-                        Utils.handleError( new Error('Please add a method (refresh) to your widget!') );
-                    }
-                }
-            }, false);
-        }
-
         function _loadWidgetConfiguration(){
+            // Define if the user provide a widget conf for testing (instead of URL)
+            var testWidgetProvided = null;
             // ===============
             // Some init
             // widgetConfiguration is an object that can be create by widget creator to
             // overwrite some settings
             // ===============
             if( typeof window.widgetConfiguration !== 'undefined' ){
-                Utils.log.debug('Substitute configuration provided by user. Use it instead of default library configuration!');
+                console.log('Substitute configuration provided by user. Use it instead of default library configuration!');
                 if( window.widgetConfiguration.widget && window.widgetConfiguration.widget.configuration){
                     testWidgetProvided = window.widgetConfiguration.widget;
-                }
-                if( window.widgetConfiguration.log ){
-                    LOG_LVL = window.widgetConfiguration.log;
                 }
             }
             else{
@@ -269,18 +201,20 @@
             }
             else{
                 if( !tmp.widget){
-                    throw new WidgetError("No widget configuration specified into URL");
+                    throw new Error("No widget configuration specified into URL");
                 }
                 if( ! Utils.checkValidityOfJsonFromUrl( tmp.widget )){
-                    throw new WidgetError("Please specify a valid widget configuration");
+                    throw new Error("Please specify a valid widget configuration");
                 }
                 return JSON.parse(tmp.widget);
             }
         }
     };
 
+    // Init module
     Module.init();
 
+    // Run module
     Module.run()
 
 }).call(this);
