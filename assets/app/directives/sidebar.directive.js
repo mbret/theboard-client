@@ -23,14 +23,15 @@
                     restrict: 'A',
                     link: function(scope, element, attrs) {
 
+                        console.log(scope);
                         scope.close = function(){
                             sidebarService.close();
                         }
 
-                        scope.logout = function(){
-                            delete $window.localStorage.token;
-                            $window.location.replace(APP_CONFIG.routes.signin);
-                        }
+                        // scope.logout = function(){
+                        //     delete $window.localStorage.token;
+                        //     $window.location.replace(APP_CONFIG.routes.signin);
+                        // }
 
                         scope.user = {
                             avatar: user.avatar || APP_CONFIG.user.default.avatar,

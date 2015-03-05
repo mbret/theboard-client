@@ -4,6 +4,7 @@
 	"i18n_Email": "Welcome",
 	"i18n_Password": "Welcome",
 	"i18n_Login": "Login",
+    "i18n_Register": "Register",
 	"i18n_A brand new app.": "A brand new app.",
     "i18n_Not Found": "Not Found",
     "i18n_Page not found": "Page not found",
@@ -14,9 +15,9 @@
 
     "i18n_500_server_crash": "The server encountered something unexpected that didn't allow it to complete the request. We apologize.",
     "i18n_500_can_go_back_home": "You can go back to main page:",
-  
+
     "i18n_login_welcome_text": "<h3>Welcome to The Board</h3><p>Tired to wait information ? Give a try to the board and stay informed all the time!</p><p>Login in. To see it in action.</p>",
-  
+
 	"Error.Passport.Password.Invalid": "The provided password is invalid!",
 	"Error.Passport.Password.Wrong": "Whoa, that password wasn't quite right!",
 	"Error.Passport.Password.NotSet": "Oh no. Your account exist but you haven't set password yet, connect with social provider and set a password to your account!",

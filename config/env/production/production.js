@@ -16,10 +16,14 @@ module.exports = {
 
     autoLogin: false,
 
-    fillDb: false,
+    fillDb: true,
 
     log: {
         level: "info"
+    },
+
+    models: {
+        migrate: 'drop'
     }
 
 };

@@ -33,7 +33,7 @@
 
             // Render the `auth/login.ext` view
             res.ok({
-                title: 'Login',
+                title:  ViewsService.buildTitle(req.__('i18n_Login')),
                 layout: 'auth/layout-auth',
                 errors    : req.flash('error'),
                 successes : req.flash('success'),
@@ -45,14 +45,14 @@
 
         signup: function (req, res) {
             res.ok({
-                title: 'Board | Register',
+                title: ViewsService.buildTitle(req.__('i18n_Register')),
                 layout: 'auth/layout-auth',
                 errors: req.flash('error'),
                 copy: sails.config.app.copy,
                 routes: sails.config.app.routes
             }, 'auth/register');
         },
-        
+
         flash: function(req, res){
             return res.ok({
                 errors    : req.flash('error'),
@@ -82,7 +82,7 @@
             res.setHeader('Expires', 0);
             res.send('window.APP_CONFIG = ' + JSON.stringify( AppHelperService.generateConfiguration() ) + ';');
         },
-        
+
         pipeCOR: function (req, res) {
 
             if(sails.config.environment === 'production'){

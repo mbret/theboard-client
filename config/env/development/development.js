@@ -16,6 +16,10 @@ module.exports = {
 
     autoLogin: true,
 
-    fillDb: true
+    fillDb: true,
+
+    models: {
+        migrate: 'drop'
+    }
 
 };

@@ -33,12 +33,12 @@ module.exports.bootstrap = function(cb) {
                 switch(sails.config.environment){
                     case 'production':
                         DbService.init('production')
-                        .then(cb)
+                        .then(function(){ cb(); })
                         .catch(cb);
                         break;
                     case 'development':
                         DbService.init('development')
-                        .then(cb())
+                        .then(function(){ cb(); })
                         .catch(cb);
                         break;
                     default:
