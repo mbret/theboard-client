@@ -63,9 +63,9 @@ module.exports.http = {
 
     // Add the /data folder to the static asset
     // This path is used to serve content that come from users (this content is not inside assets folder)
-    staticData: express.static(__dirname + '/../data/statics', {
+    //staticData: express.static(__dirname + '/../data/statics', {
         // here is possible options for the static path
-    }),
+    //}),
 
     /**
     * Custom middleware that do some job.
