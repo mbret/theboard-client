@@ -12,10 +12,14 @@
 
 module.exports = {
 
-    port: process.env.PORT || 1338,
-    
+    port: process.env.PORT || 1337,
+
     autoLogin: true,
 
-    fillDb: true
-    
+    fillDb: true,
+
+    models: {
+        migrate: 'drop'
+    }
+
 };

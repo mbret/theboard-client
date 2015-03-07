@@ -22,7 +22,7 @@
         $scope.widgetsLocked = false;
         $scope.widgetsBorders = user.getSetting( user.CONST.SETTING_WIDGETS_BORDERS );
         var widgets;
-            
+
         // This var save the previous widget state.
         // If widgets are moved then this var contain all widgets before this move
         var widgetsPreviousState = null;
@@ -30,7 +30,8 @@
         // backstretch take an array of url so we take settings
         // and create an array with image and url
         var urls = [];
-        angular.forEach(user.backgroundImages, function(image){
+        var bgImages = user.backgroundImages || APP_CONFIG.user.default.backgroundImages;
+        angular.forEach(bgImages, function(image){
             urls.push(image);
         });
         $scope.backstretch = {
@@ -52,7 +53,7 @@
         $rootScope.$on('sidebar.closed', function(){
             if($state.current.name === 'board') backstretch.resume();
         });
-        
+
         // Function for menu button
         $scope.toggleMenu = function () {
             sidebarService.toggle();
@@ -86,20 +87,20 @@
 
             widgets = widgets;
             $scope.widgets = widgets;
-            
+
             return (function(){
                 var deferred = $q.defer();
-                
+
                 $timeout(configureWidgets, 1000);
 
                 return deferred.promise;
-                
+
                 function configureWidgets(){
 
                     // Loop over all widget and set required values
                     // some tasks may be async so we prepare promise loop
                     var promises = [];
-                    
+
                     angular.forEach(widgets, function(widget){
 
                         widget.state = 'loading';

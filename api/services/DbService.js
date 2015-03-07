@@ -2,7 +2,15 @@ var Promise = require('bluebird');
 
 module.exports = {
 
-    initTest: function(){
+    /**
+     *
+     * @return promise
+     */
+    init: function(env){
+        return this['init_' + env]();
+    },
+
+    init_test: function(){
         return Promise.all([
             Widget.create({
                 identity: 'Velib',
@@ -158,8 +166,70 @@ module.exports = {
         });
     },
 
-    initDev: function(){
-        return this.initTest();
+    init_development: function(){
+        return this.init_test();
+    },
+
+    /**
+     * For the production there is a small change.
+     * It's not possible to drop or alter so we need to check if db already contain data.
+     * If yes then do not init.
+     * To reset database delete .tmp
+     */
+    init_production: function(){
+        sails.log.debug('Dbservice: production database initializing...');
+        return Widget.findOne({identity: 'Velib'}).then(function(widget){
+
+            if(widget){
+                sails.log.debug('DbService: The database seems to be already initialized, operation ommitted!');
+                return;
+            }
+
+            return Promise.all([
+              Widget.create({
+                  identity: 'Velib',
+                  identityHTML: 'widget-velib',
+                  url: 'widgets/velib/widget.html',
+                  baseURL: 'widgets/velib/widget.html',
+                  permissions: [
+                      'location'
+                  ],
+                  sizeX: 1, sizeY: 1, row: 0, col: 0
+              }),
+              Widget.create({
+                  identity: 'Widget sample',
+                  identityHTML: 'widget-sample',
+                  url: 'widgets/sample/widget.html',
+                  baseURL: 'widgets/sample/widget.html',
+                  backgroundColor: '#57aae1',
+                  permissions:[
+                      'email',
+                  ],
+                  options:[
+                      {
+                          id: 'option1', // must not have space
+                          name: 'Option 1',
+                          placeholder: 'Enter something',
+                          type: 'text',
+                          default: 'toto'
+                      },
+                      {
+                          id: 'option2', // must not have space
+                          name: 'Option 2',
+                          placeholder: 'Select city',
+                          type: 'select',
+                          options: ['Nancy', 'Toul'],
+                          required: false
+                          //default: 'Nancy'
+                      }
+                  ],
+                  sizeX: 1, sizeY: 1, row: 0, col: 2
+              }),
+            ]).then(function(widgets) {
+                return null;
+            });
+        })
+
     }
 
 }

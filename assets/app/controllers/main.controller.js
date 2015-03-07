@@ -5,13 +5,13 @@
         .module('app.controllers')
         .controller('MainController', MainController)
 
-    MainController.$inject = ['$rootScope', '$scope', '$http', '$state', 'user', '$log', '$animate', 'widgetService', 'geolocationService', 'backstretch'];
+    MainController.$inject = ['$rootScope', '$scope', '$http', '$state', 'user', '$log', '$animate', 'widgetService', 'geolocationService', 'backstretch', 'APP_CONFIG'];
 
     /**
      * USE THIS CONTROLLER AS LESS AS POSSIBLE (bad practice)
      * Usually if you need something to go here you should probably make a directive or service !
      */
-    function MainController($rootScope, $scope, $http, $state, user, $log, $animate, widgetService, geolocationService, backstretch){
+    function MainController($rootScope, $scope, $http, $state, user, $log, $animate, widgetService, geolocationService, backstretch, APP_CONFIG){
 
         console.log($state.includes('settings'));
         /**
@@ -29,10 +29,14 @@
             }
         };
 
+        $scope.href = {
+            logout: APP_CONFIG.routes.logout
+        };
+
         //$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
         //   console.log(fromState, toState);
         //});
-        
+
         //annyang.debug();
         //annyang.addCommands(commands);
         //annyang.start();
