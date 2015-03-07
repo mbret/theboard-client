@@ -62,7 +62,7 @@
             },
 
             renderError: function(){
-                var template = $('#tpl-loaded').html();
+                var template = $('#tpl-error').html();
                 $('#tpl-target').html(_.template(template)({ title: self.identity }));
             },
 
@@ -72,7 +72,7 @@
             },
 
             renderStopped: function(){
-                var template = $('#tpl-refreshing').html();
+                var template = $('#tpl-stop').html();
                 $('#tpl-target').html(_.template(template)({ title: self.identity }));
             }
         };
