@@ -1,8 +1,8 @@
 {
     "i18n_Home": "Home",
 	"i18n_Welcome": "Welcome",
-	"i18n_Email": "Welcome",
-	"i18n_Password": "Welcome",
+	"i18n_Email": "Email",
+	"i18n_Password": "Password",
 	"i18n_Login": "Login",
     "i18n_Register": "Register",
 	"i18n_A brand new app.": "A brand new app.",

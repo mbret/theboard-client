@@ -1,6 +1,7 @@
 (function(){
     var Promise = require('bluebird');
-
+    var path = require('path');
+    
     module.exports = {
 
         me: function(req, res){
@@ -62,7 +63,7 @@
                 }
 
                 var file = files[0];
-                var fdSplitted = file.fd.split('\\');
+                var fdSplitted = file.fd.split(path.sep); // split with platform-specific separator
                 var filename = fdSplitted[fdSplitted.length-1];
                 var url = require('util').format('%s/%s', '/' + sails.config.urls.data, filename);
                 console.log(sails.config.urls.data);
