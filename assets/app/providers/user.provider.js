@@ -46,13 +46,17 @@
                 self.settings = angular.copy(data.settings);
                 self.id = data.id;
                 self.email = data.email;
-                self.backgroundImages = angular.copy(data.backgroundImages);
+                self.backgroundImages = [];
                 self.avatar = data.avatar;
                 self.banner = data.banner;
                 self.profile = data.profile;
                 self.firstName = data.firstName;
                 self.lastName = data.lastName;
 
+                if(data.backgroundImages && Array.isArray(data.backgroundImages)){
+                    self.backgroundImages = angular.copy(data.backgroundImages);
+                }
+                
                 /*
                  * Constants
                  * constants are here to reduce the use of potentially future changed strings.
@@ -71,7 +75,6 @@
                     self.backgroundImages = _.remove(self.backgroundImages, function(n) {
                         return key !== n;
                     });
-                    console.log(self.backgroundImages);
                 };
                 
                 /**

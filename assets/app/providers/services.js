@@ -85,75 +85,7 @@ angular
         }
     })
     
-    /**
-     * Widget service
-     * http://blog.revolunet.com/blog/2014/02/14/angularjs-services-inheritance/
-     */
-    .factory('widgetService', function($rootScope, $http, logger, APP_CONFIG, $window, Widget, dataservice){
 
-        
-        
-        return {
-
-            /**
-             *
-             * @param profileID
-             * @returns {*}
-             */
-            getAll: function(profileID){
-                var method;
-                if( profileID === null || typeof profileID === "undefined"){
-                    method = dataservice.getWidgets;
-                }
-                else{
-                    method = dataservice.getWidgetsByProfile;
-                }
-                return method(profileID).then(function(widgets){
-                    return _buildBaseWidget(widgets);
-                });
-            },
-            
-            reload: function(widget){
-                logger.debug('Widget service reload', widget);
-                widget.buildIframeURL();
-                $rootScope.$broadcast('widget.reload', widget);
-            },
-            
-            load: function(widget){
-                logger.debug('Widget service load', widget);
-                widget.buildIframeURL();
-                $rootScope.$broadcast('widget.load', widget);
-            },
-
-            sendSignal: function( widget, signal ){
-                //console.log(widget);
-                if(widget) logger.debug('Signal ' + signal + ' sent to widget ' + widget.identity);
-                else logger.debug('widgetService: Signal ' + signal + ' sent to all widgets');
-                $rootScope.$broadcast('widget-signal', widget, signal, JSON.stringify({signal:signal}));
-                return;
-            },
-
-            reloadAll: function( widgets ){
-                logger.debug('Widget service reload all');
-                angular.forEach(widgets, function(widget){
-                    widget.buildIframeURL();
-                });
-                $rootScope.$broadcast('widget.reloadAll', widgets);
-            }
-
-        }
-
-        //
-        function _buildBaseWidget(widgets){
-            var models = [];
-            angular.forEach(widgets, function(widget){
-                models.push( new Widget(widget) );
-            });
-            //logger.debug('Widgets built as models successfully!', models);
-            return models;
-        }
-    })
-    
     .factory('profilesService', function(dataservice){
         return {
             update: update,

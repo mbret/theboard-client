@@ -5,6 +5,12 @@ var validator = require('validator');
 
 module.exports = {
 
+    tableName: 'profile_widget',
+    autoPK: true,
+    autoCreatedAt: true,
+    autoUpdatedAt: true,
+    schema: true,
+    
     attributes: {
         
         profile: {model: 'profile', required: true},

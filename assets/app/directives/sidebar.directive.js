@@ -23,7 +23,6 @@
                     restrict: 'A',
                     link: function(scope, element, attrs) {
 
-                        console.log(scope);
                         scope.close = function(){
                             sidebarService.close();
                         }

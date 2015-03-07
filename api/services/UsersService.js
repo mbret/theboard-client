@@ -50,13 +50,4 @@ module.exports = {
         return bgImages;
     },
 
-    // @todo put inside user service
-    addBackgroundImage: function( file ){
-        var fdSplitted = file.fd.split('\\');
-        //var url = require('util').format('%s/user/background/%s', sails.getBaseUrl() + '/' + sails.config.urls.data, fdSplitted[fdSplitted.length-1]);
-        var url = require('util').format('%s/user/background/%s', '/' + sails.config.urls.data, fdSplitted[fdSplitted.length-1]);
-        this.backgroundImages.push(url);
-        return url;
-    },
-
 };

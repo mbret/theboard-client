@@ -5,7 +5,7 @@
         .module('app.controllers')
         .controller('IndexController', IndexController)
 
-    IndexController.$inject = ['$state', 'backstretch', 'user', '$scope', '$rootScope', '$q', 'APP_CONFIG', '$log', 'widgetService', 'geolocationService', 'modalService', 'notifService', '$timeout', 'sidebarService'];
+    IndexController.$inject = ['dataservice', '$state', 'backstretch', 'user', '$scope', '$rootScope', '$q', 'APP_CONFIG', '$log', 'widgetService', 'geolocationService', 'modalService', 'notifService', '$timeout', 'sidebarService'];
 
     /**
      * IndexController
@@ -14,7 +14,7 @@
      * Controllers should never do DOM manipulation or hold DOM selectors; that's where directives and using ng-model come in. Likewise business logic should live in services, not controllers.
      * Data should also be stored in services, except where it is being bound to the $scope
      */
-    function IndexController($state, backstretch, user, $scope, $rootScope, $q, APP_CONFIG, $log, widgetService, geolocationService, modalService, notifService, $timeout, sidebarService){
+    function IndexController(dataservice, $state, backstretch, user, $scope, $rootScope, $q, APP_CONFIG, $log, widgetService, geolocationService, modalService, notifService, $timeout, sidebarService){
 
         // This var will contain all widget element
         // These widgets will be placed inside iframe and get from server
@@ -30,7 +30,7 @@
         // backstretch take an array of url so we take settings
         // and create an array with image and url
         var urls = [];
-        var bgImages = user.backgroundImages || APP_CONFIG.user.default.backgroundImages;
+        var bgImages = (user.backgroundImages.length > 0) ? user.backgroundImages : APP_CONFIG.user.default.backgroundImages;
         angular.forEach(bgImages, function(image){
             urls.push(image);
         });
@@ -57,24 +57,24 @@
         // Function for menu button
         $scope.toggleMenu = function () {
             sidebarService.toggle();
-        }
+        };
         $scope.refreshWidgets = function(){
-            widgetService.sendSignal( null, 'refresh' );
+            widgetService.sendSignal( widgets, widgetService.SIGNAL_REFRESH );
         };
         $scope.stopWidgets = function(){
-            widgetService.sendSignal( null /*widget*/, 'stop' /*signal*/);
+            widgetService.sendSignal( widgets, widgetService.SIGNAL_STOP );
         };
         $scope.startWidgets = function(){
-            widgetService.sendSignal( null, 'start' );
+            widgetService.sendSignal( widgets, widgetService.SIGNAL_START );
         };
         $scope.reloadWidgets = function(){
-            widgetService.reloadAll( widgets );
+            widgetService.reloadAll(widgets);
         };
         $scope.lockOrUnlock = function(){
             $scope.widgetsLocked = !$scope.widgetsLocked;
             if($scope.widgetsLocked){ }
             else{ }
-        }
+        };
 
         /*
          * Widget load and init
@@ -87,9 +87,9 @@
             alert("We are sorry but your browser is too old and unsafe. Your widgets will not be loaded in order to protect you.");
         }
         else{
-            widgetService.getAll().then(function(widgets){
+            widgetService.getAll().then(function(widgetsFromServer){
 
-                widgets = widgets;
+                widgets = widgetsFromServer;
                 $scope.widgets = widgets;
 
                 return (function(){
@@ -107,7 +107,7 @@
 
                         angular.forEach(widgets, function(widget){
 
-                            widget.state = 'loading';
+                            widgetService.setViewState(widget, widgetService.VIEW_STATE_LOADING);
 
                             // create promise and push it to run job later
                             promises.push(async());
@@ -128,13 +128,16 @@
                                 if( widget.permissions &&  widget.permissions.indexOf('email') !== -1  ){
                                     permissions.email = user.email;
                                 }
-                                // location (async)
+                                
+                                // location
                                 // We create a new promise (with anonymous function)
                                 (function(){
                                     var deferred2 = $q.defer();
                                     if( widget.permissions &&  widget.permissions.indexOf('location') !== -1 ){
                                         // get location using geoloc browser api
-                                        widget.state = 'location';
+                                        
+                                        widgetService.setViewState(widget, widgetService.VIEW_STATE_WAIT_LOCATION);
+                                       
                                         geolocationService.getLocation()
                                             .then(function(data){
                                                 permissions.location = data.coords;
@@ -151,16 +154,17 @@
                                     return deferred2.promise;
 
                                 })().then(function(){
-                                    //console.log(widget);
+                                    // attach permissions to widget
                                     widget.permissions = permissions; // @todo maybe not useful anymore
-
+                                    widget.buildIframeURL();
+                                    widget.isReady = true;
+                                    // This method will load the widget iframe
                                     widgetService.load(widget);
-
                                     return deferred.resolve();
-                                })
-                                    .catch(function(err){
-                                        return deferred.reject(err);
-                                    });
+                                }).catch(function(err){
+                                    
+                                    return deferred.reject(err);
+                                });
 
                                 return deferred.promise;
                             }
@@ -200,7 +204,12 @@
             },
             stop: function(event, $element, widget) {
                 backstretch.resume();
-                widget.updateIfStateChanged();
+                if(widget.hasStateChanged()){
+                    dataservice.updateWidget(widget).then(function(){
+                        notifService.success( APP_CONFIG.messages.success.widget.updated );
+                        widget.saveState();
+                    });
+                }
             }
         };
 
@@ -211,7 +220,12 @@
             },
             stop: function(event, $element, widget) {
                 backstretch.resume();
-                widget.updateIfStateChanged();
+                
+                if(widget.hasStateChanged()){
+                    dataservice.updateWidget(widget).then(function(){
+                        notifService.success( APP_CONFIG.messages.success.widget.updated );
+                    });
+                }
             }
         };
 

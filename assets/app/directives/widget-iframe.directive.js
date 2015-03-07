@@ -9,14 +9,14 @@
         .module('app.directives')
         .directive('widgetIframe', widgetIframe);
 
-    widgetIframe.$inject = ['logger', 'APP_CONFIG'];
+    widgetIframe.$inject = ['logger', 'APP_CONFIG', 'dataservice', 'widgetService'];
 
     /**
      * widget-iframe directive
      *
      * This new directive is about the widget iframe container
      */
-    function widgetIframe (logger, APP_CONFIG) {
+    function widgetIframe (logger, APP_CONFIG, dataservice, widgetService) {
 
         return {
             restrict: 'AE', // attribute name
@@ -36,7 +36,8 @@
             link: function(scope, element, attrs) {
 
                 var widget = scope.widget;
-
+                scope.widgetState = null;
+                
                 // Get iframe element as jquery
                 var $widgetElt = element.find('.widget-iframe');
                 var $widgetRawElt = $widgetElt[0]; // keep raw elt
@@ -48,34 +49,48 @@
                  * - We need $apply as it's jquery binding
                  */
                 $widgetElt.on("load" , function(e){
+                    console.log(scope.widgetState);
                     scope.$apply(function(){
-                        widget.state = 'ready';
+                        scope.widgetState = widgetService.VIEW_STATE_READY;
                     });
                 });
 
+                scope.$on('widget.state.changed', function(ev, widgetID, state){
+                    if(widgetID === widget.id){
+                        scope.widgetState = state;
+                    }
+                });
+                
                 /**
                  * When user send a signal to widget
                  */
-                scope.$on('widget-signal', function(ev, widget, signal, hash){
-                    // event to specific widget
-                    if( angular.equals(widget, scope.widget) /* widget && widget.identityHTML == scope.widget.identityHTML*/ ){
-                        $widgetRawElt.contentWindow.window.location.hash =  encodeURIComponent(hash);
-                        window.scrollTo(0,0);
-                    }
-                    // event to everyone
-                    else if(widget == null){
-                        //$widgetElt[0].src = sUrl + '#' + encodeURIComponent(hash);
-                        $widgetRawElt.contentWindow.window.location.hash = encodeURIComponent(hash);
-                        window.scrollTo(0,0);
-                    }
-                    else{
-                        // not for me
+                scope.$on('widget.signal', function(ev, widget, signal, hash){
+                    if(scope.widgetState === widgetService.VIEW_STATE_READY){
+                        // event to specific widget
+                        if( angular.equals(widget, scope.widget) /* widget && widget.identityHTML == scope.widget.identityHTML*/ ){
+                            $widgetRawElt.contentWindow.window.location.hash =  encodeURIComponent(hash);
+                            window.scrollTo(0,0);
+                        }
+                        // event to everyone
+                        else if(widget == null){
+                            //$widgetElt[0].src = sUrl + '#' + encodeURIComponent(hash);
+                            $widgetRawElt.contentWindow.window.location.hash = encodeURIComponent(hash);
+                            window.scrollTo(0,0);
+                        }
+                        else{
+                            // not for me
+                        }
                     }
                 });
 
+                /**
+                 * When the widget is prepared from controller.
+                 * At this point widget is fully set and can be handle by the directive.
+                 *
+                 */
                 scope.$on('widget.load', function(ev, targetWidget){
                     if(targetWidget.id === widget.id){
-                        widget.state = 'loading';
+                        scope.widgetState = widgetService.VIEW_STATE_LOADING;
                         if( scope.iframeURL === widget.iframeURL ) forceReload();
                         else scope.iframeURL = widget.iframeURL; // maj url
                     }
@@ -83,18 +98,13 @@
                 
                 scope.$on('widget.reload', function(ev, targetWidget){
                     if(targetWidget.id === widget.id){
-                        widget.state = 'reloading';
+                        scope.widgetState = widgetService.VIEW_STATE_RELOADING;
                         if( scope.iframeURL === widget.iframeURL ) forceReload();
                         else scope.iframeURL = widget.iframeURL; // maj url
                     }
                 });
-
-                scope.$on('widget.reloadAll', function(ev, widgets){
-                    widget.state = 'reloading';
-                    if( scope.iframeURL === widget.iframeURL ) forceReload();
-                    else scope.iframeURL = widget.iframeURL; // maj url
-                });
                 
+                // Force an iframe to reload, even if they have same url
                 function forceReload(){
                     $widgetRawElt.contentWindow.window.location.hash = '';
                     $widgetRawElt.contentDocument.location.reload();
@@ -126,7 +136,6 @@
                     }).result
                         .then(function (result) {
                             $scope.result = result;
-                            logger.info('Modal dismissed at: ' + new Date());
                         }).finally(function(){
                             backstretch.resume();
                             
@@ -199,7 +208,6 @@
                                 // Loop over all options bound with <form>
                                 // Set the new value to the widget
                                 angular.forEach($scope.options, function(option, index){
-                                    console.log(widget);
                                     if(option.type === 'select'){
                                         // Option can be null
                                         if( option.value && option.value.label && (option.value.label !== widget.getOptionValue(option.id)) ){
@@ -220,10 +228,11 @@
                                     noChanges();
                                 }
                                 else{
-                                    widget.saveOptions()
+                                    dataservice.updateWidget(widget)
                                         .then(function(){
                                             // Update local widget
                                             notifService.success( APP_CONFIG.messages.success.widget.updated );
+                                            widget.buildIframeURL();
                                             widgetService.reload(widget);
                                             $scope.ok();
                                         }).catch(function(err){
@@ -242,7 +251,6 @@
                         }
 
                         function noChanges(){
-                            logger.debug('Widget config modal closed because of no options');
                             notifService.info( APP_CONFIG.messages.nochange );
                             $scope.ok();
                         }

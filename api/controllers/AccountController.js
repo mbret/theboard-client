@@ -46,10 +46,9 @@
 
         uploadBackgroundImage: function(req, res){
             req.file('uploadfile').upload({
-                dirname: sails.config.paths.publicData + '/user/background',
+                dirname: sails.config.paths.publicData,
                 // don't allow the total upload size to exceed ~10MB
                 maxBytes: 10000000
-                
             }, whenDone);
 
             function whenDone(err, files){
@@ -62,14 +61,17 @@
                     return res.badRequest();
                 }
 
-                console.log(files);
-                var image = req.user.addBackgroundImage(files[0]);
+                var file = files[0];
+                var fdSplitted = file.fd.split('\\');
+                var filename = fdSplitted[fdSplitted.length-1];
+                var url = require('util').format('%s/%s', '/' + sails.config.urls.data, filename);
+                req.user.backgroundImages.push(url);
                 req.user.save(function(err, user){
                     if(err){
                         return res.serverError(err);
                     }
-                    return res.ok(image);
-                })
+                    return res.ok(url);
+                });
 
             }
         }

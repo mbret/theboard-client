@@ -87,12 +87,12 @@
             var route = APP_CONFIG.routes.api.widgets.getAll;
             return $http.get(route)
                 .then(function(data) {
-                    logger.debug('Widgets loaded successfully!', data.data);
+                    logger.debug(debugName + 'Widgets loaded successfully!', data.data);
                     var widgets = data.data;
                     return widgets;
                 })
                 .catch(function(error) {
-                    logger.error('Failure loading widgets');
+                    logger.error(debugName + 'Failure loading widgets');
                     throw new Error(APP_CONFIG.messages.errors.widgets.unableToLoad);
                 });
         }
@@ -101,12 +101,12 @@
             var route = APP_CONFIG.routes.api.widgets.getByProfile.replace(':id', profileID);
             return $http.get(route)
                 .then(function(data) {
-                    logger.debug('Widgets loaded successfully!', data.data);
+                    logger.debug(debugName + 'Widgets loaded successfully!', data.data);
                     var widgets = data.data;
                     return widgets;
                 })
                 .catch(function(error) {
-                    logger.error('Failure loading widgets');
+                    logger.error(debugName + 'Failure loading widgets');
                     throw new Error(APP_CONFIG.messages.errors.widgets.unableToLoad);
                 });
         }
@@ -116,18 +116,19 @@
                 sizeX: widget.sizeX,
                 sizeY: widget.sizeY,
                 row: widget.row,
-                col: widget.col
+                col: widget.col,
+                options: widget.options
             });
         }
 
         function update(id, data){
             var route = APP_CONFIG.routes.api.widgets.update.replace(':id', id);
             return $http.put(route, data).then(function(data) {
-                logger.debug('Widget updated successfully!', data.data);
+                logger.debug(debugName + 'Widget updated successfully!', data.data);
                 return data.data;
             })
             .catch(function(err) {
-                    logger.error('Failure while updating widget', err);
+                    logger.error(debugName + 'Failure while updating widget', err);
                     throw new Error(APP_CONFIG.messages.errors.widgets.unableToUpdate);
             });
         }

@@ -6,8 +6,9 @@
      */
     angular
         .module('app.services')
-        .factory('Widget', Widget);
-
+        .factory('Widget', Widget)
+        .factory('widgetService', widgetService);
+    
     Widget.$inject = ['$window', '$http', 'APP_CONFIG', 'logger', 'notifService', '$injector'];
 
     /**
@@ -15,35 +16,30 @@
      *
      */
     function Widget($window, $http, APP_CONFIG, logger, notifService, $injector) {
+        
         var Widget = function(widget){
             this.id = widget.id;
             this.iframeURL = widget.iframeURL;
             this.oldState;
+            this.isReady = false; // isReady = true when widget is fully ready for the view (geoloc, etc)
             
             // @todo remove it and set all attribute in hard
             for(var prop in widget){
                 this[prop] = widget[prop];
             }
             
+            // Contain the state of iframe
             var state = null;
             this.options = widget.options ? widget.options : [];
             this.saveState(); // keep trace of current state
-        }
+        };
+        
         Widget.prototype.__defineGetter__("STATE_RELOADING", function(){ return 'reloading' });
         Widget.prototype.hasOptions = hasOptions;
-        Widget.prototype.saveOptions = saveOptions;
         Widget.prototype.getOptionValue = getOptionValue;
         Widget.prototype.getState = getState;
         Widget.prototype.setState = setState;
         Widget.prototype.buildIframeURL = buildIframeURL;
-        
-        function setState(state){
-
-        }
-        
-        function getState(){
-            
-        }
         
         /**
          * Save the current state like position, size etc
@@ -56,6 +52,33 @@
                 col: this.col
             }
         }
+        
+        Widget.prototype.setOptionValue = function(id, value){
+            angular.forEach(this.options, function(option){
+                if(option.id === id){
+                    option.value = value;
+                }
+            })
+        };
+        
+        /**
+         * Take an associative array of options
+         * @param options
+         */
+        Widget.prototype.setOptionsValues = function(options){
+            var that = this;
+            angular.forEach(options, function(value, id){
+                that.setOptionValue(id, value);
+            });
+        };
+        
+        function setState(state){
+
+        }
+        
+        function getState(){
+            
+        }
 
         function getOptionValue(id){
             var optionValue = null;
@@ -67,25 +90,6 @@
             return optionValue;
         };
         
-        Widget.prototype.setOptionValue = function(id, value){
-            angular.forEach(this.options, function(option){
-                if(option.id === id){
-                    option.value = value;
-                }
-            })
-        };
-
-        /**
-         * Take an associative array of options
-         * @param options
-         */
-        Widget.prototype.setOptionsValues = function(options){
-            var that = this;
-            angular.forEach(options, function(value, id){
-                that.setOptionValue(id, value);
-            });
-        };
-
         function buildIframeURL(){
             // prepare options for widget
             var options = {};
@@ -103,9 +107,8 @@
             };
             var URI = $window.URI(this.baseURL).search({widget:JSON.stringify(configuration)}).toString();
             this.iframeURL = URI;
-            logger.debug('Widget build its URL', URI);
+            //logger.debug('Widget build its URL', URI);
         }
-        
 
         /**
          * Check if the widget has options
@@ -114,55 +117,6 @@
         function hasOptions(){
             return this.options.length > 0;
         }
-
-        /**
-         * Save the current widget options
-         * Save it to server
-         * @returns {*}
-         */
-        function saveOptions(){
-            var that = this;
-            return this._save({
-                options: that.options
-            });
-        };
-
-        Widget.prototype.save = function(){
-            return this._save({
-                sizeX: this.sizeX,
-                sizeY: this.sizeY,
-                row: this.row,
-                col: this.col,
-                options: this.options
-            });
-        };
-
-        /**
-         * Function that handle the widget update on action
-         * - Get the new widget
-         * - Compare this widget to all other widgets
-         * - Check the equality between this widget and the list of previous widget
-         * 	if one eq found 	=> this widget has not been dragged or resized (the old is equal to the new)
-         *	if no eq found 		=> this widget is new so update it
-         *
-         * - When success we also update the widget in previous state etc
-         * @todo remove use of notifService and return a promise (always)
-         */
-        Widget.prototype.updateIfStateChanged = function(){
-            var that = this;
-            var key = null;
-            if( this.hasStateChanged() ){
-                return $injector.get('dataservice').updateWidget( that )
-                    .then(function( widgetUpdated ){
-                        notifService.success( APP_CONFIG.messages.widgets.updated );
-                        that.saveState();
-                    })
-                    .catch(function(err){
-                        notifService.error( err.message );
-                    });
-            }
-            return false;
-        }
         
         Widget.prototype.hasStateChanged = function(){
             return (this.col !== this.oldState.col
@@ -170,24 +124,106 @@
             || this.sizeX !== this.oldState.sizeX
             || this.sizeY !== this.oldState.sizeY);
         }
-        
-        /*
-         * Private methods
-         */
-
-        Widget.prototype._save = function(data){
-            return $http.put(APP_CONFIG.routes.widgets.update + '/' + this.id, data)
-                .then(function(data) {
-                    logger.debug('Widget updated successfully!', data.data);
-                    return data.data;
-                })
-                .catch(function(err) {
-                    logger.error('Failure while updating widget', err);
-                    throw new Error(APP_CONFIG.messages.errors.widgets.unableToUpdate);
-                });
-        };
 
         return Widget;
+    }
+
+    /**
+     * Widget service
+     * http://blog.revolunet.com/blog/2014/02/14/angularjs-services-inheritance/
+     */
+    widgetService.$inject = ['$rootScope', '$http', 'logger', 'APP_CONFIG', '$window', 'Widget', 'dataservice'];
+    function widgetService($rootScope, $http, logger, APP_CONFIG, $window, Widget, dataservice){
+
+        return {
+
+            VIEW_STATE_READY: 'ready',
+            VIEW_STATE_LOADING: 'loading',
+            VIEW_STATE_RELOADING: 'reloading',
+            VIEW_STATE_WAIT_LOCATION: 'location',
+
+            SIGNAL_REFRESH: 'refresh',
+            SIGNAL_STOP: 'stop',
+            SIGNAL_START: 'start',
+
+            setViewState: function(widget, state){
+                //console.log(widget, state);
+                $rootScope.$broadcast('widget.state.changed', widget.id, state);
+            },
+            
+            /**
+             *
+             * @param profileID
+             * @returns {*}
+             */
+            getAll: function(profileID){
+                var method;
+                if( profileID === null || typeof profileID === "undefined"){
+                    method = dataservice.getWidgets;
+                }
+                else{
+                    method = dataservice.getWidgetsByProfile;
+                }
+                return method(profileID).then(function(widgets){
+                    var models = [];
+                    angular.forEach(widgets, function(widget){
+                        models.push( new Widget(widget) );
+                    });
+                    return models;
+                });
+            },
+
+            /**
+             * This method reload the widget iframe
+             * @param widget
+             */
+            reload: function(widget){
+                if(widget.isReady){
+                    logger.debug('Widget service reload', widget);
+                    widget.buildIframeURL();
+                    $rootScope.$broadcast('widget.reload', widget);
+                }
+            },
+
+            /**
+             * This method load the widget iframe
+             * @param widget
+             */
+            load: function(widget){
+                if(widget.isReady){
+                    logger.debug('Widget service load', widget);
+                    widget.buildIframeURL();
+                    $rootScope.$broadcast('widget.load', widget);
+                }
+            },
+
+            /**
+             * Send signal to one widget or all widgets.
+             * @param widget
+             * @param signal
+             */
+            sendSignal: function( widgets, signal ){
+                if(widgets && Array.isArray(widgets)){
+                    console.log('dfsdf');
+                    _.forEach(widgets, function(widget){
+                        if(widget.isReady){
+                            $rootScope.$broadcast('widget.signal', widget, signal, JSON.stringify({signal:signal}));
+                        }
+                    });
+                }
+                else if(widgets && widgets.isReady){
+                    $rootScope.$broadcast('widget.signal', widgets, signal, JSON.stringify({signal:signal}));
+                }
+            },
+
+            reloadAll: function(widgets){
+                var self = this;
+                _.forEach(widgets, function(widget){
+                    self.reload(widget);
+                });
+            }
+
+        }
     }
 
 })();

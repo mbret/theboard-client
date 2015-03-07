@@ -2,9 +2,12 @@
     'use strict';
 
     var UserSetting = {
-        // Enforce model schema in the case of schemaless databases
+        
+        tableName: 'user_setting',
+        //autoPK: true,
+        autoCreatedAt: true,
+        autoUpdatedAt: true,
         schema: true,
-        //autoPK: false,
 
         attributes: {
             user        : { model: 'user' }, // DO NOT use required:true (I don't know why but it crash when update later)

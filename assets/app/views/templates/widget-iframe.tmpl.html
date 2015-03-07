@@ -1,5 +1,5 @@
 <div class="gridster-draggable widget-iframe-lock">
-    <div class="vertical" ng-if="widget.state === 'ready'">
+    <div class="vertical" ng-if="widgetState === 'ready'">
         <!--Action buttons-->
         <div>
             <button class="widget-options-button btn btn-primary btn-circle btn-lg"  aria-label="Options" ng-click="showOptions($event, widget.identityHTML)">
@@ -10,10 +10,10 @@
 </div>
 
 <!--Widget component-->
-<div ng-switch="widget.state" class="widget-content">
+<div ng-switch="widgetState" class="widget-content">
     
-    <iframe sandbox="allow-scripts"
-            ng-class="{'iframe-visible': widget.state == 'ready'}"
+    <iframe sandbox="allow-scripts allow-same-origin"
+            ng-class="{'iframe-visible': widgetState == 'ready'}"
             id="{{widget.identityHTML}}"
             ng-src="{{iframeURL}}"
             class="widget-iframe {{widget.tile}}"></iframe>

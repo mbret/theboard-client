@@ -19,6 +19,7 @@ module.exports = {
     fillDb: true,
 
     models: {
+        connection: 'mysqlServer',
         migrate: 'drop'
     }
 

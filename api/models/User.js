@@ -11,7 +11,7 @@ var User = {
 
         firstName: { type: 'string' },
         lastName: { type: 'string' },
-        backgroundImages: { type: 'array', required: false },
+        backgroundImages: { type: 'array', required: false, defaultsTo: [] },
         locale: { type:'string', defaultTo: 'en_US' },
         avatar: { type: 'string', required: false },
         banner: { type: 'string', required: false },

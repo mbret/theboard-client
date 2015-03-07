@@ -9,8 +9,8 @@ var Profile = {
     
     attributes: {
         user        : { model: 'user' },
-        name        : { type: 'text',  unique: true, required: true },
-        description : { type: 'text', unique: false, required: false },
+        name        : { type: 'string',  unique: true, required: true },
+        description : { type: 'text', length: 300, unique: false, required: false },
         default     : { type: 'boolean', unique: false, required: false, defaultsTo: true },
         widgets     : { collection: 'profileWidget', via: 'profile' },
 

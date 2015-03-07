@@ -142,10 +142,5 @@
         if(instance) instance.refresh();
     });
 
-    document.addEventListener("widget.configuration.changed", function(e){
-        //console.log('widget.configuration.changed', e);
-        if(instance) instance.updateConfig(e.detail);
-    });
-
 })();
 

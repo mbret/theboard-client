@@ -13,7 +13,6 @@
      */
     function MainController($rootScope, $scope, $http, $state, user, $log, $animate, widgetService, geolocationService, backstretch, APP_CONFIG){
 
-        console.log($state.includes('settings'));
         /**
          * Lib used: https://github.com/TalAter/annyang
          * Google test speech recognition: http://www.google.com/intl/fr/chrome/demos/speech.html
