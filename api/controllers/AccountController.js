@@ -65,6 +65,9 @@
                 var fdSplitted = file.fd.split('\\');
                 var filename = fdSplitted[fdSplitted.length-1];
                 var url = require('util').format('%s/%s', '/' + sails.config.urls.data, filename);
+                console.log(sails.config.urls.data);
+                console.log(url);
+                console.log(sails.config.paths.publicData);
                 req.user.backgroundImages.push(url);
                 req.user.save(function(err, user){
                     if(err){
