@@ -1,5 +1,39 @@
 var Promise = require('bluebird');
 
+var widgetSample = {
+    identity: 'Widget sample',
+    identityHTML: 'widget-sample',
+    url: 'widgets/sample/widget.html',
+    baseURL: 'widgets/sample/widget.html',
+    backgroundColor: '#57aae1',
+    permissions:[
+        'email',
+        //'location'
+    ],
+    options:[
+        {
+            id: 'option1', // must not have space
+            name: 'Option 1',
+            placeholder: 'Enter something',
+            type: 'text',
+            default: 'toto'
+        },
+        {
+            id: 'option2', // must not have space
+            name: 'Option 2',
+            placeholder: 'Select city',
+            type: 'select',
+            options: ['Nancy', 'Toul'],
+            required: false
+            //default: 'Nancy'
+        }
+    ],
+    sizeX: 1,
+    sizeY: 1,
+    row: 0,
+    col: 2
+};
+
 module.exports = {
 
     /**
@@ -56,39 +90,14 @@ module.exports = {
             //    row: 0,
             //    col: 2
             //}),
-            Widget.create({
-                identity: 'Widget sample',
-                identityHTML: 'widget-sample',
-                url: 'widgets/sample/widget.html',
-                baseURL: 'widgets/sample/widget.html',
-                backgroundColor: '#57aae1',
-                permissions:[
-                    'email',
-                    //'location'
-                ],
-                options:[
-                    {
-                        id: 'option1', // must not have space
-                        name: 'Option 1',
-                        placeholder: 'Enter something',
-                        type: 'text',
-                        default: 'toto'
-                    },
-                    {
-                        id: 'option2', // must not have space
-                        name: 'Option 2',
-                        placeholder: 'Select city',
-                        type: 'select',
-                        options: ['Nancy', 'Toul'],
-                        required: false
-                        //default: 'Nancy'
-                    }
-                ],
-                sizeX: 1,
-                sizeY: 1,
-                row: 0,
-                col: 2
-            }),
+            Widget.create(widgetSample),
+            //Widget.create(widgetSample),
+            //Widget.create(widgetSample),
+            //Widget.create(widgetSample),
+            //Widget.create(widgetSample),
+            //Widget.create(widgetSample),
+            //Widget.create(widgetSample),
+            //Widget.create(widgetSample),
             //Widget.create({
             //  identity: 'Widget meteo 4',
             //  identityHTML: 'widget-meteo4',

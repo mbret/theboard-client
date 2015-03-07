@@ -12,7 +12,8 @@
 <!--Widget component-->
 <div ng-switch="widget.state" class="widget-content">
     
-    <iframe ng-class="{'iframe-visible': widget.state == 'ready'}"
+    <iframe sandbox="allow-scripts"
+            ng-class="{'iframe-visible': widget.state == 'ready'}"
             id="{{widget.identityHTML}}"
             ng-src="{{iframeURL}}"
             class="widget-iframe {{widget.tile}}"></iframe>

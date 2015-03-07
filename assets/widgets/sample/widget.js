@@ -1,6 +1,8 @@
 (function(){
     'use strict';
     
+    console.log(parent);
+    
     var instance;
     var Widget = function( conf ){
 
@@ -25,7 +27,7 @@
          * - start the bg process
          */
         this.start = function(){
-            console.log(this.identity + ' is running');
+            //console.log(this.identity + ' is running');
             self.process.start();
         };
 
@@ -34,7 +36,7 @@
          * - stop the bg process
          */
         this.stop = function(){
-            console.log(self.identity + ' is stopped');
+            //console.log(self.identity + ' is stopped');
             this.GUI.renderStopped();
             self.process.stop();
         };
@@ -44,7 +46,7 @@
          * - reset the bg refresh (simulate restart)
          */
         this.refresh = function(){
-            console.log(this.identity + ' is refreshing');
+            //console.log(this.identity + ' is refreshing');
             self.process.reset();
         };
 
@@ -121,27 +123,27 @@
     };
 
     document.addEventListener("widget.init", function(e){
-        console.log('widget.init', e);
+        //console.log('widget.init', e);
         instance = new Widget(e.detail);
     });
 
     document.addEventListener("widget.start", function(e){
-        console.log('widget.start', e);
+        //console.log('widget.start', e);
         if(instance) instance.start();
     });
 
     document.addEventListener("widget.stop", function(e){
-        console.log('widget.stop', e);
+        //console.log('widget.stop', e);
         if(instance) instance.stop();
     });
 
     document.addEventListener("widget.refresh", function(e){
-        console.log('widget.refresh', e);
+        //console.log('widget.refresh', e);
         if(instance) instance.refresh();
     });
 
     document.addEventListener("widget.configuration.changed", function(e){
-        console.log('widget.configuration.changed', e);
+        //console.log('widget.configuration.changed', e);
         if(instance) instance.updateConfig(e.detail);
     });
 

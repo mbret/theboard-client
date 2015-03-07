@@ -180,7 +180,7 @@
             // overwrite some settings
             // ===============
             if( typeof window.widgetConfiguration !== 'undefined' ){
-                console.log('Substitute configuration provided by user. Use it instead of default library configuration!');
+                //console.log('Substitute configuration provided by user. Use it instead of default library configuration!');
                 if( window.widgetConfiguration.widget && window.widgetConfiguration.widget.configuration){
                     testWidgetProvided = window.widgetConfiguration.widget;
                 }

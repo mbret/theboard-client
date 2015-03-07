@@ -83,101 +83,107 @@
          * - Transform the permissions array into filled object
          *
          */
-        widgetService.getAll().then(function(widgets){
+        if(!"sandbox" in document.createElement("iframe")){
+            alert("We are sorry but your browser is too old and unsafe. Your widgets will not be loaded in order to protect you.");
+        }
+        else{
+            widgetService.getAll().then(function(widgets){
 
-            widgets = widgets;
-            $scope.widgets = widgets;
+                widgets = widgets;
+                $scope.widgets = widgets;
 
-            return (function(){
-                var deferred = $q.defer();
+                return (function(){
+                    var deferred = $q.defer();
 
-                $timeout(configureWidgets, 1000);
+                    $timeout(configureWidgets, 1000);
 
-                return deferred.promise;
+                    return deferred.promise;
 
-                function configureWidgets(){
+                    function configureWidgets(){
 
-                    // Loop over all widget and set required values
-                    // some tasks may be async so we prepare promise loop
-                    var promises = [];
+                        // Loop over all widget and set required values
+                        // some tasks may be async so we prepare promise loop
+                        var promises = [];
 
-                    angular.forEach(widgets, function(widget){
+                        angular.forEach(widgets, function(widget){
 
-                        widget.state = 'loading';
+                            widget.state = 'loading';
 
-                        // create promise and push it to run job later
-                        promises.push(async());
+                            // create promise and push it to run job later
+                            promises.push(async());
 
-                        function async(){
-                            var deferred = $q.defer();
+                            function async(){
+                                var deferred = $q.defer();
 
-                            // =============================
-                            // Fill permissions part
-                            // permissions: ['email', 'location']
-                            // =============================
-                            var permissions = {
-                                email: null,
-                                location: null
-                            };
+                                // =============================
+                                // Fill permissions part
+                                // permissions: ['email', 'location']
+                                // =============================
+                                var permissions = {
+                                    email: null,
+                                    location: null
+                                };
 
-                            // mail
-                            if( widget.permissions &&  widget.permissions.indexOf('email') !== -1  ){
-                                permissions.email = user.email;
+                                // mail
+                                if( widget.permissions &&  widget.permissions.indexOf('email') !== -1  ){
+                                    permissions.email = user.email;
+                                }
+                                // location (async)
+                                // We create a new promise (with anonymous function)
+                                (function(){
+                                    var deferred2 = $q.defer();
+                                    if( widget.permissions &&  widget.permissions.indexOf('location') !== -1 ){
+                                        // get location using geoloc browser api
+                                        widget.state = 'location';
+                                        geolocationService.getLocation()
+                                            .then(function(data){
+                                                permissions.location = data.coords;
+                                                deferred2.resolve();
+                                            })
+                                            .catch(function(err){
+                                                $log.debug('User has not accepted location, permission is set to null');
+                                                deferred2.reject(err);
+                                            });
+                                    }
+                                    else{
+                                        deferred2.resolve();
+                                    }
+                                    return deferred2.promise;
+
+                                })().then(function(){
+                                    //console.log(widget);
+                                    widget.permissions = permissions; // @todo maybe not useful anymore
+
+                                    widgetService.load(widget);
+
+                                    return deferred.resolve();
+                                })
+                                    .catch(function(err){
+                                        return deferred.reject(err);
+                                    });
+
+                                return deferred.promise;
                             }
-                            // location (async)
-                            // We create a new promise (with anonymous function)
-                            (function(){
-                                var deferred2 = $q.defer();
-                                if( widget.permissions &&  widget.permissions.indexOf('location') !== -1 ){
-                                    // get location using geoloc browser api
-                                    widget.state = 'location';
-                                    geolocationService.getLocation()
-                                        .then(function(data){
-                                            permissions.location = data.coords;
-                                            deferred2.resolve();
-                                        })
-                                        .catch(function(err){
-                                            $log.debug('User has not accepted location, permission is set to null');
-                                            deferred2.reject(err);
-                                        });
-                                }
-                                else{
-                                    deferred2.resolve();
-                                }
-                                return deferred2.promise;
 
-                            })().then(function(){
-                                //console.log(widget);
-                                widget.permissions = permissions; // @todo maybe not useful anymore
+                        });
 
-                                widgetService.load(widget);
+                        // Run loop job
+                        // catch is handle by superior promise
+                        $q.all(promises).then(function(){
+                            return deferred.resolve();
+                        }).catch(function(err){
+                            return deferred.reject(err);
+                        });
+                    }
+                })();
 
-                                return deferred.resolve();
-                            })
-                            .catch(function(err){
-                                return deferred.reject(err);
-                            });
-
-                            return deferred.promise;
-                        }
-
-                    });
-
-                    // Run loop job
-                    // catch is handle by superior promise
-                    $q.all(promises).then(function(){
-                        return deferred.resolve();
-                    }).catch(function(err){
-                        return deferred.reject(err);
-                    });
-                }
-            })();
-
-        }).catch(function(error){
-            // This catch handle error from all subsequent code
-            // If error happens when set permission or promises loop for example
-            modalService.simpleError(error.message);
-        });
+            }).catch(function(error){
+                // This catch handle error from all subsequent code
+                // If error happens when set permission or promises loop for example
+                modalService.simpleError(error.message);
+            });
+        }
+        
 
         /*
          * Gridster part

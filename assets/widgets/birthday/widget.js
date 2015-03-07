@@ -6,20 +6,20 @@ var widget = {
      * Function to handle main application
      */
     init: function(){
-        console.log(this.identity + ' is initializing');
+        //console.log(this.identity + ' is initializing');
         this.start();
     },
     start: function(){
-        console.log(this.identity + ' is running');
+        //console.log(this.identity + ' is running');
         this.refreshProcess.start();
     },
     stop: function(){
-        console.log(this.identity + ' is stopped');
+        //console.log(this.identity + ' is stopped');
         document.getElementById("sample").innerHTML = 'Widget is stopped';
         this.refreshProcess.stop();
     },
     refresh: function(){
-        console.log(this.identity + ' is refreshing');
+        //console.log(this.identity + ' is refreshing');
         this.refreshProcess.refresh();
     },
 
