@@ -1,46 +1,36 @@
-<div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-lg-9">
-        <h2>Profile</h2>
-        <ol class="breadcrumb">
-            <li>
-                <a ui-sref="board">Board</a>
-            </li>
-            <li class="active">
-                <strong>Widget profiles</strong>
-            </li>
-        </ol>
+<div class="row">
+
+    <div class="col-md-3">
+        <div class="">
+            <h4>More about widgets profile</h4>
+            <p class="small text-justify">
+                Widgets profiles are basically a list of preset you can define and use wherever you want (on any device running the application).
+                You can define a default profile which will be used when running the application for the first time. You can then activate a different profile,
+                it will be keep in memory and be used as long as you change it.
+            </p>
+        </div>
+        <div class="m-t-md ">
+            <button class="btn btn-success btn-lg btn-block btn-outline" ng-click="widgetProfilesCtl.newProfile()"><i class="fa fa-check"></i> New profile</button>
+        </div>
     </div>
-</div>
-<div class="wrapper wrapper-content animated fadeInRight">
+    
+    <div class="col-md-9">
 
-    <div class="row">
-        <div ng-repeat="profile in widgetProfilesCtl.profiles">
-            
-            <div class="col-lg-3" >
-                <div class="ibox widget-profile" ng-class="{selected: profile.selected}" ng-click="widgetProfilesCtl.detail(profile)">
-                    <div class="ibox-content" ng-class="{'navy-bg': profile.selected}">
-                        <h3><strong>{{profile.name}}</strong></h3>
-                        <p><b>Created:</b> {{profile.createdAt}}</p>
-                        <p><b>Widgets:</b> {{profile.widgets.length}}</p>
-                        <p class="description">{{profile.description}}</p>
-                        <button ng-if="!profile.selected" class="btn btn-success m-t" ng-click="widgetProfilesCtl.activate($event, profile)"><i class="fa fa-check"></i> Activate</button>
-                        <button class="btn btn-warning m-t" ng-click="widgetProfilesCtl.configure($event, profile)"><i class="fa fa-link"></i> Configure</button>
-                    </div>
-                </div>
-            </div>
-            
-        </div>
-
-        <div class="col-lg-3" >
-            <div class="ibox widget-profile" ng-class="" ng-click="">
-                <div class="ibox-content text-center" >
-                    <div class="vertical">
-                        <button class="btn btn-success btn-lg" ng-click="widgetProfilesCtl.newProfile()"><i class="fa fa-check"></i> New profile</button>
-                    </div>
+        <div class="col-lg-6" ng-repeat="profile in widgetProfilesCtl.profiles">
+            <div class="ibox widget-profile" ng-class="{selected: widgetProfilesCtl.isActive(profile)}" ng-click="widgetProfilesCtl.detail(profile)">
+                <div class="ibox-content" ng-class="{'navy-bg': widgetProfilesCtl.isActive(profile)}">
+                    <h3><strong>{{profile.name}}</strong></h3>
+                    <p><b>Created:</b> {{profile.createdAt}}</p>
+                    <p><b>Widgets:</b> {{profile.widgets.length}}</p>
+                    <p class="description">{{profile.description}}</p>
+                    <button ng-if="!widgetProfilesCtl.isActive(profile)" class="btn btn-success m-t" ng-click="widgetProfilesCtl.activate($event, profile)">Activate</button>
+                    <button ng-if="!profile.default" class="btn btn-info m-t" ng-click="widgetProfilesCtl.setAsDefault($event, profile)">Set as default</button>
+                    <button class="btn btn-warning m-t" ng-click="widgetProfilesCtl.configure($event, profile)"><i class="fa fa-link"></i> Configure</button>
                 </div>
             </div>
         </div>
-        
+
+
     </div>
 
 

@@ -137,7 +137,8 @@ module.exports = {
                 user.settings.add(UserSetting.buildNewSetting('widgetsBorders', false));
                 user.profiles.add({
                     name: 'Desktop',
-                    description: 'For my Desktop, it use a 1920x1080 resolution and is full of widget ;)'
+                    description: 'For my Desktop, it use a 1920x1080 resolution and is full of widget ;)',
+                    default: true
                 });
                 user.profiles.add({name: 'TV', default: false});
 

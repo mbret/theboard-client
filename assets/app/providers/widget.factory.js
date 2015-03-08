@@ -157,14 +157,7 @@
              * @returns {*}
              */
             getAll: function(profileID){
-                var method;
-                if( profileID === null || typeof profileID === "undefined"){
-                    method = dataservice.getWidgets;
-                }
-                else{
-                    method = dataservice.getWidgetsByProfile;
-                }
-                return method(profileID).then(function(widgets){
+                return dataservice.getWidgets(profileID).then(function(widgets){
                     var models = [];
                     angular.forEach(widgets, function(widget){
                         models.push( new Widget(widget) );

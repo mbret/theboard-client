@@ -37,6 +37,7 @@ var routes = {
     'get /api/users/profiles'       : 'ProfileController.findAll',
     'get /api/users/profiles/:id'   : 'ProfileController.find',
     'put /api/users/profiles'       : 'ProfileController.updateAll',
+    'post /api/users/profiles'       : 'ProfileController.create',
     'put /api/users/profiles/:id'   : 'ProfileController.update',
     'post /api/users/backgroudimages': 'AccountController.uploadBackgroundImage',
     
@@ -118,7 +119,8 @@ function getRoutes(label){
                     get: '/api/users/profiles/:id',
                     getAll: '/api/users/profiles',
                     updateAll: '/api/users/profiles',
-                    update: '/api/users/profiles/:id'
+                    update: '/api/users/profiles/:id',
+                    create: '/api/users/profiles'
                 },
                 widgets: {
                     getByProfile: '/api/users/profiles/:id/widgets', // get

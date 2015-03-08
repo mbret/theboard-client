@@ -1,0 +1,22 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-9">
+        <h2>Profile</h2>
+        <ui-breadcrumbs ng-if="test.prop" displayname-property="ncyBreadcrumb.label"
+                        [template-url=""]
+                        abstract-proxy-property="ncyBreadcrumb.breadcrumbProxy">
+        </ui-breadcrumbs>
+    </div>
+
+    
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    
+    
+    <!-- Main view  -->
+    <div ui-view></div>
+
+    <!-- Footer -->
+    <div ng-include="'app/views/common/footer.html'"></div>
+    
+</div>

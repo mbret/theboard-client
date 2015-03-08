@@ -34,7 +34,7 @@
                 $('.sidebar-backdrop').removeClass('active');
             },
             isOpen: isOpen
-        }
+        };
     
         return service;
         

@@ -1,6 +1,7 @@
 (function(){
     var Promise = require('bluebird');
-
+    var validator = require('validator');
+    
     module.exports = {
 
         /**
@@ -41,42 +42,63 @@
          */
         update: function(req, res){
             var user = req.user;
-
-            var wantToActivate = req.param('activate', null);
-
+            var id = req.param('id', null);
+            
+            if(!validator.isNumeric(id)){
+                return res.badRequest();
+            }
+            
             // Check profile
-            Profile.findOne(req.param('id'))
+            Profile.findOne(id)
                 .then(function(profile){
                     if(!profile){
-                        return profile;
-                    }
-
-                    var toUpdate = {
-                        name: req.param('name', profile.name),
-                        description: req.param('description', profile.description)
-                    };
-
-                    return Profile.update(profile.id, toUpdate);
-                })
-                .then(function(profile){
-                    if(! profile || profile.length < 1){
                         return res.notFound();
                     }
 
-                    // save profile for this session
-                    if( wantToActivate === true ){
-                        req.session.profile = profile[0].id;
-                    }
+                    profile.name = req.param('name', profile.name);
+                    profile.description = req.param('description', profile.description);
+                    profile.default = req.param('default', profile.default);
 
-                    return Profile.findOne(profile[0].id).populate('widgets').then(function(profile){
-                        return res.ok(profile);
-                    });
+                    return profile.save();
                 })
-                .catch(res.serverError);
+                .then(function(profile){
+                    return res.ok(profile);
+                })
+                .catch(function(error){
+                    return res.serverError(error);
+                });
         },
 
         updateAll: function(req, res){
             return res.ok();
+        },
+
+        /**
+         *
+         * @param req
+         * @param res
+         */
+        create: function(req, res){
+            var data = {
+                name: req.param('name'),
+                description: req.param('description'),
+                default: req.param('default', false),
+                user: req.user.id
+            };
+            
+            Profile.create(data)
+                .then(function(profile){
+                    return res.ok(profile);
+                })
+                .catch(function(err){
+                    // Validation error
+                    if(err.ValidationError){
+                        return res.badRequest(err.ValidationError);
+                    }
+                    else{
+                        return res.serverError(err);
+                    }
+                });
         }
 
     };

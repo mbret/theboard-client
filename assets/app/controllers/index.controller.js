@@ -39,19 +39,19 @@
             images: urls
         };
         backstretch.resume();
-
+        
         // We toggle backstretch state when toggling sidebar to reduce (graphical frame drop)
         $rootScope.$on('sidebar.open', function(){
-            if($state.current.name === 'board') backstretch.pause();
+            if($state.includes('board')) backstretch.pause();
         });
         $rootScope.$on('sidebar.opened', function(){
-            if($state.current.name === 'board') backstretch.resume();
+            if($state.includes('board')) backstretch.resume();
         });
         $rootScope.$on('sidebar.close', function(){
-            if($state.current.name === 'board') backstretch.pause();
+            if($state.includes('board')) backstretch.pause();
         });
         $rootScope.$on('sidebar.closed', function(){
-            if($state.current.name === 'board') backstretch.resume();
+            if($state.includes('board')) backstretch.resume();
         });
 
         // Function for menu button
@@ -87,7 +87,7 @@
             alert("We are sorry but your browser is too old and unsafe. Your widgets will not be loaded in order to protect you.");
         }
         else{
-            widgetService.getAll().then(function(widgetsFromServer){
+            widgetService.getAll(user.getActiveProfile()).then(function(widgetsFromServer){
 
                 widgets = widgetsFromServer;
                 $scope.widgets = widgets;

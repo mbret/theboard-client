@@ -17,9 +17,7 @@
 </head>
 
 
-<body ng-controller="MainController" class="{{$state.current.name}}" >
-
-    <!--<backstretch backstretch-images="{{backstretch.images}}" backstretch-duration="{{backstretch.duration}}" backstretch-fade="1" ></backstretch>-->
+<body ng-controller="MainController" class="{{$state.current.data.target}}" >
 
     <!-- This preloader is used with pace.js to hide the content of page while rendering is not done -->
     <div class="preloader">
@@ -33,17 +31,11 @@
         <div ng-include="'app/views/common/sidebar.html'"></div>
 
         <!-- Page wraper -->
-        <!-- ng-class with current state name give you the ability to extended customization your view -->
-        <div id="page-wrapper" class="gray-bg {{$state.current.name}}">
-
-            <!-- Page wrapper -->
-            <!--<div ng-include="'views/common/topnavbar.html'"></div>-->
-
+        <!-- ng-class with current state name give the ability to extended customization about the current view -->
+        <div id="page-wrapper" class="gray-bg {{$state.current.data.target}}">
+            
             <!-- Main view  -->
             <div ui-view></div>
-
-            <!-- Footer -->
-            <div ng-include="'app/views/common/footer.html'"></div>
 
         </div>
         <!-- End page wrapper-->
@@ -77,9 +69,11 @@
     <script src="/js/dependencies/angular/angular-aria.js"></script>
     <script src="/js/dependencies/angular/angular-route.js"></script>
     <script src="/js/dependencies/angular/angular-ui-router.js"></script>
+    <script src="/js/dependencies/angular-plugins/angular-breadcrumb.min.js"></script>
     <script src="/js/dependencies/angular-plugins/angular-gridster.js"></script>
     <script src="/js/dependencies/angular-plugins/angular-hammer.js"></script>
     <script src="/js/dependencies/angular-plugins/angular-jwt/angular-jwt.min.js"></script>
+    <script src="/js/dependencies/angular-plugins/angular-local-storage.min.js"></script>
     <script src="/js/dependencies/angular-plugins/bootstrap/ui-bootstrap-tpls-0.12.0.min.js"></script>
     <script src="/app/app.config.module.js"></script>
     <script src="/app/app.module.js"></script>
@@ -98,6 +92,7 @@
     <script src="/app/blocks/exception/exception-handler.provider.js"></script>
     <script src="/app/blocks/logger/logger.js"></script>
     <script src="/app/blocks/page-title/page-title.directive.js"></script>
+    <script src="/app/blocks/uiBreadcrumbs/uiBreadcrumbs.js"></script>
     <script src="/app/controllers/account.controller.js"></script>
     <script src="/app/controllers/index.controller.js"></script>
     <script src="/app/controllers/main.controller.js"></script>
@@ -118,6 +113,7 @@
     <script src="/app/providers/services.js"></script>
     <script src="/app/providers/sidebar.service.js"></script>
     <script src="/app/providers/user.provider.js"></script>
+    <script src="/app/providers/widget-profile.service.js"></script>
     <script src="/app/providers/widget.factory.js"></script>
     <!--SCRIPTS APP END-->
     

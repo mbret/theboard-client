@@ -27,7 +27,7 @@
                     // Default title - load on Dashboard 1
                     var title = APP_CONFIG.pageTitle + ' | Home';
                     // Create your own title pattern
-                    if (toState.data && toState.pageTitle) title = APP_CONFIG.pageTitle + ' | ' + toState.data.pageTitle;
+                    if (toState.pageTitle && toState.pageTitle) title = APP_CONFIG.pageTitle + ' | ' + toState.pageTitle;
                     $timeout(function() {
                         element.text(title);
                     });

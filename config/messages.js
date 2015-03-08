@@ -63,7 +63,8 @@
                 nochange: 'No change',
                 profile:{
                     activated: 'New profile activated!',
-                    updated: 'Profile updated'
+                    updated: 'Profile updated',
+                    created: 'Profile created'
                 },
                 widgets: {
                     updated: 'Widgets updated!'

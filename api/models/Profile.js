@@ -52,13 +52,15 @@ var Profile = {
         async.series([
             function checkUniqueDefault(cb){
                 if( values.user && values.default && values.default === true ){
-                    sails.models.profile.findOne().where({ user: values.user, default: true }).then(function(profile){
-                        var error;
-                        if(profile && profile.id !== values.id){
-                            error = new Error('Only one profile can be set as default at the same time for one user');
-                        }
-                        return cb(error);
-                    }).catch(cb);
+                    sails.models.profile.findOne().where({ user: values.user, default: true })
+                        .then(function(profile){
+                            console.log(profile);
+                            if(profile && profile.id !== values.id){
+                                profile.default = false;
+                                return profile.save(cb);
+                            }
+                            return cb();
+                        }).catch(cb);
                 }
                 else{
                     return cb();
@@ -80,15 +82,17 @@ var Profile = {
     beforeUpdate: function(values, cb){
 
         async.series([
-            function checkUniqueDefault(){
+            function checkUniqueDefault(cb){
                 if( values.user && values.default && values.default === true ){
-                    sails.models.profile.findOne().where({ user: values.user, default: true }).then(function(profile){
-                        var error;
-                        if(profile && profile.id !== values.id){
-                            error = new Error('Only one profile can be set as default at the same time for one user');
-                        }
-                        return cb(error);
-                    }).catch(cb);
+                    console.log({ user: values.user, default: true });
+                    sails.models.profile.findOne().where({ user: values.user, default: true })
+                        .then(function(profile){
+                            if(profile && profile.id !== values.id){
+                                profile.default = false;
+                                return profile.save(cb);
+                            }
+                            return cb();
+                        }).catch(cb);
                 }
                 else{
                     return cb();

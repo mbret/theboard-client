@@ -7,7 +7,8 @@
     angular
         .module('app.services')
         .provider('user', userProvider)
-
+        .factory('userService', userService);
+    
     function userProvider(){
         
         var userData;
@@ -26,18 +27,18 @@
             userData = data;
         }
 
-        userFactory.$inject = ['_', '$injector', 'dataservice'];
+        userFactory.$inject = ['_', '$injector', 'dataservice', 'localStorageService'];
         /**
          * Build a user object that come will useful method.
          * This object represent logged user so there is only one.
          * SINGLETON
          */
-        function userFactory(_, $injector, dataservice) {
+        function userFactory(_, $injector, dataservice, localStorageService) {
 
             var User = function( data ){
 
                 var self = this;
-                
+                    
                 /*
                  * Attributes
                  */
@@ -56,6 +57,8 @@
                 if(data.backgroundImages && Array.isArray(data.backgroundImages)){
                     self.backgroundImages = angular.copy(data.backgroundImages);
                 }
+                
+                mergeLocal();
                 
                 /*
                  * Constants
@@ -80,24 +83,14 @@
                 /**
                  * Use this function to set new active profile as local.
                  */
-                User.prototype.setActiveProfile = function( id ){
-                    self.profile = id;
+                User.prototype.setActiveProfile = function( profile ){
+                    self.profile = profile.id;
                 };
 
-                /**
-                 *  
-                 * @returns {*}
-                 */
-                User.prototype.save = function(){
-                    var data = {
-                        firstName: self.firstName,
-                        lastName: self.lastName,
-                        settings: self.settings,
-                        backgroundImages: self.backgroundImages
-                    };
-                    return dataservice.updateAccount(data);
-                }
-
+                User.prototype.getActiveProfile = function(){
+                    return self.profile;
+                };
+                
                 /**
                  *
                  * @param id
@@ -105,7 +98,7 @@
                  */
                 User.prototype.setSetting = function( id, value ){
                     self.settings[id] = value;
-                }
+                };
 
                 /**
                  * @todo depend of the type we should return specific value here
@@ -114,6 +107,31 @@
                  */
                 User.prototype.getSetting = function( id ){
                     return self.settings[id];
+                };
+
+                User.prototype.save = function(){
+                    var data = {
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        settings: user.settings,
+                        backgroundImages: user.backgroundImages
+                    };
+                    return dataservice.updateAccount(data).then(function(user){
+                        saveLocal();
+                        return user;
+                    });
+                };
+
+                function saveLocal(){
+                    var data = {
+                        profile: self.profile
+                    };
+                    localStorageService.set('user.' + self.id, data);
+                }
+
+                function mergeLocal(){
+                    var localUser = localStorageService.get('user.' + self.id);
+                    self.profile = localUser.profile;
                 }
             };
 
@@ -121,4 +139,14 @@
         }
     }
 
+    userService.$inject = ['localStorageService', 'dataservice'];
+    function userService(localStorageService, dataservice){
+        
+        return {
+            
+            
+            
+        }
+        
+    }
 })();

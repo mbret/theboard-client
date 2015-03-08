@@ -13,6 +13,16 @@
      */
     function MainController($rootScope, $scope, $http, $state, user, $log, $animate, widgetService, geolocationService, backstretch, APP_CONFIG){
 
+
+        $scope.test = [{displayName: 'board', route:'board.index'}, {displayName: 'board', route:'board.test'}];
+
+        $scope.$on('$stateChangeSuccess', function() {
+            $scope.test.prop = null;
+            $scope.test.prop = true;
+
+            $scope.test[1] = {displayName: $state.$current.name, route:$state.$current.name} ;
+        });
+        
         /**
          * Lib used: https://github.com/TalAter/annyang
          * Google test speech recognition: http://www.google.com/intl/fr/chrome/demos/speech.html

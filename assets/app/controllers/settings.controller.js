@@ -29,8 +29,8 @@
      * form validation: http://www.ng-newsletter.com/posts/validations.html
      *
      */
-    SettingsGeneralController.$inject = ['$scope', '$http', 'user','modalService', 'APP_CONFIG', 'notifService'];
-    function SettingsGeneralController($scope, $http, user, modalService, APP_CONFIG, notifService){
+    SettingsGeneralController.$inject = ['$scope', '$http', 'user','modalService', 'APP_CONFIG', 'notifService', 'userService'];
+    function SettingsGeneralController($scope, $http, user, modalService, APP_CONFIG, notifService, userService){
 
         
         
@@ -68,8 +68,8 @@
      *
      *
      */
-    SettingsAccountController.$inject = ['$scope', '$http', 'user','modalService', 'APP_CONFIG', 'notifService'];
-    function SettingsAccountController($scope, $http, user, modalService, APP_CONFIG, notifService){
+    SettingsAccountController.$inject = ['$scope', '$http', 'user','modalService', 'APP_CONFIG', 'notifService', 'userService'];
+    function SettingsAccountController($scope, $http, user, modalService, APP_CONFIG, notifService, userService){
         
         var self = this;
         self.user = {
@@ -102,8 +102,8 @@
      *
      *
      */
-    SettingsBoardController.$inject = ['$scope', '$http', 'user','notifService', 'APP_CONFIG', '_', 'modalService'];
-    function SettingsBoardController($scope, $http, user, notifService, APP_CONFIG, _, modalService){
+    SettingsBoardController.$inject = ['$scope', '$http', 'user','notifService', 'APP_CONFIG', '_', 'modalService', 'userService'];
+    function SettingsBoardController($scope, $http, user, notifService, APP_CONFIG, _, modalService, userService){
         
         var self = this;
         

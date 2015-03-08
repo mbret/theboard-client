@@ -15,18 +15,11 @@
             var data = [];
 
             if( profileId === null ){
-                // current profile for session
-                if( req.session.profile ){
-                    query.id = req.session.profile;
-                }
-                else{
-                    query.default = true;
-                }
+                query.default = true;
             }
             else{
                 query.id = profileId;
             }
-            console.log(query);
 
             // get activated profile
             Profile.findOne(query).populate('widgets').then(function(profile){

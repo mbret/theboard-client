@@ -9,36 +9,44 @@
     /**
      *
      */
-    WidgetProfilesController.$inject = ['APP_CONFIG', '$modal', 'profilesService', 'notifService', 'user', '$state'];
-    function WidgetProfilesController(APP_CONFIG, $modal, profilesService, notifService, user, $state){
+    WidgetProfilesController.$inject = ['APP_CONFIG', '$modal', 'widgetProfilesService', 'notifService', 'user', '$state', 'userService'];
+    function WidgetProfilesController(APP_CONFIG, $modal, widgetProfilesService, notifService, user, $state, userService){
 
         var that = this;
         var vm = this; // view model
         vm.profiles = [];
-
-        profilesService.getAll().then(function(profiles){
-            angular.forEach(profiles, function(profile){
-                vm.profiles.push({
-                    id: profile.id,
-                    name: profile.name,
-                    createdAt: profile.createdAt,
-                    widgets: profile.widgets,
-                    description: profile.description,
-                    selected: (user.profile) ? ((user.profile === profile.id) ? profile.id : false) : profile.default
-                });
-            });
+        
+        widgetProfilesService.getAll().then(function(profiles){
+            vm.profiles = profiles;
         });
 
+        this.isActive = function(profile){
+            return user.getActiveProfile() === profile.id ? true : false;
+        };
+        
         this.detail = function(profile){
-            $state.go('widget-profiles-detail', {id:profile.id});
-        }
+            $state.go('static.widgetProfilesDetail', {id:profile.id});
+        };
         
         /**
          * Create a new profile.
          */
         this.newProfile = function(){
-            notifService.success("Profile created");
-        }
+            $modal.open({
+                templateUrl: APP_CONFIG.routes.templates + '/modals/widget-profile.new.html',
+                controller: ModalNewWidgetCtl,
+                controllerAs: 'modalNewWidgetCtl',
+                resolve: {
+                    profiles: function(){
+                        return vm.profiles;
+                    }
+                }
+            })
+            .result
+            .then(function(profile){
+                    vm.profiles.push(profile);
+            });
+        };
 
         /**
          * Activate a profile
@@ -47,23 +55,32 @@
         this.activate = function(event, profile){
             // We stop propagation because there are ng-click on parent elt
             event.stopPropagation();
-            
-            profilesService.update({
-                id: profile.id,
-                activate: true
-            }).then(function(profileUpdated){
-               
-                // Update view
-                angular.forEach(vm.profiles, function(profile){
-                    if( profile.selected ) profile.selected = false;
-                });
-                profile.selected = true;
-                
-                user.setActiveProfile(profileUpdated.id);
 
+            // save for user and for session
+            user.setActiveProfile(profile);
+            user.save().then(function(user){
                 notifService.success(APP_CONFIG.messages.profile.activated);
             });
-        }
+        };
+        
+        this.setAsDefault = function(event, profile){
+            // We stop propagation because there are ng-click on parent elt
+            event.stopPropagation();
+            widgetProfilesService.update({
+                id: profile.id,
+                default: true
+            }).then(function(profileUpdated){
+
+                // Update view
+                angular.forEach(vm.profiles, function(profile){
+                    if( profile.default ) profile.default = false;
+                });
+                profile.default = true;
+                
+                notifService.success(APP_CONFIG.messages.profile.updated);
+            });
+            
+        };
 
         /**
          * Display the settings modal
@@ -91,8 +108,8 @@
     /**
      *  https://github.com/angular-ui/ui-router/wiki/Nested-States-%26-Nested-Views
      */
-    WidgetProfilesDetailController.$inject = ['$stateParams', 'profilesService', '$state'];
-    function WidgetProfilesDetailController($stateParams, profilesService, $state){
+    WidgetProfilesDetailController.$inject = ['$stateParams', 'widgetProfilesService', '$state'];
+    function WidgetProfilesDetailController($stateParams, widgetProfilesService, $state){
         var id = $stateParams.id;
 
         var self = this;
@@ -100,14 +117,54 @@
         
         // Get profile from server
         // In case of error redirect to profiles (user could put shit in url)
-        profilesService.get(id)
+        widgetProfilesService.get(id)
             .then(function(profile){
                 self.profile = profile;
             })
             .catch(function(err){
-                $state.go('widget-profiles');
+                $state.go('static.widgetProfiles');
             })
     }
+
+    /**
+     *
+     * @constructor
+     */
+    ModalNewWidgetCtl.$inject = ['$scope', '$modalInstance' , 'profiles', 'notifService', 'APP_CONFIG', 'widgetProfilesService'];
+    function ModalNewWidgetCtl ($scope, $modalInstance, profiles, notifService, APP_CONFIG, widgetProfilesService) {
+
+        var self = this;
+        
+        $scope.ok = function (profile) {
+            $modalInstance.close(profile);
+        };
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+
+        /**
+         * Form.
+         * This form take into account click on button ok and enter key
+         * @todo add test for name already exist (use profiles resolved)
+         * @param isValid
+         */
+        $scope.submitForm = function(form) {
+
+            if (form.$valid) {
+                widgetProfilesService.create({
+                    name: $scope.profile.name,
+                    description: $scope.profile.description
+                }).then(function(profile){
+                    notifService.success( APP_CONFIG.messages.profile.created );
+                    $scope.ok(profile);
+                });
+            }
+            else{
+                form.name.$setDirty();
+                notifService.error( APP_CONFIG.messages.form.invalid );
+            }
+        };
+    };
     
     /**
      * Modal that handle the profile settings
@@ -115,8 +172,8 @@
      * The profile is directly updated if success. No need to treat the modal result.
      * @constructor
      */
-    ModalInstanceCtrl.$inject = ['$scope', '$modalInstance' ,'profile', 'notifService', 'APP_CONFIG', 'profilesService'];
-    function ModalInstanceCtrl ($scope, $modalInstance, profile, notifService, APP_CONFIG, profilesService) {
+    ModalInstanceCtrl.$inject = ['$scope', '$modalInstance' ,'profile', 'notifService', 'APP_CONFIG', 'widgetProfilesService'];
+    function ModalInstanceCtrl ($scope, $modalInstance, profile, notifService, APP_CONFIG, widgetProfilesService) {
         
         var that = this;
         that.profile = {
@@ -131,8 +188,6 @@
             $modalInstance.dismiss('cancel');
         };
 
-        
-        
         /**
          * Form.
          * This form take into account click on button ok and enter key
@@ -146,7 +201,7 @@
                     return noChanges();
                 }
                 else{
-                    profilesService.update({
+                    widgetProfilesService.update({
                         id: profile.id,
                         name: that.profile.name,
                         description: that.profile.description

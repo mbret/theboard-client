@@ -42,8 +42,8 @@
     }
 
     // Config that must be execute at module run
-    appRun.$inject = ['$rootScope', '$state', '$http', '$log', 'notifService', '$timeout', 'APP_CONFIG', 'user'];
-    function appRun($rootScope, $state, $http, $log, notifService, $timeout, APP_CONFIG, user){
+    appRun.$inject = ['$rootScope', '$state', '$http', '$log', 'notifService', 'userService', 'APP_CONFIG', 'user'];
+    function appRun($rootScope, $state, $http, $log, notifService, userService, APP_CONFIG, user){
 
         window.user = user;
 

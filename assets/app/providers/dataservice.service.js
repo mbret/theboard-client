@@ -11,28 +11,52 @@
         .module('app')
         .factory('dataservice', dataservice);
 
-    dataservice.$inject = ['$http', 'APP_CONFIG', 'logger', '$exceptionHandler'];
+    dataservice.$inject = ['$http', 'APP_CONFIG', 'logger', '$exceptionHandler', '$q'];
 
-    function dataservice($http, APP_CONFIG, logger, $exceptionHandler) {
+    function dataservice($http, APP_CONFIG, logger, $exceptionHandler, $q) {
 
         var that = this;
         var debugName = 'dataservice';
 
+        // used to optimize save() method. The last saved state is always updated
+        // before a save to know if it's useful or not to make a request
+        var _lastSavedState = {
+            user: null
+        };
+        
         return {
             getWidgets: getWidgets,
-            getWidgetsByProfile: getWidgetsByProfile,
             updateWidget: updateWidget,
             getProfiles: getProfiles,
             getProfile: getProfile,
+            createProfile: createProfile,
             updateProfile: updateProfile,
             updateAccount: updateAccount
         };
 
+        // check for each data property if the sate's same property is different
+        // if one is different then return true
+        // @todo
+        function noChanges(key, data){
+
+        }
+        
+        // save all the data to the current state
+        // do not overwrite the state but add or rewrite data property
+        // @todo
+        function saveState(key, data){
+            
+        }
+        
         function updateAccount( data ){
+            if(noChanges('user', data)){
+
+            }
             var route = APP_CONFIG.routes.api.account.update;
             return $http.put(route, data)
                 .then(function(data){
                     logger.debug(debugName + ' updateAccount success!', data.data);
+                    saveState('user', data);
                     return data.data;
                 })
                 .catch(function(error){
@@ -43,8 +67,13 @@
         }
         
         function updateProfile( profile ){
+            var data = {
+                name: profile.name,
+                description: profile.description,
+                default: profile.default
+            };
             var route = APP_CONFIG.routes.api.profiles.update.replace(':id', profile.id);
-            return $http.put(route, profile)
+            return $http.put(route, data)
                 .then(function(data){
                     var profile = data.data;
                     logger.debug(debugName + ' updateProfile success!', data.data);
@@ -83,22 +112,30 @@
                 });
         }
 
-        function getWidgets(){
-            var route = APP_CONFIG.routes.api.widgets.getAll;
-            return $http.get(route)
+        function createProfile(profile){
+            var route = APP_CONFIG.routes.api.profiles.create;
+            var data = {
+                name: profile.name,
+                description: profile.description
+            };
+            return $http.post(route, data)
                 .then(function(data) {
-                    logger.debug(debugName + 'Widgets loaded successfully!', data.data);
-                    var widgets = data.data;
-                    return widgets;
+                    logger.debug(debugName + ' createProfile success!', data.data);
+                    return data.data;
                 })
                 .catch(function(error) {
-                    logger.error(debugName + 'Failure loading widgets');
-                    throw new Error(APP_CONFIG.messages.errors.widgets.unableToLoad);
+                    logger.error(debugName + ' createProfile failure!', error);
+                    throw new Error(APP_CONFIG.messages.errors.unableToLoad);
                 });
         }
 
-        function getWidgetsByProfile( profileID ){
-            var route = APP_CONFIG.routes.api.widgets.getByProfile.replace(':id', profileID);
+        function getWidgets( profileID ){
+            if(profileID){
+                var route = APP_CONFIG.routes.api.widgets.getByProfile.replace(':id', profileID);
+            }
+            else{
+                var route = APP_CONFIG.routes.api.widgets.getAll;
+            }
             return $http.get(route)
                 .then(function(data) {
                     logger.debug(debugName + 'Widgets loaded successfully!', data.data);

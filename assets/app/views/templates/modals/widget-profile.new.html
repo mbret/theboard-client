@@ -1,11 +1,11 @@
 <div class="inmodal">
     <div class="modal-header">
-        <h4 class="modal-title">Profile configuration</h4>
-        <small class="font-bold">You can change here settings relative to your profile.</small>
+        <h4 class="modal-title">New Profile</h4>
+        <small class="font-bold">You are going to create a new profile.</small>
     </div>
     <div class="modal-body">
         
-        <form name="profileForm" ng-submit="submitForm(profileForm.$valid)" novalidate>
+        <form name="profileForm" ng-submit="submitForm(profileForm)" novalidate>
             <div class="form-group">
                 <label>Profile name</label>
                 <input
@@ -13,7 +13,7 @@
                     name="name"
                     placeholder="Enter a profile name"
                     class="form-control"
-                    ng-model="modalInstanceCtrl.profile.name"
+                    ng-model="profile.name"
                     ng-required="true"
                     required>
                 </input>
@@ -29,7 +29,7 @@
                         placeholder="Enter a description to better see what your profile is set for"
                         class="form-control"
                         name="description"
-                        ng-model="modalInstanceCtrl.profile.description"
+                        ng-model="profile.description"
                         ng-required="false"
                         ng-maxlength="150"></textarea>
                 <div class="error-container ng-hide" ng-show="profileForm.description.$dirty && profileForm.description.$invalid">
@@ -41,7 +41,7 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-white" ng-click="cancel()">Close</button>
-        <button type="button" class="btn btn-primary" ng-click="submitForm(profileForm.$valid)">Save changes</button>
+        <button type="button" class="btn btn-primary" ng-click="submitForm(profileForm)">Save changes</button>
     </div>
 </div>
 

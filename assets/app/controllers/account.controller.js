@@ -26,6 +26,6 @@
             // @todo use filter here
             smartName: user.firstName ? ((user.lastName) ? user.firstName + ' ' + user.lastName : user.firstName) : user.email
         };
-
+        
     };
 })();
