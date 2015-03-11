@@ -1,13 +1,12 @@
 var request = require('supertest');
-var utils   = require('../../../testUtils.js');
+var conf = require('../../config');
+var utils = require(conf.path.tools + '/logger.js');
 var app;
 var agent;
 var profiles;
 
 describe('ProfileController', function() {
 
-    
-    
     before(function(next) {
         app = sails.hooks.http.app;
         // this agent is logged
@@ -34,7 +33,7 @@ describe('ProfileController', function() {
      * Unit test for getProfile function.
      * Function that return a specified profile passed in param.
      */
-    describe('forOne', function() {
+    describe('findOne', function() {
         var route = "/api/users/profiles";
         it('should redirect to /login (not logged)', function (done){
             request(app)
@@ -47,7 +46,7 @@ describe('ProfileController', function() {
                     agent.get(route + "/9999").expect(404, cb);
                 },
                 function(cb){
-                    agent.get(route + "/a").expect(404, cb);
+                    agent.get(route + "/a").expect(400, cb);
                 }
             ], done);
         });
@@ -64,5 +63,5 @@ describe('ProfileController', function() {
                 });
         });
     });
-    
+
 });

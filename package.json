@@ -13,6 +13,7 @@
     "grunt-contrib-concat": "^0.3.0",
     "grunt-contrib-copy": "^0.5.0",
     "grunt-contrib-cssmin": "^0.9.0",
+    "grunt-contrib-jshint": "^0.11.0",
     "grunt-contrib-jst": "~0.6.0",
     "grunt-contrib-less": "^0.11.4",
     "grunt-contrib-uglify": "^0.4.1",
@@ -34,6 +35,7 @@
     "request": "^2.53.0",
     "sails": "^0.11.0",
     "sails-disk": "~0.10.0",
+    "sails-hook-dev": "^1.0.0",
     "sails-mysql": "^0.10.11",
     "supertest": "^0.15.0",
     "validator": "^3.32.0"

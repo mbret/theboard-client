@@ -1,5 +1,6 @@
 var request = require('supertest');
-var utils   = require('../../../testUtils.js');
+var conf = require('../../config');
+var utils   = require(conf.path.tools + '/logger.js');
 var app;
 var agent;
 

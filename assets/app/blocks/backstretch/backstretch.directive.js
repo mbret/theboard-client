@@ -34,7 +34,18 @@
                 scope.api = backstretch;
                 
                 // Watch for API call (controller, etc)
-                scope.$watch('api.status', watchStatus);
+                scope.$watch('api.status', function watchStatus(){
+                    if(scope.api.status === 'pause'){
+                        pause();
+                    }
+                    if(scope.api.status === 'resume'){
+                        resume();
+                    }
+                    if(scope.api.status === 'destroy'){
+                        destroy();
+                    }
+                    scope.api.status = null;
+                });
 
                 scope.$on('$destroy', function() {
                     destroy();
@@ -59,6 +70,7 @@
                 }
 
                 function pause(){
+                    logger.info('backstretch: pause()');
                     // If backstretch was resuming, prevent it to put in pause (again)
                     // With that if user throw multiple pause / resume, it will no resume multiple time and let a latence to user
                     cancelResume();
@@ -71,6 +83,7 @@
                  * Resume after initial duration (otherwise its directly change the image ugly)
                  */
                 function resume(){
+                    logger.info('backstretch: resume()');
                     var delay = backstretch.delay;
                     backstretch.delay = null;
                     
@@ -96,6 +109,7 @@
                 }
                 
                 function destroy(){
+                    logger.info('backstretch: destroy()');
                     cancelResume();
                     if( instance !== null && instance !== undefined ){
                         backstretchContainer.backstretch("destroy", false /*preserveBackground*/);
@@ -103,17 +117,7 @@
                     }
                 };
                 
-                function watchStatus(){
-                    if(scope.api.status === 'pause'){
-                        pause();
-                    }
-                    if(scope.api.status === 'resume'){
-                        resume();
-                    }
-                    if(scope.api.status === 'destroy'){
-                        destroy();
-                    }
-                }
+
                 
 
             }

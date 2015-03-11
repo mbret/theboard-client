@@ -1,9 +1,12 @@
 var request = require('supertest');
-var utils   = require('../../../testUtils.js');
+var conf = require('../../config');
+var utils   = require(conf.path.tools + '/logger.js');
 var agent;
 var app;
 
 describe('AuthController', function() {
+
+
 
     before(function(done) {
         app = sails.hooks.http.app;

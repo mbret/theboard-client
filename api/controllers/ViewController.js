@@ -10,7 +10,6 @@
          * Return the app page
          */
         index: function (req, res){
-            console.log(sails.getBaseUrl());
             return res.ok({
                 routes: sails.config.app.routes
             }, 'app/app');
@@ -66,7 +65,7 @@
          * Return the settings of application to be used with ajax call.
          */
         configurationJSON: function(req, res){
-            res.ok( AppHelperService.generateConfiguration() );
+            res.ok( WebAppService.generateConfiguration() );
         },
 
         /**
@@ -80,7 +79,7 @@
             res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
             res.setHeader('Pragma', 'no-cache');
             res.setHeader('Expires', 0);
-            res.send('window.APP_CONFIG = ' + JSON.stringify( AppHelperService.generateConfiguration() ) + ';');
+            res.send('window.APP_CONFIG = ' + JSON.stringify( WebAppService.generateConfiguration() ) + ';');
         },
 
         pipeCOR: function (req, res) {

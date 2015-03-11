@@ -194,7 +194,7 @@ function $RouteProvider() {
     * Normalizes the given path, returning a regular expression
     * and the original path.
     *
-    * Inspired by pathRexp in visionmedia/express/lib/testUtils.js.
+    * Inspired by pathRexp in visionmedia/express/lib/logger.js.
     */
   function pathRegExp(path, opts) {
     var insensitive = opts.caseInsensitiveMatch,

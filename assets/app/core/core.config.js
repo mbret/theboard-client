@@ -8,7 +8,6 @@
         .config(configureUser)
         .run(appRun);
 
-
     // Toaster configuration
     // The configuration come from the server
     configureToastr.$inject = ['toastr', 'APP_CONFIG'];
@@ -31,14 +30,16 @@
         exceptionHandlerProvider.configure(APP_CONFIG.appErrorPrefix);
     }
 
-    configureUser.$inject = ['APP_CONFIG', 'userProvider'];
+    configureUser.$inject = ['APP_CONFIG', 'userProvider', '$provide'];
     /**
      * Configure the user value for all application.
      * The user object come from server and correspond to the logged user.
      * This value is set now but can change anytime during process and is share accross modules.
      */
-    function configureUser(APP_CONFIG, userProvider){
+    function configureUser(APP_CONFIG, userProvider, $provide){
         userProvider.setData(APP_CONFIG.userLogged);
+        //var user = new userService(APP_CONFIG.userLogged);
+        //$provide.value('user', user);
     }
 
     // Config that must be execute at module run

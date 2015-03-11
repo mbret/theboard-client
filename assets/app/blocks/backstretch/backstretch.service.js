@@ -14,7 +14,7 @@
         return {
             status: null,
             delay: null,
-            pause: function() {
+            pause: function(){
                 this.status = 'pause';
             },
             resume: function( delay ) {

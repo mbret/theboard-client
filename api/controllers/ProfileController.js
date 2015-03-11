@@ -22,6 +22,11 @@
 
         find: function(req, res){
             var id = req.param('id', null);
+
+            if(!validator.isNumeric(id)){
+                return res.badRequest();
+            }
+
             Profile.findOne(id).populate('widgets')
                 .then(function(result){
                     if(!result){

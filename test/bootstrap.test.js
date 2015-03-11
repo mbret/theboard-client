@@ -10,7 +10,11 @@ before(function(done) {
         
         connections: {
             test: {
-                adapter: 'sails-disk'
+                adapter: 'sails-mysql',
+                host: 'localhost',
+                user: 'root',
+                password: 'root',
+                database: 'theboard_test'
             }
         },
         
@@ -30,7 +34,7 @@ before(function(done) {
             email: 'user@gmail.com',
             password: 'password'
         }
-        
+
     }, function(err, server){
         console.log(err);
 

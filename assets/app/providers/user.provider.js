@@ -7,7 +7,6 @@
     angular
         .module('app.services')
         .provider('user', userProvider)
-        .factory('User', userService)
         .factory('userService', userService);
     
     function userProvider(){
@@ -28,13 +27,13 @@
             userData = data;
         }
 
-        userFactory.$inject = ['User'];
+        userFactory.$inject = ['userService'];
         /**
          * Build a user object that come will useful method.
          * This object represent logged user so there is only one.
          * SINGLETON
          */
-        function userFactory(User) {
+        function userFactory(userService) {
             return new userService( userData );
         }
     }
@@ -60,6 +59,8 @@
             self.profile = data.profile;
             self.firstName = data.firstName;
             self.lastName = data.lastName;
+            self.job = 'Developer';
+            self.phone = '(+33) 6 06 65 87 55';
 
             if(data.backgroundImages && Array.isArray(data.backgroundImages)){
                 self.backgroundImages = angular.copy(data.backgroundImages);
@@ -138,7 +139,9 @@
 
             function mergeLocal(){
                 var localUser = localStorageService.get('user.' + self.id);
-                self.profile = localUser.profile;
+                if(localUser && localUser.profile){
+                    self.profile = localUser.profile;
+                }
             }
         };
 
@@ -153,4 +156,5 @@
         return User;
         
     }
+
 })();

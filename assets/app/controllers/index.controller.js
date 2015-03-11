@@ -42,16 +42,16 @@
         
         // We toggle backstretch state when toggling sidebar to reduce (graphical frame drop)
         $rootScope.$on('sidebar.open', function(){
-            if($state.includes('board')) backstretch.pause();
+            backstretch.pause();
         });
         $rootScope.$on('sidebar.opened', function(){
-            if($state.includes('board')) backstretch.resume();
+            backstretch.resume();
         });
         $rootScope.$on('sidebar.close', function(){
-            if($state.includes('board')) backstretch.pause();
+            backstretch.pause();
         });
         $rootScope.$on('sidebar.closed', function(){
-            if($state.includes('board')) backstretch.resume();
+            backstretch.resume();
         });
 
         // Function for menu button
