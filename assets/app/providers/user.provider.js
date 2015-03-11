@@ -38,8 +38,8 @@
         }
     }
 
-    userService.$inject = ['localStorageService', 'dataservice'];
-    function userService(localStorageService, dataservice){
+    userService.$inject = ['localStorageService', 'dataservice', 'APP_CONFIG'];
+    function userService(localStorageService, dataservice, APP_CONFIG){
 
         var User = function( data ){
 
@@ -73,11 +73,10 @@
              * constants are here to reduce the use of potentially future changed strings.
              * Use them inside controller etc and change only here when server changed.
              */
-            User.prototype.CONST = {
-                SETTING_WIDGETS_BORDERS : 'widgetsBorders',
-                SETTING_BACKGROUND_IMAGES_INTERVAL : 'backgroundImagesInterval'
-            };
-
+            User.prototype.SETTING_WIDGETS_BORDERS = 'widgetsBorders';
+            User.prototype.SETTING_BACKGROUND_IMAGES_INTERVAL = 'backgroundImagesInterval';
+            User.prototype.SETTING_BACKGROUND_USE_DEFAULT = 'useDefaultBackground';
+            
             User.prototype.addBackgroundImage = function( key ){
                 self.backgroundImages.push(key);
             };
@@ -113,8 +112,17 @@
              * @param id
              * @returns {*}
              */
-            User.prototype.getSetting = function( id ){
-                return self.settings[id];
+            User.prototype.getSetting = function( id, defaultOtherwise ){
+                var setting = self.settings[id];
+                if( typeof setting !== 'undefined' && setting !== null ){
+                    return self.settings[id];
+                }
+                else if (defaultOtherwise){
+                    return APP_CONFIG.user.default.settings[id];
+                }
+                else{
+                    return null;
+                }
             };
 
             User.prototype.save = function(){
@@ -137,10 +145,17 @@
                 localStorageService.set('user.' + self.id, data);
             }
 
+            /**
+             * Merge all local config into user logged.
+             * - Check if local var are still valids. 
+             */
             function mergeLocal(){
                 var localUser = localStorageService.get('user.' + self.id);
                 if(localUser && localUser.profile){
-                    self.profile = localUser.profile;
+                    // reject if this id is not synchronized with server
+                    if(self.profiles.indexOf(localUser.profile) !== -1){
+                        self.profile = localUser.profile;
+                    }
                 }
             }
         };

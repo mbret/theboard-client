@@ -25,7 +25,8 @@ module.exports = {
                   banner: sails.config.urls.images + '/' + sails.config.user.default.banner,
                   backgroundImages: _.map(sails.config.user.default.backgroundImages, function(image){
                     return sails.config.urls.images + '/board-bg-sample/' + image;
-                  })
+                  }),
+                  settings: sails.config.user.default.settings
                 }
             }
         });

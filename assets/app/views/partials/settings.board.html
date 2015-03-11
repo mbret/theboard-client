@@ -1,11 +1,10 @@
 <div class="settings board">
     <div class="row">
-        <div class="col-sm-12">
-
+        
+        <div class="col-sm-6">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>Widgets settings
-                    </h5>
+                    <h5>Widgets</h5>
                 </div>
                 <div class="ibox-content">
                     <form class="form-horizontal" name="widgetsForm" ng-submit="settingsBoardCtl.widgetsFormSubmit()">
@@ -29,11 +28,12 @@
                     </form>
                 </div>
             </div>
+        </div>
 
+        <div class="col-sm-6">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>Profile settings
-                    </h5>
+                    <h5>Profile</h5>
                 </div>
                 <div class="ibox-content">
                     <form class="form-horizontal" name="profileForm" ng-submit="profileFormSubmit()">
@@ -48,54 +48,85 @@
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
-
+    
     <div class="row">
         <div class="col-sm-12">
-
             <div class="ibox float-e-margins">
-
+                <div class="ibox-title">
+                    <h5>Background</h5>
+                </div>
                 <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h2>Background images</h2>
+                            <p>
+                                Here is the list of your personal images for board background.
+                            </p>
 
-                    <h2>Background images</h2>
-                    <p>
-                        Here is the list of your personal images for board background.
-                    </p>
+                            <form action="" class="dropzone" id="my-awesome-dropzone" dropzone dropzone-config="settingsBoardCtl.dropzone.config" ></form>
+                            <div class="m-t"></div>
+                            <div class="lightBoxGallery bg-gallery" id="test" >
+                                <span ng-repeat="image in settingsBoardCtl.settings.backgroundImages">
+                                    <div class="item" ng-mouseenter="hover(image)" ng-mouseleave="hover(image)">
+                                        <button class="btn btn-warning btn-circle" type="button" ng-show="image.showDelete" ng-click="delete(image)" ng-confirm-click="Are you sure?">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                        <a ng-href="{{image.src}}" title="{{image.title}}" blueimp data-gallery="" >
+                                            <img style="max-width:150px;max-height: 150px;margin:3px;" ng-src="{{image.src}}" />
+                                        </a>
+                                    </div>
+                                </span>
 
-                    <div class="lightBoxGallery bg-gallery" id="test" >
-                    <span ng-repeat="image in settingsBoardCtl.backgroundImages">
-                        <div class="item" ng-mouseenter="hover(image)" ng-mouseleave="hover(image)">
-                            <button class="btn btn-warning btn-circle" type="button" ng-show="image.showDelete" ng-click="delete(image)" ng-confirm-click="Are you sure?">
-                                <i class="fa fa-times"></i>
-                            </button>
-                            <a ng-href="{{image.src}}" title="{{image.title}}" blueimp data-gallery="" >
-                                <img style="max-width:150px;max-height: 150px;margin:3px;" ng-src="{{image.src}}" />
-                            </a>
+                                <!-- The Gallery as lightbox dialog, should be a child element of the document body -->
+                                <div id="blueimp-gallery" class="blueimp-gallery">
+                                    <div class="slides"></div>
+                                    <h3 class="title"></h3>
+                                    <a class="prev">‹</a>
+                                    <a class="next">›</a>
+                                    <a class="close">×</a>
+                                    <a class="play-pause"></a>
+                                    <ol class="indicator"></ol>
+                                </div>
+
+                            </div>
                         </div>
-                    </span>
+                        <div class="col-lg-6">
+                            <form class="form-horizontal" name="widgetsForm" ng-submit="settingsBoardCtl.backgroundFormSubmit()">
 
-                        <!-- The Gallery as lightbox dialog, should be a child element of the document body -->
-                        <div id="blueimp-gallery" class="blueimp-gallery">
-                            <div class="slides"></div>
-                            <h3 class="title"></h3>
-                            <a class="prev">‹</a>
-                            <a class="next">›</a>
-                            <a class="close">×</a>
-                            <a class="play-pause"></a>
-                            <ol class="indicator"></ol>
+                                <div class="form-group" >
+                                    <label class="col-sm-5 control-label">Use default background</label>
+                                    <div class="col-sm-3">
+                                        <div class="checkbox">
+                                            <input icheck type="checkbox" ng-model="settingsBoardCtl.settings.backgroundDefault">
+                                        </div>
+                                        <span class="help-block m-b-none">By using this option, your backgrounds images will be deactivated.</span>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Background images interval (seconds)</label>
+                                    <div class="col-sm-5">
+                                        <knob knob-data="settingsBoardCtl.settings.backgroundImageInterval" knob-options="knobOptions" class="m-r-sm" data-fgColor="#ED5565" data-width="70" data-height="70" data-cursor=true data-thickness=.3></knob>
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-4 col-sm-offset-2">
+                                        <button class="btn btn-primary" type="submit" >Save changes</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-
                     </div>
-
-                    <div class="m-t"></div>
-
-                    <form action="" class="dropzone" id="my-awesome-dropzone" dropzone dropzone-config="settingsBoardCtl.dropzone.config" ></form>
-
                 </div>
             </div>
-
         </div>
     </div>
 </div>

@@ -100,20 +100,29 @@
     
     /**
      *
-     *
      */
     SettingsBoardController.$inject = ['$scope', '$http', 'user','notifService', 'APP_CONFIG', '_', 'modalService', 'userService'];
     function SettingsBoardController($scope, $http, user, notifService, APP_CONFIG, _, modalService, userService){
         
         var self = this;
         
-        // Set scope for background image settings
-        self.backgroundImages = _.map(user.backgroundImages, function(image){
-            return {
-                src: image,
-                showDelete: false
-            }
-        });
+        self.settings = {
+            backgroundImageInterval: user.getSetting( user.SETTING_BACKGROUND_IMAGES_INTERVAL, true ) / 1000,
+            backgroundImages: _.map(user.backgroundImages, function(image){
+                return {
+                    src: image,
+                    showDelete: false
+                }
+            }),
+            backgroundDefault: user.getSetting( user.SETTING_BACKGROUND_USE_DEFAULT, true )
+        };
+        
+        console.log(self.settings);
+        
+        $scope.knobOptions = {
+            min: 5,
+            max: 60
+        };
         
         // Set scope for widgets settings
         self.widgets = {
@@ -132,7 +141,7 @@
                     var selfDropzone = this;
                     selfDropzone.on('success', function(file, json){
                         $scope.$apply(function(){
-                            self.backgroundImages.push({src: json});
+                            self.settings.backgroundImages.push({src: json});
                         });
                         user.addBackgroundImage(json);
                     });
@@ -145,7 +154,24 @@
          */
         self.widgetsFormSubmit = function(){
             if($scope.widgetsForm.$valid){
-                user.setSetting( user.CONST.SETTING_WIDGETS_BORDERS, self.widgets.borders);
+                user.setSetting( user.SETTING_WIDGETS_BORDERS, self.widgets.borders);
+                user.save()
+                    .then(function(){
+                        notifService.success( APP_CONFIG.messages.success.form.updated )
+                    }).catch(function(err){
+                        modalService.simpleError(err.message);
+                    });
+            }
+            else{
+                notifService.error( APP_CONFIG.messages.errors.form.invalid );
+            }
+        };
+        
+        self.backgroundFormSubmit = function(){
+            if($scope.widgetsForm.$valid){
+                console.log(self.settings.backgroundImageInterval);
+                user.setSetting( user.SETTING_BACKGROUND_USE_DEFAULT, self.settings.backgroundDefault );
+                user.setSetting( user.SETTING_BACKGROUND_IMAGES_INTERVAL, self.settings.backgroundImageInterval * 1000);
                 user.save()
                     .then(function(){
                         notifService.success( APP_CONFIG.messages.success.form.updated )
@@ -173,7 +199,7 @@
             user.save()
                 .then(function(){
                     notifService.success( APP_CONFIG.messages.success.deleted );
-                    _.remove(self.backgroundImages, function(n) {
+                    _.remove(self.settings.backgroundImages, function(n) {
                         return image === n;
                     });
                 })

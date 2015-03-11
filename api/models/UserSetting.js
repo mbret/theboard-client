@@ -51,7 +51,9 @@
             //}
             // This setting doesnt exist
             if(_.isUndefined(sails.config.user.settings[name]) ){
-                throw new Error('The setting with key ' + name + ' is not a valid setting and cannot be build!');
+                var error = new Error('The setting with key ' + name + ' is not a valid setting and cannot be build!');
+                error.code = 'INVALID_USER_SETTING';
+                throw error
             }
             // build setting with help of config
             var type = sails.config.user.settings[name].type;

@@ -29,10 +29,17 @@
             
             // Update settings
             // If one setting doesn't exist it will be added to the list automatically by user
-            // If settings doesn't exist and it's not a possible setting nothing happen
+            // If settings doesn't exist and it's not a possible setting nothing happen (we catch it)
             if(!_.isNull(settings)){
                 _.forEach(settings, function(value, key){
-                    user.setSettingValueOrCreate(key, value);
+                    try{
+                        user.setSettingValueOrCreate(key, value);
+                    }
+                    catch(err){
+                        if(err.code !== 'INVALID_USER_SETTING'){
+                            res.serverError(err);
+                        }
+                    }
                 });
             }
 

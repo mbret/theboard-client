@@ -20,7 +20,7 @@
         // These widgets will be placed inside iframe and get from server
         $scope.widgets = null;
         $scope.widgetsLocked = false;
-        $scope.widgetsBorders = user.getSetting( user.CONST.SETTING_WIDGETS_BORDERS );
+        $scope.widgetsBorders = user.getSetting( user.SETTING_WIDGETS_BORDERS, true );
         var widgets;
 
         // This var save the previous widget state.
@@ -35,7 +35,7 @@
             urls.push(image);
         });
         $scope.backstretch = {
-            duration: user.getSetting(user.CONST.SETTING_BACKGROUND_IMAGES_INTERVAL),
+            duration: user.getSetting(user.SETTING_BACKGROUND_IMAGES_INTERVAL, true),
             images: urls
         };
         backstretch.resume();
