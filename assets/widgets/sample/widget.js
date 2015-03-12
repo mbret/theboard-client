@@ -1,8 +1,6 @@
 (function(){
     'use strict';
     
-    console.log(parent);
-    
     var instance;
     var Widget = function( conf ){
 

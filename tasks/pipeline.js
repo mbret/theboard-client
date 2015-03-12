@@ -8,8 +8,6 @@
  * for matching multiple files.)
  */
 
-
-
 // CSS files to inject in order
 //
 // (if you're using LESS with the built-in default config, you'll want

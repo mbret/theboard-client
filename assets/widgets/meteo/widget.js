@@ -1,48 +1,29 @@
-window.widgetConfiguration = {
-
-    widget: {
-
-        configuration: {
-            identity: 'Meteo',
-
-            // Require information from user without action from user
-            permissions: {
-                location: 'Nancy, France'
-            },
-
-            // Options are information that can be changed by user
-            // As they are used by application you can only specify here the values
-            options: {
-                option1: "Nancy"
-            }
-        }
-    },
-
-    log: 'debug'
-};
-
 (function(){
 
     'use strict';
 
-    var Widget = function( conf ){
+    var instance;
+    function Widget( conf ){
 
         var that = this;
+        var self = this;
         var process;
-        var configuration = _.assign({
+        this.identity = conf.identity;
+        // Merge global config with widget scope config
+        this.configuration = _.assign({
             process: {
-                interval: 5000
+                interval: 500000
             }
         }, conf);
 
-        process = new Process( _fetchData, configuration.process.interval );
+        process = new Process( _fetchData, that.configuration.process.interval );
 
         /**
          * Start the widget functionaries
          */
         this.start = function(){
-            WidgetUtils.log.debug(this.identity + ' is running');
-            this.GUI.start();
+            console.log(this.identity + ' is running');
+            this.GUI.render();
             process.start();
         };
 
@@ -50,7 +31,7 @@ window.widgetConfiguration = {
          * Stop the widget functionaries
          */
         this.stop = function(){
-            WidgetUtils.log.debug(this.identity + ' is stopped');
+            console.log(this.identity + ' is stopped');
             this.GUI.displayStopped();
             process.stop();
         };
@@ -59,7 +40,7 @@ window.widgetConfiguration = {
          *
          */
         this.refresh = function(){
-            WidgetUtils.log.debug(this.identity + ' is refreshing');
+            console.log(this.identity + ' is refreshing');
             process.reset();
         };
 
@@ -67,11 +48,11 @@ window.widgetConfiguration = {
         // This method get the needed data (from API for example)
         // Then refresh the display
         function _fetchData(){
-            that.GUI.displayRefreshing();
+            that.GUI.renderRefreshing();
             // do some stuff (get info from google API ?)
             // ...
             setTimeout( function(){
-                that.GUI.displayContent();
+                that.GUI.render();
             }, 1000);
         };
 
@@ -105,18 +86,17 @@ window.widgetConfiguration = {
 
         };
 
-        /**
-         * This object control the GUI
-         * @type {{init: Function, displayContent: Function, displayError: Function, displayRefreshing: Function, displayStopped: Function}}
-         */
         this.GUI = {
 
-            start: function(){
-                //$('.widget-header').html('<h1>'+ configuration.identity + '</h1>');
-                //$('.widget-content').html(
-                //    '<p>Widget is loading</p>'
-                //);
+            render: function(){
                 var skycons = new Skycons({"color": "white"});
+
+                var template = $('#tpl-loaded').html();
+                $('#tpl-target').html(_.template(template)({
+                    updated: new Date().toISOString(),
+                    option1: self.configuration.options.option1
+                }));
+
                 skycons.set("icon-current-weather", Skycons.CLEAR_DAY);
                 skycons.set("icon-weather-1", Skycons.CLEAR_DAY);
                 skycons.set("icon-weather-2", Skycons.CLEAR_DAY);
@@ -128,39 +108,43 @@ window.widgetConfiguration = {
                 skycons.play();
             },
 
-            displayContent: function(){
-                //$('.widget-content').html(
-                //    '<p>Sunday 21 December 2014,'+
-                //    '</br><span class="widget-component-highlighted">Option 1 is: '+ configuration.options.option1+'</span></p>'
-                //);
-                //$('.widget-updated').html('Updated: ' + new Date().toISOString());
+            renderError: function(){
+                var template = $('#tpl-error').html();
+                $('#tpl-target').html(_.template(template)({ title: self.identity }));
             },
 
-            displayError: function(){
-                //$('.widget-content').html(
-                //    '<p>Widget on error</p>'
-                //);
-                //$('.widget-updated').html('');
+            renderRefreshing: function(){
+                var template = $('#tpl-refreshing').html();
+                $('#tpl-target').html(_.template(template)({ title: self.identity }));
             },
 
-            displayRefreshing: function(){
-                //$('.widget-content').html(
-                //    '<p>Widget is refreshing</p>'
-                //);
-                //$('.widget-updated').html('');
-            },
-
-            displayStopped: function(){
-                //$('.widget-content').html(
-                //    '<p>Widget is stopped</span></p>'
-                //);
-                //$('.widget-updated').html('');
+            renderStopped: function(){
+                var template = $('#tpl-stop').html();
+                $('#tpl-target').html(_.template(template)({ title: self.identity }));
             }
         };
 
     };
-    // export
-    window.Widget = Widget;
+
+    document.addEventListener("widget.init", function(e){
+        //console.log('widget.init', e);
+        instance = new Widget(e.detail);
+    });
+
+    document.addEventListener("widget.start", function(e){
+        //console.log('widget.start', e);
+        if(instance) instance.start();
+    });
+
+    document.addEventListener("widget.stop", function(e){
+        //console.log('widget.stop', e);
+        if(instance) instance.stop();
+    });
+
+    document.addEventListener("widget.refresh", function(e){
+        //console.log('widget.refresh', e);
+        if(instance) instance.refresh();
+    });
 
 })();
 

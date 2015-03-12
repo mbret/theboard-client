@@ -4,89 +4,161 @@
 	<head>
 
         <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
         <!-- Optional theme -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
         
 		<!-- Include the possible widget default style -->
-		<link rel="stylesheet" href="/widgets/default.css">
+		<link rel="stylesheet" href="/styles/importer-widget.css">
 
 		<link rel="stylesheet" href="widget.css">
 
 	</head>
 
-	<body class="widget-theme-blue">
+	<body class="widget-theme-light-blue">
+
+        <div class="widget-wrapper">
+            <div class="widget" id="widget-weather">
+                <div id="tpl-target">
+                    <!--Templates will be inserted here-->
+                </div>
+            </div>
+        </div>
+
+        <!--Templates-->
+        <script type="text/template" id="tpl-loaded">
+            <div class="row m-t text-center">
+                <div class="col-xs-6">
+                    <canvas id="icon-current-weather" width="98" height="98"></canvas>
+                </div>
+                <div class="col-xs-6">
+                    <p class="text-4x">27°</p>
+                    <p>Partly Cloudy Day</p>
+                </div>
+            </div>
+            <h4 class=""><span class="glyphicon glyphicon-map-marker" ></span> San Jose, CA</h4>
+            <p class="">Today</p>
+            <hr>
+            <ul class="list-unstyled text-center clearfix">
+                <li class="col-xs-2">
+                    <canvas id="icon-weather-2" width="32" height="32"></canvas>
+                    <p class="text-sm mar-no">
+                        Saturday
+                        <br>
+                        25 °C
+                    </p>
+                </li>
+                <li class="col-xs-2">
+                    <canvas id="icon-weather-3" width="32" height="32"></canvas>
+                    <p class="text-sm mar-no">
+                        Saturday
+                        <br>
+                        25 °C
+                    </p>
+                </li>
+                <li class="col-xs-2">
+                    <canvas id="icon-weather-4" width="32" height="32"></canvas>
+                    <p class="text-sm mar-no">
+                        Saturday
+                        <br>
+                        25 °C
+                    </p>
+                </li>
+                <li class="col-xs-2">
+                    <canvas id="icon-weather-5" width="32" height="32"></canvas>
+                    <p class="text-sm mar-no">
+                        Saturday
+                        <br>
+                        25 °C
+                    </p>
+                </li>
+                <li class="col-xs-2">
+                    <canvas id="icon-weather-6" width="32" height="32"></canvas>
+                    <p class="text-sm mar-no">
+                        Saturday
+                        <br>
+                        25 °C
+                    </p>
+                </li>
+                <li class="col-xs-2">
+                    <canvas id="icon-weather-7" width="32" height="32"></canvas>
+                    <p class="text-sm mar-no">
+                        Saturday
+                        <br>
+                        25 °C
+                    </p>
+                </li>
+            </ul>
+        </script>
+
+        <script type="text/template" id="tpl-refreshing">
+            <header class="widget-header">
+                <h1><%= title %></h1>
+            </header>
+            <div class="widget-content">
+                <p>Widget is refreshing</p>
+            </div>
+        </script>
+
+        <script type="text/template" id="tpl-error">
+            <header class="widget-header">
+                <h1><%= title %></h1>
+            </header>
+            <div class="widget-content">
+                <p>Widget is on error</p>
+            </div>
+        </script>
+
+        <script type="text/template" id="tpl-stop">
+            <header class="widget-header">
+                <h1><%= title %></h1>
+            </header>
+            <div class="widget-content">
+                <p>Widget is stopped</p>
+            </div>
+        </script>
 
 		<!-- Widget start -->
 		<div class="widget-wrapper">
 			<div class="widget" id="weather">
 
-                <div class="row m-t text-center">
-                    <div class="col-xs-6">
-                        <canvas id="icon-current-weather" width="98" height="98"></canvas>
-                    </div>
-                    <div class="col-xs-6">
-                        <p class="text-4x">27°</p>
-                        <p>Partly Cloudy Day</p>
-                    </div>
-                </div>
 
-
-                <h4 class="mar-no"><span class="glyphicon glyphicon-map-marker" ></span> San Jose, CA</h4>
-                <p class="">Today</p>
-
-
-                <hr>
-
-                <ul class="list-unstyled text-center clearfix">
-                    <li class="col-xs-2">
-                        <canvas id="icon-weather-2" width="32" height="32"></canvas>
-                        <p class="text-sm mar-no">Saturday</p>
-                        <p>25 °C</p>
-                    </li>
-                    <li class="col-xs-2">
-                        <canvas id="icon-weather-3" width="32" height="32"></canvas>
-                        <p class="text-sm mar-no">Sunday</p>
-                        <p>22 °C</p>
-                    </li>
-                    <li class="col-xs-2">
-                        <canvas id="icon-weather-4" width="32" height="32"></canvas>
-                        <p class="text-sm mar-no">Monday</p>
-                        <p>20 °C</p>
-                    </li>
-                    <li class="col-xs-2">
-                        <canvas id="icon-weather-5" width="32" height="32"></canvas>
-                        <p class="text-sm mar-no">Tuesday</p>
-                        <p>28 °C</p>
-                    </li>
-                    <li class="col-xs-2">
-                        <canvas id="icon-weather-6" width="32" height="32"></canvas>
-                        <p class="text-sm mar-no">Wednesday</p>
-                        <p>22 °C</p>
-                    </li>
-                    <li class="col-xs-2">
-                        <canvas id="icon-weather-7" width="32" height="32"></canvas>
-                        <p class="text-sm mar-no">Thursday</p>
-                        <p>25 °C</p>
-                    </li>
-                </ul>
 
 			</div>
 
 		</div>
-
         
 
 		<!-- Here is the widget part -->
-		<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-		<script src="http://momentjs.com/downloads/moment.js"></script>
+		<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
 		<script src="jquery.simpleWeather.js"></script>
 		<script src="skycons.js"></script>
 		<script src="lodash.js"></script>
 		<script src="widget.js"></script>
 
 		<!-- Include the required widget library -->
+        <script>
+            // Here is an object that you can use for test.
+            // The library will use it instead of url (which is filled by application automatically)
+            window.widgetConfiguration = {
+                widget: {
+                    configuration: {
+                        identity: 'Weather',
+                        // Require information from user without action from user
+                        permissions: {
+                            location: 'Nancy, France'
+                        },
+                        // Options are information that can be changed by user
+                        // As they are used by application you can only specify here the values
+                        options: {
+                            option1: "Nancy"
+                        }
+                    }
+                }
+            };
+        </script>
 		<script src="/widgets/library.js"></script>
 
 	</body>

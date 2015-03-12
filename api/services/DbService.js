@@ -34,6 +34,21 @@ var widgetSample = {
     col: 2
 };
 
+var widgetMeteo = {
+    identity: 'Widget meteo',
+    identityHTML: 'widget-meteo',
+    url: 'widgets/meteo/widget.html',
+    baseURL: 'widgets/meteo/widget.html',
+    permissions: [
+      'mail',
+      'location'
+    ],
+    //options: {
+    //    defaultLocation: 'New York'
+    //},
+    sizeX: 1, sizeY: 1, row: 1, col: 2
+};
+
 module.exports = {
 
     /**
@@ -62,23 +77,7 @@ module.exports = {
                 row: 0,
                 col: 0
             }),
-            //Widget.create({
-            //    identity: 'Widget meteo',
-            //    identityHTML: 'widget-meteo',
-            //    url: 'widgets/meteo/widget.html',
-            //    baseURL: 'widgets/meteo/widget.html',
-            //    permissions: [
-            //      'mail',
-            //      'location'
-            //    ],
-            //    //options: {
-            //    //    defaultLocation: 'New York'
-            //    //},
-            //    sizeX: 1,
-            //    sizeY: 1,
-            //    row: 1,
-            //    col: 2
-            //}),
+            Widget.create(widgetMeteo),
             //Widget.create({
             //    identity: 'Widget clock',
             //    identityHTML: 'widget-clock',
