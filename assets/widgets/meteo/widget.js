@@ -97,7 +97,9 @@
                     option1: self.configuration.options.option1
                 }));
 
-                skycons.set("icon-current-weather", Skycons.CLEAR_DAY);
+                skycons.set($('.icon-current-weather').get(0), Skycons.CLEAR_DAY);
+                skycons.set($('.icon-current-weather').get(1), Skycons.CLEAR_DAY);
+                skycons.set($('.icon-current-weather').get(2), Skycons.CLEAR_DAY);
                 skycons.set("icon-weather-1", Skycons.CLEAR_DAY);
                 skycons.set("icon-weather-2", Skycons.CLEAR_DAY);
                 skycons.set("icon-weather-3", Skycons.CLEAR_DAY);

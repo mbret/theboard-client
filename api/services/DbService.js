@@ -41,12 +41,12 @@ var widgetMeteo = {
     baseURL: 'widgets/meteo/widget.html',
     permissions: [
       'mail',
-      'location'
+      //'location'
     ],
     //options: {
     //    defaultLocation: 'New York'
     //},
-    sizeX: 1, sizeY: 1, row: 1, col: 2
+    sizeX: 1, sizeY: 1, row: 2, col: 0
 };
 
 module.exports = {
