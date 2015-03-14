@@ -40,13 +40,35 @@ var widgetMeteo = {
     url: 'widgets/meteo/widget.html',
     baseURL: 'widgets/meteo/widget.html',
     permissions: [
-      'mail',
-      //'location'
+      'location'
+    ],
+    options:[
+        {
+            id: 'location', // must not have space
+            name: 'Location',
+            placeholder: 'Specify a location',
+            tip: 'This location will overwrite geolocation',
+            type: 'text',
+            default: null
+        },
+    ],
+    sizeX: 1, sizeY: 1, row: 2, col: 0
+};
+var widgetVelib = {
+    identity: 'Velib',
+    identityHTML: 'widget-velib',
+    url: 'widgets/velib/widget.html',
+    baseURL: 'widgets/velib/widget.html',
+    permissions: [
+        'location'
     ],
     //options: {
     //    defaultLocation: 'New York'
     //},
-    sizeX: 1, sizeY: 1, row: 2, col: 0
+    sizeX: 1,
+    sizeY: 1,
+    row: 0,
+    col: 0
 };
 
 module.exports = {
@@ -61,22 +83,7 @@ module.exports = {
 
     init_test: function(){
         return Promise.all([
-            Widget.create({
-                identity: 'Velib',
-                identityHTML: 'widget-velib',
-                url: 'widgets/velib/widget.html',
-                baseURL: 'widgets/velib/widget.html',
-                permissions: [
-                    'location'
-                ],
-                //options: {
-                //    defaultLocation: 'New York'
-                //},
-                sizeX: 1,
-                sizeY: 1,
-                row: 0,
-                col: 0
-            }),
+            //Widget.create(widgetVelib),
             Widget.create(widgetMeteo),
             //Widget.create({
             //    identity: 'Widget clock',
@@ -90,13 +97,6 @@ module.exports = {
             //    col: 2
             //}),
             Widget.create(widgetSample),
-            //Widget.create(widgetSample),
-            //Widget.create(widgetSample),
-            //Widget.create(widgetSample),
-            //Widget.create(widgetSample),
-            //Widget.create(widgetSample),
-            //Widget.create(widgetSample),
-            //Widget.create(widgetSample),
             //Widget.create({
             //  identity: 'Widget meteo 4',
             //  identityHTML: 'widget-meteo4',

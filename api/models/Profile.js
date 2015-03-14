@@ -14,6 +14,19 @@ var Profile = {
         default     : { type: 'boolean', unique: false, required: false, defaultsTo: true },
         widgets     : { collection: 'profileWidget', via: 'profile' },
 
+        toView: function(){
+
+            // We need to clone it (problem with populate that will not show up on json)
+            var data = _.cloneDeep(this.toObject());
+
+            if(!data.widgets){
+                data.widgets = [];
+            }
+
+            return data;
+
+        },
+        
         /**
          * Register a new widget
          * This method use a queue so you NEED to call user.save in order to save these change

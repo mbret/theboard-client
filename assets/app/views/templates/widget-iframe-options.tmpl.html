@@ -26,8 +26,15 @@
                     <label>{{option.label}}</label>
                     <div ng-switch on="option.type">
                         <!--Text-->
-                        <input  ng-switch-when="text" type="text"  placeholder="{{option.placeholder}}" class="form-control" ng-model="option.value">
-                        <select ng-switch-when="select" class="form-control m-b" ng-model="option.value" ng-options="opt as opt.label for opt in option.selectOptions">
+                        <input  ng-attr-tooltip-placement="{{ option.tip ? 'bottom' : null }}"
+                                ng-attr-tooltip="{{ option.tip ? option.tip : null }}"
+                                ng-switch-when="text" type="text"  placeholder="{{option.placeholder}}" class="form-control" ng-model="option.value">
+                        <select ng-attr-tooltip-placement="{{ option.tip ? 'bottom' : null }}"
+                                ng-attr-tooltip="{{ option.tip ? option.tip : null }}"
+                                ng-switch-when="select" 
+                                class="form-control m-b" 
+                                ng-model="option.value" 
+                                ng-options="opt as opt.label for opt in option.selectOptions">
                             <option value="" ng-if="!option.required"></option>
                         </select>
                     </div>

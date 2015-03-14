@@ -28,39 +28,50 @@
 
         <!--Templates-->
         <script type="text/template" id="tpl-loaded">
-            <div class="visible-widget-xs-block hidden-widget-sm hidden-widget-md hidden-widget-lg">
-                <canvas class="icon-current-weather" width="98" height="98"></canvas>
-                <h4 class=""><span class="glyphicon glyphicon-map-marker" ></span> San Jose, CA</h4>
-                <p class="">Today</p>
-            </div>
-            <div class="visible-widget-sm-block hidden-widget-xs">
-                <div class="row m-t text-center">
-                    <div class="col-xs-6">
-                        <canvas class="icon-current-weather" width="98" height="98"></canvas>
+            <div class="visible-widget-xs-block">
+                <div class="row text-center">
+                    <div class="col-xs-5">
+                        <canvas class="icon-current-weather" width="128" height="128"></canvas>
                     </div>
-                    <div class="col-xs-6">
-                        <h4 class=""><span class="glyphicon glyphicon-map-marker" ></span> San Jose, CA</h4>
-                        <p class="">Today</p>
-                    </div>
-                </div>
-            </div>
-            <div class="hidden-widget-sm hidden-widget-xs">
-                <div class="row m-t text-center">
-                    <div class="col-xs-6">
-                        <canvas class="icon-current-weather" width="98" height="98"></canvas>
-                    </div>
-                    <div class="col-xs-6">
-                        <p class="text-4x">27°</p>
-                        <p>Partly Cloudy Day</p>
+                    <div class="col-xs-7">
+                        <div class="m-t-md">
+                            <div class="text-center ">
+                                <span class="text-lg "><span class="glyphicon glyphicon-map-marker" ></span> <%= city %></span>
+                                <br>
+                                <div class="m-t-sm"></div>
+                                <p class="text-lg"><%= today %></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <h4 class=""><span class="glyphicon glyphicon-map-marker" ></span> San Jose, CA</h4>
-                <p class="">Today</p>
+            </div>
+            <div class="visible-widget-sm-block visible-widget-md-block visible-widget-lg-block">
+                <div class="row m-t text-center">
+                    <div class="col-xs-3 text-right">
+                        <canvas class="icon-current-weather" width="128" height="128"></canvas>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="m-t-md text-left">
+                            <div class="text-center">
+                                <span class="text-2x .m-b-md"><span class="glyphicon glyphicon-map-marker" ></span> <%= city %></span>
+                                <br>
+                                <span class="text-md"><%= today %></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 text-left">
+                        <div class="m-t">
+                            <span class="text-4x"><%= temperature %></span>
+                            <br>
+                            <span class="text-md"><%= currently %></span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <hr>
-            <div class="visible-widget-sm-block visible-widget-xs-block">
-                <p class="text-4x">27°</p>
-                <p>Partly Cloudy Day</p>
+            <div class="visible-widget-sm-block visible-widget-xs-block text-center">
+                <span class="text-3x"><%= temperature %></span><br>
+                <span class="text-lg"><%= currently %></span>
             </div>
             <div class="hidden-widget-sm hidden-widget-xs">
                 <ul class="list-unstyled text-center clearfix">
@@ -130,7 +141,7 @@
                 <h1><%= title %></h1>
             </header>
             <div class="widget-content">
-                <p>Widget is on error</p>
+                <p class="text-lg"><%= message %></p>
             </div>
         </script>
 
@@ -156,22 +167,22 @@
         <script>
             // Here is an object that you can use for test.
             // The library will use it instead of url (which is filled by application automatically)
-            window.widgetConfiguration = {
-                widget: {
-                    configuration: {
-                        identity: 'Weather',
-                        // Require information from user without action from user
-                        permissions: {
-                            location: 'Nancy, France'
-                        },
-                        // Options are information that can be changed by user
-                        // As they are used by application you can only specify here the values
-                        options: {
-                            option1: "Nancy"
-                        }
-                    }
-                }
-            };
+//            window.widgetConfiguration = {
+//                widget: {
+//                    configuration: {
+//                        identity: 'Weather',
+//                        // Require information from user without action from user
+//                        permissions: {
+//                            location: 'Nancy, France'
+//                        },
+//                        // Options are information that can be changed by user
+//                        // As they are used by application you can only specify here the values
+//                        options: {
+//                            location: "Nancy, France"
+//                        }
+//                    }
+//                }
+//            };
         </script>
 		<script src="/widgets/library.js"></script>
 

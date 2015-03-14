@@ -144,8 +144,10 @@
                                                 deferred2.resolve();
                                             })
                                             .catch(function(err){
+                                                // @todo handle different error
                                                 $log.debug('User has not accepted location, permission is set to null');
-                                                deferred2.reject(err);
+                                                permissions.location = null;
+                                                deferred2.resolve();
                                             });
                                     }
                                     else{

@@ -41,8 +41,8 @@
 
 // Visibility utilities
 // Note: Deprecated .visible-xs, .visible-sm, .visible-md, and .visible-lg as of v3.2.0
-.visible-xs-block,
-.visible-xs-inline,
+.visible-widget-xs-block,
+.visible-widget-xs-inline,
 .visible-widget-xs-inline-block,
 .visible-widget-sm-block,
 .visible-widget-sm-inline,
@@ -151,16 +151,16 @@
 }
 
 @media (min-width: @screen-widget-lg-min) {
-  .visible-widgetlg {
+  .visible-widget-lg {
       .responsive-visibility();
   }
-  .visible-widgetlg-block {
+  .visible-widget-lg-block {
       display: block !important;
   }
-  .visible-widgetlg-inline {
+  .visible-widget-lg-inline {
       display: inline !important;
   }
-  .visible-widgetlg-inline-block {
+  .visible-widget-lg-inline-block {
       display: inline-block !important;
   }
   .hidden-widget-lg {

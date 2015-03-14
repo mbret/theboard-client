@@ -93,7 +93,7 @@
             
             Profile.create(data)
                 .then(function(profile){
-                    return res.ok(profile);
+                    return res.ok(profile.toView());
                 })
                 .catch(function(err){
                     // Validation error

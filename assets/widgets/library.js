@@ -186,7 +186,7 @@
                 }
             }
             else{
-                Utils.log.debug('No substitute configuration provided by user. Use default library configuration!');
+                console.log('No substitute configuration provided by user. Use default library configuration!');
             }
             // ===============
             // STEP 1

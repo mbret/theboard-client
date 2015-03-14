@@ -1,40 +1,13 @@
 body{
-    text-align: center;
-    
+
 }
-/*#weather ul {*/
-    /*display: inline-block;*/
-    /*margin: 0;*/
-    /*padding: 0;*/
-/*}*/
-/*#weather li {*/
-    /*padding: 10px 20px;*/
-    /*display: inline-block;*/
-    /*text-transform: uppercase;*/
-    /*margin: 5px 0;*/
-    /*margin-left: 10px;*/
-/*}*/
-/*#weather #weather-icon{*/
-    /*width: 100px;*/
-    /*margin-right: -20px;*/
-    /*margin-left: -20px;*/
-    /*vertical-align: sub;*/
-    /*height: 40px;*/
-/*}*/
-
-
-/*
- * Media queries
- */
-/* Tile 1x1 300x300 */
-/*@media screen and (min-width: 0px) and (max-width: 400px) {*/
-    /*.widget-content{*/
-        /*font-size: 13px;*/
-    /*}*/
-/*}*/
-/* Tile 2x1 600x300 */
-/*@media screen and (min-width: 400px) and (max-width: 600px) {*/
-    /*.widget-content{*/
-        /*font-size: 20px;*/
-    /*}*/
-/*}*/
+.icon-current-weather{
+    width: 100px;
+    height: 100px;
+}
+.inline-block{
+    display: inline-block;
+}
+.map-marker{
+    vertical-align: 50%;
+}

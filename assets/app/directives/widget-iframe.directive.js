@@ -180,7 +180,8 @@
                             type: option.type,
                             name: option.id,
                             value: option.value,
-                            required: option.required
+                            required: option.required,
+                            tip: option.tip
                         };
                         // In case of select we need to do some more job
                         if(tmp.type === 'select'){

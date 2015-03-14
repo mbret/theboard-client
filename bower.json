@@ -19,7 +19,8 @@
     "javascript-detect-element-resize": "~0.5.3",
     "jquery-backstretch": "~2.0.4",
     "ng-breadcrumbs": "~0.4.1",
-    "angular-local-storage": "~0.1.5"
+    "angular-local-storage": "~0.1.5",
+    "bootstrap": "~3.3.2"
   },
   "name": "p",
   "version": "0.0.0",
