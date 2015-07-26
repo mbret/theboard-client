@@ -14,8 +14,16 @@ module.exports = {
     attributes: {
         
         profile: {model: 'profile', required: true},
-        widget: {model:'widget', required: true},
-        
+
+        //widget: {model:'widget', required: true},
+        widget: {type:'string', required: true},
+
+        location: {
+            type: 'string',
+            required: true,
+            enum: ['local', 'remote']
+        },
+
         /*
          * relative to widget only
          */
@@ -51,5 +59,32 @@ module.exports = {
         //    return cb(error);
         //}
         return cb();
+    },
+
+    /**
+     * Add a widget to a profile
+     * @param identity The widget indentity
+     * @param location
+     * @return Promise (Error with code WIDGET_INVALID if widget doesn't exist or anything else invalid)
+     */
+    addToProfile: function(identity, location){
+        return new Promise(function(resolve, reject){
+            if(location === 'local'){
+                RepositoryService
+                    .loadLocal(identity)
+                    .then(function(widget){
+                        if(!widget){
+                            var err = new Error();
+                            err.code = 'WIDGET_INVALID';
+                            reject(err);
+                        }
+                        resolve();
+                    })
+                    .catch(reject);
+            }
+            else{
+                reject(new Error('not supported yet'));
+            }
+        });
     }
 };

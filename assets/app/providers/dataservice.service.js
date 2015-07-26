@@ -31,8 +31,52 @@
             getProfile: getProfile,
             createProfile: createProfile,
             updateProfile: updateProfile,
-            updateAccount: updateAccount
+            updateAccount: updateAccount,
+
+            widgets: {
+                browse: widgetsBrowse,
+                addToProfile: addWidgetToProfile,
+                removeFromProfile: removeWidgetFromProfile
+            }
         };
+
+        /**
+         * Activate a widget for a profile
+         * @param data
+         */
+        function addWidgetToProfile(profile, widget, location){
+            var route = APP_CONFIG.routes.api.widgets.addToProfile.replace(':profileid', profile)
+            return $http.post(route, {
+                    widget: widget,
+                    location: location
+                })
+                .then(function(data) {
+                    logger.debug(debugName + ' createProfile success!', data.data);
+                    return data.data;
+                })
+                .catch(function(error) {
+                    logger.error(debugName + ' createProfile failure!', error);
+                    throw new Error(APP_CONFIG.messages.errors.unableToLoad);
+                });
+        }
+
+        function removeWidgetFromProfile(data){
+            //
+        }
+
+        function widgetsBrowse(data){
+            var route = APP_CONFIG.routes.api.repository.widgets.getAll;
+            console.log(route, data);
+            return $http.get(route, {
+                    params: data
+                })
+                .then(function(data){
+                    return data.data;
+                })
+                .catch(function(error){
+                    throw error; // important to call superior catch
+                });
+        }
 
         // check for each data property if the sate's same property is different
         // if one is different then return true

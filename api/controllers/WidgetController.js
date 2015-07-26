@@ -1,5 +1,8 @@
 (function(){
+    'use strict';
+
     var Promise = require('bluebird');
+    var validator = require('validator');
 
     module.exports = {
 
@@ -51,6 +54,47 @@
                     return res.ok(data);
                 });
             }).catch(res.serverError);
+
+        },
+
+        /**
+         * Add a widget to the specific profile
+         * - add the widget with its default configuration
+         * @param req
+         * @param res
+         */
+        addProfileWidget: function(req, res){
+            var profileId       = req.param('profileid', null);
+            var widgetIdentity  = req.param('widget', null);
+            var location        = req.param('location', 'remote');
+
+            // Validation
+            if( ['local', 'remote'].indexOf(location) === -1 ){
+                return res.badRequest('bad location');
+            }
+
+            if(!validator.isInt(profileId)){
+                return res.badRequest('bad profile id');
+            }
+
+            if(validator.isNull(widgetIdentity)){
+                return res.badRequest('bad widget identity');
+            }
+
+            // Add widget to profile
+            ProfileWidget
+                .addToProfile(widgetIdentity, location)
+                .then(function(widget){
+                    return res.ok(widget);
+                })
+                .catch(function(err){
+                    // Unable to add this widget because he is invalid
+                    // Something went wrong with widget validation
+                    if(err.code === 'WIDGET_INVALID'){
+                        return res.badRequest('Widget invalid');
+                    }
+                    return res.serverError(err);
+                });
 
         },
 

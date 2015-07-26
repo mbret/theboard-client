@@ -57,5 +57,8 @@ module.exports.policies = {
     },
     'account': {
         '*': ['sessionAuth']
+    },
+    'repository': {
+        '*': ['sessionAuth']
     }
 };

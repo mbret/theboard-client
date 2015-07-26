@@ -54,7 +54,10 @@
         Pace.on('hide', function(){
 
             notifService.watchForServerFlashMessage();
+            $state.go('static.repository');
         });
+
+
 
     };
 })();

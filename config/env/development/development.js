@@ -15,13 +15,15 @@ module.exports = {
     port: process.env.PORT || 1338,
 
     autoLogin: true,
+    autoLoginEmail: 'bret.maxime@gmail.com',
+    autoLoginPassword: 'password',
 
     fillDb: false,
 
     models: {
         //connection: 'mysqlServer',
         connection: 'localDiskDb',
-        migrate: 'drop'
+        migrate: 'alter'
     },
 
     connections: {

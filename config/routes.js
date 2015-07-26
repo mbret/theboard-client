@@ -45,9 +45,12 @@ var routes = {
     'put /api/users/widgets/:id': 'WidgetController.updateProfileWidget', // update for default profile
     'get /api/users/profiles/:profileid/widgets': 'WidgetController.findAll', // specific profile
     'put /api/users/profiles/:profileid/widgets/:id': 'WidgetController.updateProfileWidget', // update for given profile
+    'post /api/profiles/:profileid/widgets': 'WidgetController.addProfileWidget',
 
     'get /api/account': 'AccountController.me',
     'put /api/account': 'AccountController.update',
+
+    'get /api/repository/widgets': 'RepositoryController.findAll',
 
     // ==============
     // Auth part
@@ -128,11 +131,17 @@ function getRoutes(label){
                     getAll: '/api/users/widgets',
                     updateAll: '/api/users/widgets', // put,
                     update: '/api/users/widgets/:id',
-                    updateByProfile: '/api/users/profiles/:profileid/widgets/:id'
+                    updateByProfile: '/api/users/profiles/:profileid/widgets/:id',
+                    addToProfile: '/api/profiles/:profileid/widgets'
                 },
                 account: {
                     get: '/api/account', // get
                     update: '/api/account' // put
+                },
+                repository: {
+                    widgets: {
+                        getAll: '/api/repository/widgets'
+                    }
                 }
             }
         }

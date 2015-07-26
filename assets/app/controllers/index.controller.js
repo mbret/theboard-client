@@ -5,7 +5,7 @@
         .module('app.controllers')
         .controller('IndexController', IndexController)
 
-    IndexController.$inject = ['dataservice', '$state', 'backstretch', 'user', '$scope', '$rootScope', '$q', 'APP_CONFIG', '$log', 'widgetService', 'geolocationService', 'modalService', 'notifService', '$timeout', 'sidebarService'];
+    IndexController.$inject = ['dataservice', '$state', '$window', 'backstretch', 'user', '$scope', '$rootScope', '$q', 'APP_CONFIG', '$log', 'widgetService', 'geolocationService', 'modalService', 'notifService', '$timeout', 'sidebarService'];
 
     /**
      * IndexController
@@ -14,7 +14,7 @@
      * Controllers should never do DOM manipulation or hold DOM selectors; that's where directives and using ng-model come in. Likewise business logic should live in services, not controllers.
      * Data should also be stored in services, except where it is being bound to the $scope
      */
-    function IndexController(dataservice, $state, backstretch, user, $scope, $rootScope, $q, APP_CONFIG, $log, widgetService, geolocationService, modalService, notifService, $timeout, sidebarService){
+    function IndexController(dataservice, $state, $window, backstretch, user, $scope, $rootScope, $q, APP_CONFIG, $log, widgetService, geolocationService, modalService, notifService, $timeout, sidebarService){
 
         // This var will contain all widget element
         // These widgets will be placed inside iframe and get from server
@@ -41,17 +41,23 @@
         };
         backstretch.resume();
 
-        $window.on('resize', function (event) {
+        // @todo utiliser :fulscreen css
+        function onFullScreen(event) {
             var maxHeight = window.screen.height,
                 maxWidth = window.screen.width,
                 curHeight = window.innerHeight,
                 curWidth = window.innerWidth;
+            console.log('a');
             if (maxWidth == curWidth && maxHeight == curHeight) {
                 $scope.hideButtonsBar = true;
             }
             else{
                 $scope.hideButtonsBar = false;
             }
+        }
+        angular.element(window).on('resize', onFullScreen);
+        $scope.$on('$destroy', function(){
+            angular.element(window).off('resize', onFullScreen);
         });
 
         // We toggle backstretch state when toggling sidebar to reduce (graphical frame drop)

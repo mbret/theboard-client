@@ -214,6 +214,14 @@
                 _.forEach(widgets, function(widget){
                     self.reload(widget);
                 });
+            },
+
+            addToProfile: function(widgetIdentity, profileId, location){
+                return dataservice.widgets.addToProfile(profileId, widgetIdentity, location);
+            },
+
+            removeFromProfile: function(widgetIdentity, profileId, location){
+                return dataservice.widgets.removeFromProfile(profileId, widgetIdentity, location);
             }
 
         }

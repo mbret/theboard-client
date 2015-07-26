@@ -37,6 +37,7 @@ module.exports.http = {
        'startRequestTimer',
        'cookieParser',
        'session',
+      'myRequestLogger', // custom
        'passport',
        'bodyParser',
        'handleBodyParserError',
@@ -54,6 +55,13 @@ module.exports.http = {
        '404',
        '500'
     ],
+
+      // simple log of http request
+      // Only in console, nginx take control on production environment
+      myRequestLogger: function (req, res, next) {
+          sails.log.info(req.method, req.url);
+          return next();
+      },
 
   /****************************************************************************
   *                                                                           *
@@ -98,7 +106,7 @@ module.exports.http = {
             // No action is needed to be logged with that method
             function autoLogUser(cb){
                 if(sails.config.autoLogin && !req.isAuthenticated() && !req.session.passport.user ){
-                    User.findOne({email:'user@gmail.com'}).exec(function(err, user){
+                    User.findOne({email:sails.config.autoLoginEmail}).exec(function(err, user){
                         if(err) return cb(err);
                         if(!user){
                             return cb();

@@ -31,6 +31,7 @@
             .state('static', {
                 abstract: true,
                 templateUrl: APP_CONFIG.routes.partials + '/static.html',
+                controller: 'StaticController',
                 ncyBreadcrumb: {
                     label: 'Board',
                     breadcrumbProxy: 'board.index'
@@ -48,6 +49,14 @@
                 ncyBreadcrumb: {
                     label: 'Board'
                     //skip: true
+                }
+            })
+            .state('static.repository', {
+                url: '/repository',
+                templateUrl: APP_CONFIG.routes.partials + '/static.repository.html',
+                controller: 'RepositoryController',
+                ncyBreadcrumb: {
+                    label: 'Repository'
                 }
             })
             .state('static.settings', {

@@ -17,7 +17,13 @@ module.exports = {
         sizeY: 'integer',
         row: 'integer',
         col: 'integer',
-        
+
+        location: {
+            type: 'string',
+            required: true,
+            enum: ['local', 'remote']
+        },
+
         profiles: { collection: 'profile', via: 'widgets' }
     },
 
