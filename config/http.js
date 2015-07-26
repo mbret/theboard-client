@@ -100,6 +100,9 @@ module.exports.http = {
                 if(sails.config.autoLogin && !req.isAuthenticated() && !req.session.passport.user ){
                     User.findOne({email:'user@gmail.com'}).exec(function(err, user){
                         if(err) return cb(err);
+                        if(!user){
+                            return cb();
+                        }
                         req.login(user, function (err) {
                             if (err) return cb(err);
                             sails.log.debug('User autologged by middleware!');

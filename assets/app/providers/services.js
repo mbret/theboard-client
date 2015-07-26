@@ -50,7 +50,7 @@ angular
         }
     }])
 
-    .factory('notifService', function($rootScope, APP_CONFIG, toastr, $timeout){
+    .factory('notifService', function($rootScope, APP_CONFIG, toastr, $timeout, $http, $log){
         return {
             
             display: function(label, message){
@@ -81,6 +81,34 @@ angular
 
             info: function(message){
                 return this.display('info', message);
+            },
+
+            /**
+             * Will try to get eventual flash message from server.
+             * They are not sent automatically to app for now.
+             */
+            watchForServerFlashMessage: function(){
+                var self = this;
+                // Check for flash message from server
+                // These message can come from login/logout/etc
+                // We display it after Pace is hidden.
+                $http.get(APP_CONFIG.routes.flash).then(function(data){
+                    $log.debug(data.data);
+                    var messages = data.data;
+
+                    if(messages.errors){
+                        self.error(messages.errors)
+                    }
+                    if(messages.warnings){
+                        self.warning(messages.warnings)
+                    }
+                    if(messages.success){
+                        self.success(messages.success)
+                    }
+                    if(messages.info){
+                        self.info(messages.info)
+                    }
+                });
             }
         }
     })

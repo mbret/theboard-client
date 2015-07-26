@@ -95,6 +95,7 @@ var AuthController = {
                     if(err){
                         return res.serverError(err);
                     }
+                    req.flash('success', 'Success.Auth.Register');
                     var token = sails.services.auth.generateToken(user);
                     return res.ok({
                         token: token,

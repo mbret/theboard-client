@@ -6,7 +6,7 @@
         .config(configureProviders)
         .config(configureBlocks)
         .config(configureUser)
-        .run(appRun);
+        .run(run);
 
     // Toaster configuration
     // The configuration come from the server
@@ -43,35 +43,17 @@
     }
 
     // Config that must be execute at module run
-    appRun.$inject = ['$rootScope', '$state', '$http', '$log', 'notifService', 'userService', 'APP_CONFIG', 'user'];
-    function appRun($rootScope, $state, $http, $log, notifService, userService, APP_CONFIG, user){
+    run.$inject = ['$rootScope', '$state', '$http', '$log', 'notifService', 'userService', 'APP_CONFIG', 'user'];
+    function run($rootScope, $state, $http, $log, notifService, userService, APP_CONFIG, user){
 
         window.user = user;
 
         $rootScope.$state = $state;
 
-        // Check for flash message from server
-        // These message can come from login/logout/etc
-        // We display it after Pace is hidden.
         // @todo if you have a better idea in order to not use directly Pace here give it
         Pace.on('hide', function(){
-            $http.get(APP_CONFIG.routes.flash).then(function(data){
-                $log.debug(data.data);
-                var messages = data.data;
 
-                if(messages.errors){
-                    notifService.error(messages.errors)
-                }
-                if(messages.warnings){
-                    notifService.warning(messages.warnings)
-                }
-                if(messages.success){
-                    notifService.success(messages.success)
-                }
-                if(messages.info){
-                    notifService.info(messages.info)
-                }
-            });
+            notifService.watchForServerFlashMessage();
         });
 
     };

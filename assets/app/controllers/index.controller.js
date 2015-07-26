@@ -18,9 +18,10 @@
 
         // This var will contain all widget element
         // These widgets will be placed inside iframe and get from server
-        $scope.widgets = null;
-        $scope.widgetsLocked = false;
-        $scope.widgetsBorders = user.getSetting( user.SETTING_WIDGETS_BORDERS, true );
+        $scope.widgets          = null;
+        $scope.widgetsLocked    = false;
+        $scope.widgetsBorders   = user.getSetting( user.SETTING_WIDGETS_BORDERS, true );
+        $scope.hideButtonsBar   = false;
         var widgets;
 
         // This var save the previous widget state.
@@ -39,7 +40,20 @@
             images: urls
         };
         backstretch.resume();
-        
+
+        $window.on('resize', function (event) {
+            var maxHeight = window.screen.height,
+                maxWidth = window.screen.width,
+                curHeight = window.innerHeight,
+                curWidth = window.innerWidth;
+            if (maxWidth == curWidth && maxHeight == curHeight) {
+                $scope.hideButtonsBar = true;
+            }
+            else{
+                $scope.hideButtonsBar = false;
+            }
+        });
+
         // We toggle backstretch state when toggling sidebar to reduce (graphical frame drop)
         $rootScope.$on('sidebar.open', function(){
             backstretch.pause();
@@ -128,16 +142,16 @@
                                 if( widget.permissions &&  widget.permissions.indexOf('email') !== -1  ){
                                     permissions.email = user.email;
                                 }
-                                
+
                                 // location
                                 // We create a new promise (with anonymous function)
                                 (function(){
                                     var deferred2 = $q.defer();
                                     if( widget.permissions &&  widget.permissions.indexOf('location') !== -1 ){
                                         // get location using geoloc browser api
-                                        
+
                                         widgetService.setViewState(widget, widgetService.VIEW_STATE_WAIT_LOCATION);
-                                       
+
                                         geolocationService.getLocation()
                                             .then(function(data){
                                                 permissions.location = data.coords;
@@ -164,7 +178,7 @@
                                     widgetService.load(widget);
                                     return deferred.resolve();
                                 }).catch(function(err){
-                                    
+
                                     return deferred.reject(err);
                                 });
 
@@ -189,7 +203,7 @@
                 modalService.simpleError(error.message);
             });
         }
-        
+
 
         /*
          * Gridster part
@@ -222,7 +236,7 @@
             },
             stop: function(event, $element, widget) {
                 backstretch.resume();
-                
+
                 if(widget.hasStateChanged()){
                     dataservice.updateWidget(widget).then(function(){
                         notifService.success( APP_CONFIG.messages.success.widget.updated );
@@ -235,13 +249,15 @@
         $scope.$on('gridster-resized', function(event, size){
 
         });
+
         // Watch item changes
         // @todo this event is triggered at startup, I suspect its due to the page building which make gridster change during process
         // @todo maybe use a queue here to store change and call server less times
-        $scope.$watch('widgets', function(newWidgets){
-
-
-        }, true);
+        // @todo DO NOT USE IN THIS STATE this method cause fatal loop
+        //$scope.$watch('widgets', function(newWidgets){
+        //
+        //
+        //}, true);
 
 
     };

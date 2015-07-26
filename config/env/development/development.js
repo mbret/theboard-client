@@ -16,11 +16,18 @@ module.exports = {
 
     autoLogin: true,
 
-    fillDb: true,
+    fillDb: false,
 
     models: {
-        connection: 'mysqlServer',
+        //connection: 'mysqlServer',
+        connection: 'localDiskDb',
         migrate: 'drop'
+    },
+
+    connections: {
+        mysqlServer: {
+            database: 'theboard'
+        }
     }
 
 };
