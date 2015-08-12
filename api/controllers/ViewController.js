@@ -7,7 +7,7 @@
     module.exports = {
 
         /**
-         * Return the app page
+         * Return the web app page
          */
         index: function (req, res){
             return res.ok({
@@ -50,6 +50,13 @@
             }, 'auth/register');
         },
 
+        /**
+         * Return all the flash message available on the server.
+         * It's used by the web app.
+         * @param req
+         * @param res
+         * @returns {*}
+         */
         flash: function(req, res){
             return res.ok({
                 errors    : req.flash('error'),
