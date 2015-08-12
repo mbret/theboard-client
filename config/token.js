@@ -13,5 +13,4 @@ module.exports.token = {
 
     expiresInMinutes: 10//60*24
 
-
 };

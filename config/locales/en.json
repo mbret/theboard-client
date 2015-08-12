@@ -4,6 +4,7 @@
 	"i18n_Email": "Email",
 	"i18n_Password": "Password",
 	"i18n_Login": "Login",
+	"i18n_Index": "Coucou",
     "i18n_Register": "Register",
 	"i18n_A brand new app.": "A brand new app.",
     "i18n_Not Found": "Not Found",
@@ -11,7 +12,6 @@
     "i18n_Internal server error": "Internal server error",
 
     "i18n_404_page_not_found": "Sorry, but the page you are looking for has not been found. Try checking the URL for error, then hit the refresh button on your browser or try another URL.",
-    "i18n_404_gentlecat": "Orrr why not give a chance to our gentle cat!",
 
     "i18n_500_server_crash": "The server encountered something unexpected that didn't allow it to complete the request. We apologize.",
     "i18n_500_can_go_back_home": "You can go back to main page:",

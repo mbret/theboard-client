@@ -7,13 +7,22 @@
  *
  * For more information on bootstrapping your app, check out:
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.bootstrap.html
+ *
+ * Access sails useful parts:
+ * - sails.hooks.http.app => the underlying HTTP server (i.e. the Express app)
+ * - sails.config.appPath
  */
-var Promise = require('bluebird');
 var fs = require('fs');
+var path = require('path');
 
 module.exports.bootstrap = function(cb) {
 
-    //sails.services.oauth2orize.createServer();
+    // Extends express app.locals with view helpers
+    // These helpers unlike res.locals are available everywhere and especially
+    // for different templates
+    _.extend(sails.hooks.http.app.locals, {
+        helper: require(path.join(sails.config.appPath, 'api/services/ViewHelperService'))
+    });
 
     // Load passport providers on startup
     // Will add to passport.use() all the strategy

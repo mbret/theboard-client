@@ -27,7 +27,7 @@
 
     <%- body %>
 
-    <script src="<%= routes.configurationJS %>"></script>
+    <script src="<%= helper.getUrl(sails.config.urls.configurationJS) %>"></script>
 
     <!--SCRIPTS-->
     <script src="/js/dependencies/sails.io.js"></script>

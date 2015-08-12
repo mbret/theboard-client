@@ -25,7 +25,9 @@ before(function(done) {
         
         environment: 'development',
         
-        autoLogin: false,
+        passport: {
+            autoLogin: false
+        },
 
         fillDb: true,
         

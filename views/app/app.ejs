@@ -3,7 +3,7 @@
 <html>
 <head>
 
-    <title page-title></title>
+    <title page-title><%= title %></title>
 
     <meta charset="utf-8">
 
@@ -43,7 +43,7 @@
     </div>
     <!-- End wrapper-->
 
-    <script src="<%= routes.configurationJS %>"></script>
+    <script src="<%= helper.getUrl(sails.config.urls.configurationJS) %>"></script>
     
     <!--SCRIPTS APP-->
     <script src="/js/dependencies/sails.io.js"></script>

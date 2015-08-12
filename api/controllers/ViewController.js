@@ -11,12 +11,12 @@
          */
         index: function (req, res){
             return res.ok({
-                routes: sails.config.app.routes
+                title:  ViewsService.buildTitle(req.__('i18n_Index')),
             }, 'app/app');
         },
 
         signin: function (req, res) {
-            var strategies = sails.config.passport;
+            var strategies = sails.config.passport.strategies;
             var providers  = {};
 
             // Get a list of available providers for use in your templates.
@@ -36,9 +36,8 @@
                 layout: 'auth/layout-auth',
                 errors    : req.flash('error'),
                 successes : req.flash('success'),
-                copy: sails.config.app.copy,
+                copy: sails.config.views.copy,
                 providers: providers,
-                routes: sails.config.app.routes
             }, 'auth/login');
         },
 
@@ -47,8 +46,7 @@
                 title: ViewsService.buildTitle(req.__('i18n_Register')),
                 layout: 'auth/layout-auth',
                 errors: req.flash('error'),
-                copy: sails.config.app.copy,
-                routes: sails.config.app.routes
+                copy: sails.config.views.copy,
             }, 'auth/register');
         },
 
@@ -65,7 +63,7 @@
          * Return the settings of application to be used with ajax call.
          */
         configurationJSON: function(req, res){
-            res.ok( WebAppService.generateConfiguration() );
+            res.ok( ViewsService.generateConfiguration() );
         },
 
         /**
@@ -79,7 +77,7 @@
             res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
             res.setHeader('Pragma', 'no-cache');
             res.setHeader('Expires', 0);
-            res.send('window.APP_CONFIG = ' + JSON.stringify( WebAppService.generateConfiguration() ) + ';');
+            res.send('window.APP_CONFIG = ' + JSON.stringify( ViewsService.generateConfiguration() ) + ';');
         },
 
         pipeCOR: function (req, res) {
@@ -87,14 +85,7 @@
             if(sails.config.environment === 'production'){
                 console.error('You must disable this route for production');
             }
-            var content = null;
 
-            //request(req.param('url'), function(err, resp, body) {
-            //	console.log(body);
-            //	content = body;
-            //	pass back the results to client side
-            //	res.send(content);
-            //});
             require('request').get(req.param('url')).pipe(res);
 
         },

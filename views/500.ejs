@@ -4,6 +4,6 @@
 
     <div class="error-desc">
         <p><%= __('i18n_500_server_crash') %></p>
-        <br/><%= __('i18n_500_can_go_back_home') %> <br/><a href="/" class="btn btn-primary m-t"><%= __('i18n_Home') %></a>
+        <br/><%= __('i18n_500_can_go_back_home') %> <br/><a href="<%= sails.getBaseUrl() %>" class="btn btn-primary m-t"><%= __('i18n_Home') %></a>
     </div>
 </div>

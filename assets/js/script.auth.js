@@ -5,6 +5,7 @@
 
     $(document).ready(function(){
 
+        // Get config from server
         var APP_CONFIG = window.APP_CONFIG;
 
         $('.i-checks').iCheck({
@@ -30,7 +31,7 @@
             "hideEasing": "linear",
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
-        }
+        };
         
         // Display errors if present
         $('.notification').each(function(index){
@@ -118,8 +119,6 @@
 
             }
         });
-
-
 
     });
     

@@ -19,134 +19,75 @@
  * For more information on configuring custom routes, check out:
  * http://sailsjs.org/#/documentation/concepts/Routes/RouteTargetSyntax.html
  */
-    
-
-var routes = {
-
-    /***************************************************************************
-    *                                                                          *
-    * Make the view located at `views/homepage.ejs` (or `views/homepage.jade`, *
-    * etc. depending on your default view engine) your home page.              *
-    *                                                                          *
-    * (Alternatively, remove this and add an `index.html` file in your         *
-    * `assets` directory)                                                      *
-    *                                                                          *
-    ***************************************************************************/
-
-    'get /api/users/'               : 'ProfileController.find',
-    'get /api/users/profiles'       : 'ProfileController.findAll',
-    'get /api/users/profiles/:id'   : 'ProfileController.find',
-    'put /api/users/profiles'       : 'ProfileController.updateAll',
-    'post /api/users/profiles'       : 'ProfileController.create',
-    'put /api/users/profiles/:id'   : 'ProfileController.update',
-    'post /api/users/backgroudimages': 'AccountController.uploadBackgroundImage',
-    
-    'get /api/users/widgets': 'WidgetController.findAll', // default activated profile
-    'put /api/users/widgets/:id': 'WidgetController.updateProfileWidget', // update for default profile
-    'get /api/users/profiles/:profileid/widgets': 'WidgetController.findAll', // specific profile
-    'put /api/users/profiles/:profileid/widgets/:id': 'WidgetController.updateProfileWidget', // update for given profile
-    'post /api/profiles/:profileid/widgets': 'WidgetController.addProfileWidget',
-
-    'get /api/account': 'AccountController.me',
-    'put /api/account': 'AccountController.update',
-
-    'get /api/repository/widgets': 'RepositoryController.findAll',
-
-    // ==============
-    // Auth part
-    // ==============
-    // Views
-    'get /signin': 'ViewController.signin',
-    'get /signup': 'ViewController.signup',
-    
-    'get /auth/logout': 'AuthController.logout',
-    // local auth
-    'get  /auth/token/refresh'   : 'AuthController.issueToken',
-    'post /auth/signin'         : 'AuthController.signin',
-    'post /auth/signup'         : 'AuthController.signup',
-    
-    // Providers auth
-    'get /auth/:provider': 'AuthController.provider',
-    'get /auth/:provider/callback': 'AuthController.callback',
-    'get /auth/:provider/:action': 'AuthController.callback',
-
-    // ==============
-    // App routes
-    // ==============
-    'get /helpers/cor/:url': 'ViewController.pipeCOR', // act as proxy for any request out of this domain
-    'get /configuration.json': 'ViewController.configurationJSON', // return app settings
-    'get /configuration.js': 'ViewController.configurationJS', // return app settings
-    'get /flash': 'ViewController.flash',
-    'get /': 'ViewController.index' // Home (start point of front end app)
-
-};
-
 module.exports = {
-    routes: routes,
-    app: {
-        routes: getRoutes('app')
+
+    routes: {
+
+        /***************************************************************************
+         *                                                                          *
+         * Make the view located at `views/homepage.ejs` (or `views/homepage.jade`, *
+         * etc. depending on your default view engine) your home page.              *
+         *                                                                          *
+         * (Alternatively, remove this and add an `index.html` file in your         *
+         * `assets` directory)                                                      *
+         *                                                                          *
+         ***************************************************************************/
+
+        'get /api/users/'               : 'ProfileController.find',
+        'get /api/users/profiles'       : 'ProfileController.findAll',
+        'get /api/users/profiles/:id'   : 'ProfileController.find',
+        'put /api/users/profiles'       : 'ProfileController.updateAll',
+        'post /api/users/profiles'       : 'ProfileController.create',
+        'put /api/users/profiles/:id'   : 'ProfileController.update',
+        'post /api/users/backgroudimages': 'AccountController.uploadBackgroundImage',
+
+        'get /api/users/widgets': 'WidgetController.findAll', // default activated profile
+        'put /api/users/widgets/:id': 'WidgetController.updateProfileWidget', // update for default profile
+        'get /api/users/profiles/:profileid/widgets': 'WidgetController.findAll', // specific profile
+        'put /api/users/profiles/:profileid/widgets/:id': 'WidgetController.updateProfileWidget', // update for given profile
+        'post /api/profiles/:profileid/widgets': 'WidgetController.addProfileWidget',
+
+        'get /api/account': 'AccountController.me',
+        'put /api/account': 'AccountController.update',
+
+        'get /api/repository/widgets': 'RepositoryController.findAll',
+
+        // ==============
+        // Auth part
+        // ==============
+        // Views
+        'get /signin': 'ViewController.signin',
+        'get /signup': 'ViewController.signup',
+
+        'get /auth/logout': 'AuthController.logout',
+        // local auth
+        'get  /auth/token/refresh'   : 'AuthController.issueToken',
+        'post /auth/signin'         : 'AuthController.signin',
+        'post /auth/signup'         : 'AuthController.signup',
+
+        // Providers auth
+        'get /auth/:provider': 'AuthController.provider',
+        'get /auth/:provider/callback': 'AuthController.callback',
+        'get /auth/:provider/:action': 'AuthController.callback',
+
+        // ==============
+        // App routes
+        // ==============
+        'get /helpers/cor/:url': 'ViewController.pipeCOR', // act as proxy for any request out of this domain
+        'get /configuration.json': 'ViewController.configurationJSON', // return app settings
+        'get /configuration.js': 'ViewController.configurationJS', // return app settings
+        'get /flash': 'ViewController.flash',
+        'get /': 'ViewController.index' // Home (start point of front end app)
+
     },
-    urls: getRoutes('server')
+
+    urls: {
+        signin: '/signin',
+        signup: '/signup',
+        app: '/',
+        data: 'public',
+        userBackgroundImages: '/public/users/backgrounds',
+        images: 'images',
+        configurationJS: '/configuration.js',
+    }
 };
-
-function getRoutes(label){
-    var routes = {
-        default: {
-            signin: '/signin',
-            app: '/'
-        },
-        server: {
-            data: 'public',
-            userBackgroundImages: '/public/users/backgrounds',
-            images: 'images'
-        },
-        app: {
-            views: '/app/views',
-            server: '/',
-            icons: '/app/icons',
-            images: '/app/img',
-            flash: '/flash',
-            signup: '/signup',
-            logout: '/auth/logout',
-            configurationJS: '/configuration.js',
-            api: {
-                auth: {
-                    signin: '/auth/signin',
-                    signup: '/auth/signup'
-                },
-                me: '/api/account',
-                user: {
-
-                },
-                profiles: {
-                    get: '/api/users/profiles/:id',
-                    getAll: '/api/users/profiles',
-                    updateAll: '/api/users/profiles',
-                    update: '/api/users/profiles/:id',
-                    create: '/api/users/profiles'
-                },
-                widgets: {
-                    getByProfile: '/api/users/profiles/:id/widgets', // get
-                    get: '/api/users/widgets/:id', // get
-                    getAll: '/api/users/widgets',
-                    updateAll: '/api/users/widgets', // put,
-                    update: '/api/users/widgets/:id',
-                    updateByProfile: '/api/users/profiles/:profileid/widgets/:id',
-                    addToProfile: '/api/profiles/:profileid/widgets'
-                },
-                account: {
-                    get: '/api/account', // get
-                    update: '/api/account' // put
-                },
-                repository: {
-                    widgets: {
-                        getAll: '/api/repository/widgets'
-                    }
-                }
-            }
-        }
-
-    };
-
-    return require('lodash').assign(routes.default, routes[label]);
-}
