@@ -32,7 +32,8 @@ module.exports.bootstrap = function(cb) {
 
         // Create data dir if it doesnt exist (with app rights)
         function(cb){
-            FileService.createDataDir(cb);
+            return cb();
+            //FileService.createDataDir(cb);
         },
 
         // Init database

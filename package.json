@@ -47,7 +47,8 @@
   "keywords": [],
   "scripts": {
     "start": "node app.js",
-    "debug": "node debug app.js"
+    "debug": "node debug app.js",
+    "test" : "mocha"
   },
   "main": "app.js",
   "repository": {
