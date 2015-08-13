@@ -107,7 +107,7 @@
             alert("We are sorry but your browser is too old and unsafe. Your widgets will not be loaded in order to protect you.");
         }
         else{
-            widgetService.getAll(user.getActiveProfile()).then(function(widgetsFromServer){
+            widgetService.getAll(user.getProfile()).then(function(widgetsFromServer){
 
                 widgets = widgetsFromServer;
                 $scope.widgets = widgets;

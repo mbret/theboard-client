@@ -27,16 +27,16 @@ module.exports.policies = {
   ***************************************************************************/
 
     // Revoke all by default
-    '*': false, //['sessionAuth'], // ok or 403
+    '*': false,
 
     // Views are accessible but some part are revoked when logged or not
     'view': {
-        'index': ['sessionAuthOrRedirect'],
-        'configurationJSON': true,
-        'configurationJS': true,
-        'flash': ['sessionAuth'],
-        'signin': ['notAuthenticated'],
-        'signup': ['notAuthenticated'],
+        'index'         : ['sessionAuthOrRedirect'],
+        'configuration' : true, // true is needed because configuration is accessible even for signin / signup
+        'user'          : ['sessionAuth'],
+        'flash'         : ['sessionAuth'],
+        'signin'        : ['notAuthenticated'],
+        'signup'        : ['notAuthenticated'],
     },
     
     //

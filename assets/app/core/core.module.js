@@ -3,8 +3,6 @@
 
     angular.module('app.core', [
 
-        'app.config',
-        
         'ui.router',
         'ui.bootstrap',
         'angularUtils.directives.uiBreadcrumbs',

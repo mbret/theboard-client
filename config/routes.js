@@ -40,14 +40,12 @@ module.exports = {
         'post /api/users/profiles'       : 'ProfileController.create',
         'put /api/users/profiles/:id'   : 'ProfileController.update',
         'post /api/users/backgroudimages': 'AccountController.uploadBackgroundImage',
-
         'get /api/users/widgets': 'WidgetController.findAll', // default activated profile
         'put /api/users/widgets/:id': 'WidgetController.updateProfileWidget', // update for default profile
         'get /api/users/profiles/:profileid/widgets': 'WidgetController.findAll', // specific profile
         'put /api/users/profiles/:profileid/widgets/:id': 'WidgetController.updateProfileWidget', // update for given profile
         'post /api/profiles/:profileid/widgets': 'WidgetController.addProfileWidget',
 
-        'get /api/account': 'AccountController.me',
         'put /api/account': 'AccountController.update',
 
         'get /api/repository/widgets': 'RepositoryController.findAll',
@@ -70,17 +68,22 @@ module.exports = {
         'get /auth/:provider/callback': 'AuthController.callback',
         'get /auth/:provider/:action': 'AuthController.callback',
 
-        // ==============
-        // App routes
-        // ==============
-        'get /helpers/cor/:url': 'ViewController.pipeCOR', // act as proxy for any request out of this domain
-        'get /configuration.json': 'ViewController.configurationJSON', // return app settings
-        'get /configuration.js': 'ViewController.configurationJS', // return app settings
-        'get /flash': 'ViewController.flash',
-        'get /': 'ViewController.index' // Home (start point of front end app)
-
+        // ------------------------------------------------------------------
+        //
+        // These routes are relative to the front end app.
+        // They are used as helper. They are not relevant for api.
+        //
+        // ------------------------------------------------------------------
+        'get /helpers/cor/:url'             : 'ViewController.pipeCOR', // act as proxy for any request out of this domain
+        'get /helpers/configuration.json'   : 'ViewController.configuration', // return app settings
+        'get /helpers/configuration.js'     : 'ViewController.configuration', // return app settings
+        'get /helpers/user.js'              : 'ViewController.user', // return the user object
+        'get /helpers/flash'                : 'ViewController.flash',
+        'get /'                             : 'ViewController.index', // Home (start point of front end app)
     },
 
+    // Server urls
+    // These urls are not available inside app configuration
     urls: {
         signin: '/signin',
         signup: '/signup',
@@ -88,6 +91,7 @@ module.exports = {
         data: 'public',
         userBackgroundImages: '/public/users/backgrounds',
         images: 'images',
-        configurationJS: '/configuration.js',
+        configuration: '/helpers/configuration.js',
+        user: '/helpers/user.js'
     }
 };

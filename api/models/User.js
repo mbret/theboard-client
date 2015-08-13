@@ -64,6 +64,7 @@ var User = {
             var data = _.cloneDeep(this.toObject());
             var that = this;
 
+            console.log(data);
             // Loop over all supposed settings
             // Fill setting with user value
             // In that way the settings array returned to app contain all settings (with possible default values)
@@ -76,6 +77,7 @@ var User = {
             // @todo check how to only retrieve list of profile id instead of having this because of populate
             data.profiles = _.map(data.profiles, 'id');
 
+            console.log(data);
             return data;
 
         }

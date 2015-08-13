@@ -27,13 +27,13 @@ var jsFilesToInject = [
     // Load sails.io before everything else
     'js/dependencies/**/sails.io.js',
 
-    'js/dependencies/jquery/jquery-2.1.1.min.js',
-    'js/dependencies/jquery/jquery-ui.min.js',
-    'js/dependencies/bootstrap/bootstrap.min.js',
-    'js/dependencies/jquery-plugins/jquery.cookie.min.js',
-    'js/dependencies/jquery-plugins/iCheck/icheck.min.js',
-    'js/dependencies/jquery-plugins/toastr/toastr.min.js',
-    'js/dependencies/jquery-plugins/validate/jquery.validate.min.js',
+    'vendors/jquery/jquery.js',
+    'vendors/jquery-ui/jquery-ui.js',
+    'vendors/bootstrap/bootstrap.js',
+    'vendors/jquery-cookie/jquery.cookie.js',
+    'vendors/iCheck/icheck.js',
+    'vendors/toastr/toastr.js',
+    'vendors/jquery-validation/jquery.validate.js',
     'js/script.auth.js',
 ];
 
@@ -69,6 +69,10 @@ var jsFilesToInjectApp = [
     // App
     // we need to load all modules
     // then their scripts
+    // core first
+    'app/core/**/*.module.js',
+    'app/core/**/*.js.js',
+    // then everything else
     'app/**/*.module.js',
     'app/**/*.js',
     

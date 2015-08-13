@@ -10,12 +10,19 @@
 module.exports = function(grunt) {
 
 	grunt.config.set('bower', {
-		dev: {
-			dest: 'assets',
-			js_dest: 'assets/js/dependencies',
-			css_dest: 'assets/styles'
+		install: {
+			options: {
+				targetDir: './assets/vendors',
+				layout: 'byType',
+				install: true,
+				verbose: true,
+				// DO NOT SET TO TRUE. We are using custom vendors so if set to true it will erase all manual plugins
+				cleanTargetDir: false,
+				cleanBowerDir: false,
+				bowerOptions: {}
+			}
 		}
 	});
 
-	grunt.loadNpmTasks('grunt-bower');
+	grunt.loadNpmTasks('grunt-bower-task');
 };

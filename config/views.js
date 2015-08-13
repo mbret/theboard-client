@@ -45,10 +45,9 @@ module.exports.views = {
             server: '/',
             icons: '/app/icons',
             images: '/app/img',
-            flash: '/flash',
+            flash: '/helpers/flash',
             signup: '/signup',
             logout: '/auth/logout',
-            configurationJS: '/configuration.js',
             api: {
                 auth: {
                     signin: '/auth/signin',

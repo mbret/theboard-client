@@ -67,24 +67,33 @@
         },
 
         /**
-         * Return the settings of application to be used with ajax call.
-         */
-        configurationJSON: function(req, res){
-            res.ok( ViewsService.generateConfiguration() );
-        },
-
-        /**
          * Return the configuration as .js.
          * Just include this route as a script.
          * @param req
          * @param res
          */
-        configurationJS: function(req, res){
+        configuration: function(req, res){
+            // @todo handle .json endpoint
             res.setHeader('Content-Type', 'application/javascript');
             res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
             res.setHeader('Pragma', 'no-cache');
             res.setHeader('Expires', 0);
             res.send('window.APP_CONFIG = ' + JSON.stringify( ViewsService.generateConfiguration() ) + ';');
+        },
+
+        /**
+         * Return the current user as .js object for the view.
+         * Just include this route as a script.
+         * @param req
+         * @param res
+         */
+        user: function(req, res){
+            var user = req.user;
+            res.setHeader('Content-Type', 'application/javascript');
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            res.setHeader('Pragma', 'no-cache');
+            res.setHeader('Expires', 0);
+            res.send('window.USER = ' + JSON.stringify( user.toView() ) + ';');
         },
 
         pipeCOR: function (req, res) {

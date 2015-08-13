@@ -4,10 +4,7 @@
     
     module.exports = {
 
-        me: function(req, res){
-            var user = req.user;
-            res.ok( user.toView() );
-        },
+
 
         update: function(req, res){
             var user = req.user;

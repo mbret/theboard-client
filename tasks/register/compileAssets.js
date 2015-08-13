@@ -1,7 +1,7 @@
 module.exports = function (grunt) {
 	grunt.registerTask('compileAssets', [
 		'clean:dev',
-		//'bower:dev',
+		'bower:install',
 		'jst:dev',
 		'less:dev',
 		'copy:dev',

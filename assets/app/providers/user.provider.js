@@ -27,7 +27,6 @@
             userData = data;
         }
 
-        userFactory.$inject = ['userService'];
         /**
          * Build a user object that come will useful method.
          * This object represent logged user so there is only one.
@@ -36,37 +35,42 @@
         function userFactory(userService) {
             return new userService( userData );
         }
+        userFactory.$inject = ['userService'];
+
     }
 
     userService.$inject = ['localStorageService', 'dataservice', 'APP_CONFIG'];
     function userService(localStorageService, dataservice, APP_CONFIG){
 
+        /**
+         *
+         * @param data
+         * @constructor
+         */
         var User = function( data ){
 
             var self = this;
 
-            /*
-             * Attributes
-             */
-            self.profiles = angular.copy(data.profiles);
-            // array of settings with their values
-            self.settings = angular.copy(data.settings);
-            self.id = data.id;
-            self.email = data.email;
+            // Copy data from server USER to the app user
+            self.profiles   = angular.copy(data.profiles);
+            self.settings   = angular.copy(data.settings);
+            self.id         = data.id;
+            self.email      = data.email;
             self.backgroundImages = [];
-            self.avatar = data.avatar;
-            self.banner = data.banner;
-            self.profile = data.profile;
-            self.firstName = data.firstName;
-            self.lastName = data.lastName;
-            self.job = 'Developer';
-            self.phone = '(+33) 6 06 65 87 55';
+            self.avatar     = data.avatar;
+            self.banner     = data.banner;
+            self.profile    = data.profile;
+            self.firstName  = data.firstName;
+            self.lastName   = data.lastName;
+            self.job        = 'Developer';
+            self.phone      = '(+33) 6 06 65 87 55';
 
             if(data.backgroundImages && Array.isArray(data.backgroundImages)){
                 self.backgroundImages = angular.copy(data.backgroundImages);
             }
 
-            mergeLocal();
+            // Merge local save of user with this current user
+            mergeWithLocalSave();
 
             /*
              * Constants
@@ -90,11 +94,11 @@
             /**
              * Use this function to set new active profile as local.
              */
-            User.prototype.setActiveProfile = function( profile ){
+            this.setProfile = function( profile ){
                 self.profile = profile.id;
             };
 
-            User.prototype.getActiveProfile = function(){
+            this.getProfile = function(){
                 return self.profile;
             };
 
@@ -103,7 +107,7 @@
              * @param id
              * @param value
              */
-            User.prototype.setSetting = function( id, value ){
+            this.setSetting = function( id, value ){
                 self.settings[id] = value;
             };
 
@@ -146,10 +150,10 @@
             }
 
             /**
-             * Merge all local config into user logged.
-             * - Check if local var are still valids. 
+             * Merge the local user save with current user data.
+             * We have to check for some values if they are still valid with server (maintain synchronization)
              */
-            function mergeLocal(){
+            function mergeWithLocalSave(){
                 var localUser = localStorageService.get('user.' + self.id);
                 if(localUser && localUser.profile){
                     // reject if this id is not synchronized with server
@@ -169,7 +173,6 @@
         };
 
         return User;
-        
     }
 
 })();

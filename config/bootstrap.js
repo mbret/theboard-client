@@ -40,11 +40,11 @@ module.exports.bootstrap = function(cb) {
         function(cb){
             if( sails.config.fillDb === true ){
                 switch(sails.config.environment){
-                    case 'production':
-                        DbService.init('production')
-                        .then(function(){ cb(); })
-                        .catch(cb);
-                        break;
+                    //case 'production':
+                    //    DbService.init('production')
+                    //    .then(function(){ cb(); })
+                    //    .catch(cb);
+                    //    break;
                     case 'development':
                         DbService.init('development')
                         .then(function(){ cb(); })

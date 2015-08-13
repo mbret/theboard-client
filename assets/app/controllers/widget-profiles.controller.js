@@ -21,7 +21,7 @@
         });
 
         this.isActive = function(profile){
-            return user.getActiveProfile() === profile.id ? true : false;
+            return user.getProfile() === profile.id ? true : false;
         };
         
         this.detail = function(profile){
@@ -57,7 +57,7 @@
             event.stopPropagation();
 
             // save for user and for session
-            user.setActiveProfile(profile);
+            user.setProfile(profile);
             user.save().then(function(user){
                 notifService.success(APP_CONFIG.messages.profile.activated);
             });

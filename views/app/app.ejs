@@ -21,7 +21,7 @@
 
     <!-- This preloader is used with pace.js to hide the content of page while rendering is not done -->
     <div class="preloader">
-        <div class="loading">Loading <i class="fa fa-refresh fa-spin icon"></i></div>
+        <div class="loading">Your app is loading <i class="fa fa-refresh fa-spin icon"></i></div>
     </div>
 
     <!-- Wrapper-->
@@ -43,28 +43,19 @@
     </div>
     <!-- End wrapper-->
 
-    <script src="<%= helper.getUrl(sails.config.urls.configurationJS) %>"></script>
-    
+    <!--Get app configuration-->
+    <script src="<%= helper.getUrl(sails.config.urls.configuration) %>"></script>
+    <!--Get user configuration-->
+    <script src="<%= helper.getUrl(sails.config.urls.user) %>"></script>
+
     <!--SCRIPTS APP-->
     <script src="/js/dependencies/sails.io.js"></script>
-    <script src="/js/dependencies/pace/pace.min.js"></script>
     <script src="/js/dependencies/URI.js"></script>
-    <script src="/js/dependencies/lodash.js"></script>
-    <script src="/js/dependencies/moment.min.js"></script>
-    <script src="/js/dependencies/hammer.js"></script>
-    <script src="/js/dependencies/detect-element-resize.js"></script>
     <script src="/js/dependencies/dropzone.js"></script>
-    <script src="/js/dependencies/jquery/jquery-2.1.1.min.js"></script>
-    <script src="/js/dependencies/jquery/jquery-ui.min.js"></script>
-    <script src="/js/dependencies/bootstrap/bootstrap.min.js"></script>
     <script src="/js/dependencies/jquery-plugins/blueimp-gallery.min.js"></script>
-    <script src="/js/dependencies/jquery-plugins/iCheck/icheck.min.js"></script>
     <script src="/js/dependencies/jquery-plugins/jquery.backstretch.js"></script>
-    <script src="/js/dependencies/jquery-plugins/jquery.cookie.js"></script>
     <script src="/js/dependencies/jquery-plugins/jquery.knob.js"></script>
     <script src="/js/dependencies/jquery-plugins/metisMenu/jquery.metisMenu.js"></script>
-    <script src="/js/dependencies/jquery-plugins/toastr/toastr.min.js"></script>
-    <script src="/js/dependencies/jquery-plugins/validate/jquery.validate.min.js"></script>
     <script src="/js/dependencies/angular/angular.js"></script>
     <script src="/js/dependencies/angular/angular-animate.js"></script>
     <script src="/js/dependencies/angular/angular-aria.js"></script>
@@ -76,19 +67,16 @@
     <script src="/js/dependencies/angular-plugins/angular-jwt/angular-jwt.min.js"></script>
     <script src="/js/dependencies/angular-plugins/angular-local-storage.min.js"></script>
     <script src="/js/dependencies/angular-plugins/bootstrap/ui-bootstrap-tpls-0.12.0.min.js"></script>
-    <script src="/app/app.config.module.js"></script>
+    <script src="/app/core/core.module.js"></script>
     <script src="/app/app.module.js"></script>
     <script src="/app/blocks/backstretch/backstretch.module.js"></script>
     <script src="/app/blocks/exception/exception.module.js"></script>
     <script src="/app/blocks/logger/logger.module.js"></script>
     <script src="/app/blocks/page-title/page-title.module.js"></script>
     <script src="/app/controllers/controllers.module.js"></script>
-    <script src="/app/core/core.module.js"></script>
     <script src="/app/directives/directives.module.js"></script>
     <script src="/app/filters/filters.module.js"></script>
     <script src="/app/providers/services.module.js"></script>
-    <script src="/app/app.config.js"></script>
-    <script src="/app/app.constants.js"></script>
     <script src="/app/blocks/backstretch/backstretch.directive.js"></script>
     <script src="/app/blocks/backstretch/backstretch.service.js"></script>
     <script src="/app/blocks/exception/exception-handler.provider.js"></script>
