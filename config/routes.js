@@ -41,11 +41,12 @@ module.exports = {
         'put /api/users/profiles/:id'       : 'ProfileController.update',
         'post /api/users/backgroudimages'   : 'AccountController.uploadBackgroundImage',
         'put /api/users/widgets/:id'        : 'WidgetController.updateProfileWidget', // update for default profile
-        'put /api/users/profiles/:profileid/widgets/:id': 'WidgetController.updateProfileWidget', // update for given profile
 
         'get /api/widgets'                  : 'WidgetController.findAll', // get all widgets
         'post /api/widgets'                 : 'WidgetController.addWidgetToProfile',
-        'delete /api/profiles/:profile/widgets/:widget': 'WidgetController.removeWidgetFromProfile',
+
+        'put /api/profiles/:profile/widgets/:widget'    : 'WidgetController.updateProfileWidget', // update for given profile
+        'delete /api/profiles/:profile/widgets/:widget' : 'WidgetController.removeWidgetFromProfile', // remove for given profile
 
         'put /api/account': 'AccountController.update',
 

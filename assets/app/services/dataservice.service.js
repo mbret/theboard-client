@@ -204,26 +204,31 @@
                 });
         }
 
-        function updateWidget( widget ){
-            return update(widget.id, {
+        /**
+         * Update a widget for a specific profile
+         * @param profileId
+         * @param widget
+         * @returns {*}
+         */
+        function updateWidget(profileId, widget){
+            var data = {
                 sizeX: widget.sizeX,
                 sizeY: widget.sizeY,
                 row: widget.row,
                 col: widget.col,
                 options: widget.options
-            });
-        }
+            };
 
-        function update(id, data){
-            var route = APP_CONFIG.routes.api.widgets.update.replace(':id', id);
-            return $http.put(route, data).then(function(data) {
-                logger.debug(debugName + 'Widget updated successfully!', data.data);
-                return data.data;
-            })
-            .catch(function(err) {
+            var route = APP_CONFIG.routes.api.widgets.updateByProfile.replace(':widget', widget.identity).replace(':profile', profileId);
+            return $http.put(route, data)
+                .then(function(data) {
+                    logger.debug(debugName + 'Widget updated successfully!', data.data);
+                    return data.data;
+                })
+                .catch(function(err) {
                     logger.error(debugName + 'Failure while updating widget', err);
                     throw new Error(APP_CONFIG.messages.errors.widgets.unableToUpdate);
-            });
+                });
         }
 
     }

@@ -67,9 +67,9 @@ module.exports.views = {
                 widgets: {
                     get: '/api/users/widgets/:id', // get
                     getAll: '/api/widgets',
-                    updateAll: '/api/users/widgets', // put,
-                    update: '/api/users/widgets/:id',
-                    updateByProfile: '/api/users/profiles/:profileid/widgets/:id',
+                    //updateAll: '/api/users/widgets', // put,
+                    //update: '/api/users/widgets/:id',
+                    updateByProfile: '/api/profiles/:profile/widgets/:widget',
                     addToProfile: '/api/widgets',
                     removeFromProfile: '/api/profiles/:profile/widgets/:widget'
                 },

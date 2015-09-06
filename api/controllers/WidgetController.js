@@ -3,6 +3,7 @@
 
     var Promise = require('bluebird');
     var validator = require('validator');
+    var util = require('util');
 
     module.exports = {
 
@@ -153,26 +154,31 @@
          */
         updateProfileWidget: function(req, res){
             var user = req.user;
-            var widgetID = req.param('id');
+            var widgetID = req.param('widget');
+            var profileId = req.param('profile', null);
 
             var query = {
                 user: user.id
             };
-            if( req.session.profile ){
-                query.id = req.session.profile;
+
+            if( !profileId ){
+                query.default = true;
             }
             else{
-                query.default = true;
+                query.id = profileId;
             }
 
             // Get default activated profile
-            Profile.findOne(query).then(function(profile){
+            Profile.findOne(query)
+                .then(function(profile){
 
-                // Load widget profile
-                ProfileWidget.findOne({profile:profile.id, widget: widgetID}).then(function(profileWidget){
+                    // Load widget profile
+                    return ProfileWidget.findOne({profile:profile.id, widget: widgetID});
+                })
+                .then(function(profileWidget){
 
                     if(!profileWidget){
-                        return res.notFound();
+                        return res.badRequest(util.format('Widget %s not found for profile %s', widgetID, profile));
                     }
 
                     // Update pos
@@ -188,11 +194,12 @@
                     });
                     console.log(profileWidget.options);
 
-                    return profileWidget.save().then(function(profileWidget){
-                        return res.ok(profileWidget);
-                    });
-                });
-            }).catch(res.serverError);
+                    return profileWidget.save();
+                })
+                .then(function(profileWidgetUpdated){
+                    return res.ok(profileWidgetUpdated.toJSON());
+                })
+                .catch(res.serverError);
         },
 
     };

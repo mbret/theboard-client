@@ -86,8 +86,6 @@ module.exports = _.merge( _.cloneDeep( require(path.join(__dirname, '/bases/Mode
             // We need to clone it (problem with populate that will not show up on json)
             var data = _.cloneDeep(this.toObject());
 
-            delete data.id;
-
             return data;
 
         },

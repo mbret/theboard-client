@@ -146,12 +146,11 @@
 
         gridsterConfig.draggable.stop = function(event, $element, widget) {
             backstretch.resume();
-            if(widget.hasStateChanged()){
-                dataservice.updateWidget(widget).then(function(){
+
+            widget.saveLocation(user.getProfile())
+                .then(function(){
                     notifService.success( APP_CONFIG.messages.success.widget.updated );
-                    widget.saveState();
                 });
-            }
         };
 
         // Set event function when widgets are resized
@@ -162,11 +161,10 @@
         gridsterConfig.resizable.stop = function(event, $element, widget) {
             backstretch.resume();
 
-            if(widget.hasStateChanged()){
-                dataservice.updateWidget(widget).then(function(){
+            widget.saveSize(user.getProfile())
+                .then(function(){
                     notifService.success( APP_CONFIG.messages.success.widget.updated );
                 });
-            }
         };
 
         // When the window change and gridster has been resized in order to be displayed

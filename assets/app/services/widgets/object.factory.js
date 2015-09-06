@@ -12,16 +12,21 @@
      * This is a Widget model factory
      *
      */
-    function Widget($window, $http, APP_CONFIG, logger, notifService, $injector, URI) {
+    function Widget($window, $http, APP_CONFIG, logger, notifService, $injector, URI, dataservice) {
 
         var Widget = function(data){
             logger.debug('Widget: A new widget is created', data);
-            
+
             this.identity   = data.identity; // id of widget (valid for all location)
             this.location   = data.location; // local / remote
             this.endPoint   = data.endPoint; // used to browse widget in repository
             this.index      = data.index; // index file to browse in repository (index.html)
             this.uri        = APP_CONFIG.repositoryLocalUri + '/' + this.endPoint + '/' + this.index;
+            this.sizeX      = data.sizeX;
+            this.sizeY      = data.sizeY;
+            this.row        = data.row;
+            this.col        = data.col;
+            this.options    = data.options || [];
 
             this.iframeURL = data.iframeURL;
             this.oldState;
@@ -29,8 +34,7 @@
             
             // Contain the state of iframe
             var state = null;
-            this.options = data.options ? data.options : [];
-            this.saveState(); // keep trace of current state
+            this._saveStateLocally(); // keep trace of current state
         };
         
         Widget.prototype.__defineGetter__("STATE_RELOADING", function(){ return 'reloading' });
@@ -65,19 +69,7 @@
 
             logger.debug('Widget build its URL', completeUri.substring(0, 80) + '...');
         };
-        
-        /**
-         * Save the current state like position, size etc
-         */
-        Widget.prototype.saveState = function(){
-            this.oldState = {
-                sizeX: this.sizeX,
-                sizeY: this.sizeY,
-                row: this.row,
-                col: this.col
-            }
-        };
-        
+
         Widget.prototype.setOptionValue = function(id, value){
             angular.forEach(this.options, function(option){
                 if(option.id === id){
@@ -96,41 +88,43 @@
                 that.setOptionValue(id, value);
             });
         };
-        
-        function setState(state){
 
-        }
-        
-        function getState(){
-            
-        }
-
-        function getOptionValue(id){
-            var optionValue = null;
-            angular.forEach(this.options, function(option){
-                if(option.id === id){
-                    optionValue = option.value;
-                }
-            });
-            return optionValue;
-        };
-        
-
-
-        /**
-         * Check if the widget has options
-         * @returns {boolean}
-         */
-        function hasOptions(){
-            return this.options.length > 0;
-        }
-        
         Widget.prototype.hasStateChanged = function(){
             return (this.col !== this.oldState.col
             || this.row !== this.oldState.row
             || this.sizeX !== this.oldState.sizeX
             || this.sizeY !== this.oldState.sizeY);
-        }
+        };
+
+        /**
+         * Save the new widget location on the web page.
+         *
+         */
+        Widget.prototype.saveLocation = function(profile){
+            var self = this;
+            if(this.hasStateChanged()){
+                return dataservice.updateWidget(profile, self).then(function(){
+                    self._saveStateLocally.call(self);
+                    return Promise.resolve();
+                });
+            }
+            else{
+                return Promise.resolve();
+            }
+        };
+
+        Widget.prototype.saveSize = function(profile){
+            var self = this;
+            if(this.hasStateChanged()){
+                return dataservice.updateWidget(profile, self).then(function(){
+                    self._saveStateLocally.call(self);
+                    return Promise.resolve();
+                });
+            }
+            else{
+                return Promise.resolve();
+            }
+        };
 
         /**
          * @todo
@@ -198,6 +192,44 @@
                     });
             });
         };
+
+        /**
+         * Save the current state like position, size etc
+         */
+        Widget.prototype._saveStateLocally = function(){
+            this.oldState = {
+                sizeX: this.sizeX,
+                sizeY: this.sizeY,
+                row: this.row,
+                col: this.col
+            }
+        };
+
+        function setState(state){
+
+        }
+
+        function getState(){
+
+        }
+
+        function getOptionValue(id){
+            var optionValue = null;
+            angular.forEach(this.options, function(option){
+                if(option.id === id){
+                    optionValue = option.value;
+                }
+            });
+            return optionValue;
+        };
+
+        /**
+         * Check if the widget has options
+         * @returns {boolean}
+         */
+        function hasOptions(){
+            return this.options.length > 0;
+        }
 
         return Widget;
     }
