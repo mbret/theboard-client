@@ -8,14 +8,12 @@
         .module('app.services')
         .factory('Widget', Widget);
 
-    Widget.$inject = ['$window', '$http', 'APP_CONFIG', 'logger', 'notifService', '$injector', 'URI'];
-
     /**
      * This is a Widget model factory
      *
      */
     function Widget($window, $http, APP_CONFIG, logger, notifService, $injector, URI) {
-        
+
         var Widget = function(data){
             logger.debug('Widget: A new widget is created', data);
             
@@ -41,8 +39,12 @@
         Widget.prototype.getState = getState;
         Widget.prototype.setState = setState;
 
+        /**
+         * Build the iframe url
+         * Iframe url contain uri + data to pass through.
+         */
         Widget.prototype.buildIframeURL = function (){
-            console.log(this);
+
             // prepare options for widget
             var options = {};
             angular.forEach(this.options, function(option, index){
@@ -57,9 +59,11 @@
                 permissions: this.permissions,
                 options: options
             };
+
             var completeUri = new URI(this.uri).search({widget:JSON.stringify(configuration)}).toString();
             this.iframeURL = completeUri;
-            //logger.debug('Widget build its URL', URI);
+
+            logger.debug('Widget build its URL', completeUri.substring(0, 80) + '...');
         };
         
         /**
@@ -127,6 +131,73 @@
             || this.sizeX !== this.oldState.sizeX
             || this.sizeY !== this.oldState.sizeY);
         }
+
+        /**
+         * @todo
+         * @returns {Promise}
+         */
+        Widget.prototype.load = function(){
+
+            var widgetService = $injector.get('widgetService'); // avoid circular dependencies
+
+            var self = this;
+
+            widgetService.setViewState(self, widgetService.VIEW_STATE_LOADING);
+
+            return new Promise(function(resolve, reject){
+
+                // =============================
+                // Fill permissions part
+                // permissions: ['email', 'location']
+                // =============================
+                var permissions = {
+                    email: null,
+                    location: null
+                };
+
+                // mail
+                if( self.permissions &&  self.permissions.indexOf('email') !== -1  ){
+                    permissions.email = user.email;
+                }
+
+                // location
+                new Promise(function(resolve, reject){
+                    if( self.permissions &&  self.permissions.indexOf('location') !== -1 ){
+                        // get location using geoloc browser api
+
+                        widgetService.setViewState(self, widgetService.VIEW_STATE_WAIT_LOCATION);
+
+                        geolocationService.getLocation()
+                            .then(function(data){
+                                permissions.location = data.coords;
+                                resolve();
+                            })
+                            .catch(function(err){
+                                // @todo handle different error
+                                $log.debug('User has not accepted location, permission is set to null');
+                                permissions.location = null;
+                                resolve();
+                            });
+                    }
+                    else{
+                       resolve();
+                    }
+                })
+                    .then(function(){
+                        // attach permissions to widget
+                        self.permissions = permissions; // @todo maybe not useful anymore
+                        self.buildIframeURL();
+                        self.isReady = true;
+                        // This method will load the widget iframe
+                        widgetService.load(self);
+
+                        return resolve();
+                    })
+                    .catch(function(err){
+                        return reject(err);
+                    });
+            });
+        };
 
         return Widget;
     }

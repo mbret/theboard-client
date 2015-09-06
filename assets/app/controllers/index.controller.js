@@ -5,8 +5,6 @@
         .module('app.controllers')
         .controller('IndexController', IndexController)
 
-    IndexController.$inject = ['dataservice', '$state', '$window', 'backstretch', 'user', '$scope', '$rootScope', '$q', 'APP_CONFIG', '$log', 'widgetService', 'geolocationService', 'modalService', 'notifService', '$timeout', 'sidebarService'];
-
     /**
      * IndexController
      *
@@ -14,7 +12,7 @@
      * Controllers should never do DOM manipulation or hold DOM selectors; that's where directives and using ng-model come in. Likewise business logic should live in services, not controllers.
      * Data should also be stored in services, except where it is being bound to the $scope
      */
-    function IndexController(dataservice, $state, $window, backstretch, user, $scope, $rootScope, $q, APP_CONFIG, $log, widgetService, geolocationService, modalService, notifService, $timeout, sidebarService){
+    function IndexController(dataservice, backstretch, user, $scope, $rootScope, APP_CONFIG, widgetService, modalService, notifService, $timeout, sidebarService, gridsterConfig){
 
         // This var will contain all widget element
         // These widgets will be placed inside iframe and get from server
@@ -95,13 +93,13 @@
             else{ }
         };
 
-        /*
-         * Widget load and init
+        /* --------------------------------------------------------------
+         *
+         *                  Widget load and init
          *
          * - Get widgets from server
          * - Transform the permissions array into filled object
-         *
-         */
+         * --------------------------------------------------------------*/
         widgetService
             .getAll(user.getProfile())
             .then(function(widgetsFromServer){
@@ -110,142 +108,64 @@
                 widgets = widgetsFromServer;
                 $scope.widgets = widgets;
 
-                return (function(){
-                    var deferred = $q.defer();
+                return new Promise(function(resolve, reject){
 
-                    $timeout(configureWidgets, 1000);
-
-                    return deferred.promise;
-
-                    function configureWidgets(){
+                    $timeout(function(){
 
                         // Loop over all widget and set required values
                         // some tasks may be async so we prepare promise loop
                         var promises = [];
 
                         angular.forEach(widgets, function(widget){
-
-                            widgetService.setViewState(widget, widgetService.VIEW_STATE_LOADING);
-
-                            // create promise and push it to run job later
-                            promises.push(async());
-
-                            function async(){
-                                var deferred = $q.defer();
-
-                                // =============================
-                                // Fill permissions part
-                                // permissions: ['email', 'location']
-                                // =============================
-                                var permissions = {
-                                    email: null,
-                                    location: null
-                                };
-
-                                // mail
-                                if( widget.permissions &&  widget.permissions.indexOf('email') !== -1  ){
-                                    permissions.email = user.email;
-                                }
-
-                                // location
-                                // We create a new promise (with anonymous function)
-                                (function(){
-                                    var deferred2 = $q.defer();
-                                    if( widget.permissions &&  widget.permissions.indexOf('location') !== -1 ){
-                                        // get location using geoloc browser api
-
-                                        widgetService.setViewState(widget, widgetService.VIEW_STATE_WAIT_LOCATION);
-
-                                        geolocationService.getLocation()
-                                            .then(function(data){
-                                                permissions.location = data.coords;
-                                                deferred2.resolve();
-                                            })
-                                            .catch(function(err){
-                                                // @todo handle different error
-                                                $log.debug('User has not accepted location, permission is set to null');
-                                                permissions.location = null;
-                                                deferred2.resolve();
-                                            });
-                                    }
-                                    else{
-                                        deferred2.resolve();
-                                    }
-                                    return deferred2.promise;
-
-                                })()
-                                    .then(function(){
-                                        // attach permissions to widget
-                                        widget.permissions = permissions; // @todo maybe not useful anymore
-                                        widget.buildIframeURL();
-                                        widget.isReady = true;
-                                        // This method will load the widget iframe
-                                        widgetService.load(widget);
-                                        return deferred.resolve();
-                                    })
-                                    .catch(function(err){
-                                        return deferred.reject(err);
-                                    });
-
-                                return deferred.promise;
-                            }
-
+                            promises.push(widget.load());
                         });
 
                         // Run loop job
                         // catch is handle by superior promise
-                        $q.all(promises).then(function(){
-                            return deferred.resolve();
-                        }).catch(function(err){
-                            return deferred.reject(err);
-                        });
-                    }
-                })();
+                        Promise.all(promises)
+                            .then(resolve)
+                            .catch(reject);
+                    }, 1000);
+
+                });
             })
-            .catch(function(error){
             // This catch handle error from all subsequent code
             // If error happens when set permission or promises loop for example
-            modalService.simpleError(error.message);
-        });
+            .catch(modalService.simpleError);
 
-
-        /*
-         * Gridster part
+        /* --------------------------------------------------------------
          *
+         *                  Gridster part
          *
-         */
-        // Inject to view the gridster configuration
-        $scope.gridsterOpts = APP_CONFIG.gridsterOpts;
+         * --------------------------------------------------------------*/
 
         // Set event function when widgets are dragged
-        $scope.gridsterOpts.draggable = {
-            start: function(event, $element, widget){
-                backstretch.pause();
-            },
-            stop: function(event, $element, widget) {
-                backstretch.resume();
-                if(widget.hasStateChanged()){
-                    dataservice.updateWidget(widget).then(function(){
-                        notifService.success( APP_CONFIG.messages.success.widget.updated );
-                        widget.saveState();
-                    });
-                }
+        gridsterConfig.draggable.start = function(event, $element, widget){
+            backstretch.pause();
+        };
+
+        gridsterConfig.draggable.stop = function(event, $element, widget) {
+            backstretch.resume();
+            if(widget.hasStateChanged()){
+                dataservice.updateWidget(widget).then(function(){
+                    notifService.success( APP_CONFIG.messages.success.widget.updated );
+                    widget.saveState();
+                });
             }
         };
 
         // Set event function when widgets are resized
-        $scope.gridsterOpts.resizable = {
-            start: function(event, $element, widget){
-                backstretch.pause();
-            },
-            stop: function(event, $element, widget) {
-                backstretch.resume();
+        gridsterConfig.resizable.start = function(event, $element, widget){
+            backstretch.pause();
+        };
 
-                if(widget.hasStateChanged()){
-                    dataservice.updateWidget(widget).then(function(){
-                        notifService.success( APP_CONFIG.messages.success.widget.updated );
-                    });
-                }
+        gridsterConfig.resizable.stop = function(event, $element, widget) {
+            backstretch.resume();
+
+            if(widget.hasStateChanged()){
+                dataservice.updateWidget(widget).then(function(){
+                    notifService.success( APP_CONFIG.messages.success.widget.updated );
+                });
             }
         };
 

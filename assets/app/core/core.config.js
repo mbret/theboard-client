@@ -19,6 +19,7 @@
         .config(configureLocalStorage)
         .config(configureUser)
         .config(configureAppConfig)
+        .config(configureGridster)
         /**
          *  get executed after the injector is created and are used to kickstart the application.
          *  Only instances and constants can be injected into run blocks.
@@ -97,7 +98,7 @@
                     stop: function(event, $element, widget) {} // optional callback fired when item is finished resizing
                 },
                 draggable: {
-                    enabled: false, // whether dragging items is supported
+                    enabled: true, // whether dragging items is supported
                     handle: '.gridster-draggable', // optional selector for resize handle
                     start: function(event, $element, widget) {}, // optional callback fired when drag is started,
                     drag: function(event, $element, widget) {}, // optional callback fired when item is moved,
@@ -105,6 +106,10 @@
                 }
             }
         });
+    }
+
+    function configureGridster(gridsterConfig, APP_CONFIG, _){
+        _.merge(gridsterConfig, APP_CONFIG.gridsterOpts);
     }
 
     /**

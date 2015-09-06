@@ -1,3 +1,7 @@
+/**
+ * This task is ran in production mode
+ * @param grunt
+ */
 module.exports = function (grunt) {
 	grunt.registerTask('prod', [
 		'compileAssets',

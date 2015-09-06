@@ -5,23 +5,32 @@
 angular
     .module('app.services')
 
-    .factory('modalService', ['$rootScope', 'APP_CONFIG', '$injector', function($rootScope, APP_CONFIG, $injector){
+    .factory('modalService', ['$rootScope', 'APP_CONFIG', '$injector', 'logger', function($rootScope, APP_CONFIG, $injector, logger){
+
         var $modal = $injector.get('$modal');
         return {
+
             simpleError: function(message){
+
+                logger.error(message);
+
+                if(typeof(message) === 'object'){
+                    message = message.message;
+                }
+
                 return $modal.open({
-                    templateUrl: '/app/templates/modals/error.html',
+                    templateUrl: '/app/views/templates/modals/error.html',
                     windowClass: 'modal-danger',
                     size: 'sm',
-                    controller: modalController,
-                    resolve: { message: function(){ return message; } }
+                    resolve: { message: function(){ return message; } },
+
+                    controller: function($scope, $modalInstance, message) {
+                        $scope.message = message;
+                        $scope.ok = function () {
+                            $modalInstance.close();
+                        };
+                    },
                 });
-                function modalController($scope, $modalInstance, message) {
-                    $scope.message = message;
-                    $scope.ok = function () {
-                        $modalInstance.close();
-                    };
-                };
             },
 
             error: function(message){

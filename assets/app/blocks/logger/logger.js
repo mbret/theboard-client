@@ -35,7 +35,9 @@
 
         function error(message, data, title) {
             //if(this.showToasts) notifService.error(message, title);
-            $log.error('Error: ' + message, data);
+            //$log.error('Error: ' + message, data);
+            //console.log(message);
+            $log.error('Error trace: ', message.stack);
         }
 
         function debug(message, data, title) {
