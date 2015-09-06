@@ -17,8 +17,17 @@ module.exports = function(grunt) {
 			files: [{
 				expand: true,
 				cwd: 'assets/styles/',
-				src: ['importer.less', 'importer-app.less', 'importer-widget.less'],
+				src: ['importer.less', 'importer-app.less'],
 				dest: '.tmp/public/styles/',
+				ext: '.css'
+			}]
+		},
+		widgetsFramework: {
+			files: [{
+				expand: true,
+				cwd: 'assets/widgets-framework/',
+				src: ['style.less'],
+				dest: '.tmp/public/widgets-framework/',
 				ext: '.css'
 			}]
 		}

@@ -40,6 +40,8 @@
             var self    = this;
             var widgets = [];
             return new Promise(function(resolve, reject){
+
+                // Read local repository
                 try{
                     var paths = fs.readdirSync(sails.config.repository.localPath);
                 }
@@ -47,10 +49,21 @@
                     sails.log.warn('Try to access widgets local path %s that doesnt exist', sails.config.repository.localPath);
                     return resolve([]);
                 }
+
+                // For each folders found
+                // - load its package
+                // - attach custom data if needed
                 paths.forEach(function(widgetPath){
                     try{
                         var widgetPackage = JSON.parse(fs.readFileSync(path.join(sails.config.repository.localPath, widgetPath, 'package.json'), 'utf-8'));
                         if(self.isPackageValid(widgetPackage)){
+
+                            self._completePackage(widgetPackage);
+
+                            // add local uri part ( ex: /my-widget ) because this info is not present in package and may be anything
+                            // and app need to locate the widget
+                            widgetPackage.endPoint = widgetPath;
+
                             widgets.push(widgetPackage);
                         }
                     }
@@ -92,6 +105,19 @@
         isPackageValid: function(widgetPackage){
             // @todo
             return true;
+        },
+
+        /**
+         * Complete the package data if some are missing.
+         * Some key like "index" are not mandatory.
+         * @param data
+         * @private
+         */
+        _completePackage: function(data){
+            if(!data.index){
+                data.index = "index.html";
+            }
+            return data;
         }
 
     };

@@ -1,0 +1,37 @@
+<div class="row">
+    <div class="col-lg-3">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div class="file-manager">
+                    <h5>Show:</h5>
+                    <a href="" class="file-control" ng-click="browse('remote')" ng-class="{'active': locationSelected === 'remote'}">Remote</a>
+                    <a href="" class="file-control" ng-click="browse('local')" ng-class="{'active': locationSelected === 'local'}">Local</a>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9 animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-6" ng-repeat="widget in data.widgets">
+                    <div class="file-box repository-widget-box" ng-class="{'active': widget.activated }">
+                        <div class="file">
+                            <a href="" ng-click="toggleWidgetActivation(widget)">
+                                <span class="corner"></span>
+                                <div class="icon">
+                                    <i class="fa fa-file"></i>
+                                </div>
+                                <div class="file-name">
+                                    {{widget.name}}
+                                    <br>
+                                    <small>Created: {{widget.createdAt}}</small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

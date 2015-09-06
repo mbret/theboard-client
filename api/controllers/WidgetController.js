@@ -35,16 +35,18 @@
             Profile
                 // Get profile with widgets populated
                 .findOne(query).populate('widgets')
-                // load complete data about widgets
                 .then(function(profile){
 
                     if(!profile) return res.notFound();
 
                     return Promise.map(profile.widgets, function(profileWidget){
+
+                        // load complete data about widgets
+                        // db is not enough, we need information about package
                         return profileWidget
                             .loadCompleteObject()
-                            .then(function(completeWidget){
-                                data.push(ProfileWidget.toView(completeWidget));
+                            .then(function(){
+                                data.push(profileWidget.toJSON());
                             });
                     });
                 })

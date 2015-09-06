@@ -1,0 +1,54 @@
+<div class="inmodal">
+    
+    <form name="updateOptionsForm" ng-submit="updateOptionsFormSubmit()">
+
+        <div class="modal-header">
+            <!--<i class="fa fa-gears modal-icon"></i>-->
+            <h4 class="modal-title"><i class="fa fa-gears"></i> Widget options</h4>
+        </div>
+        <div class="modal-body">
+            <div class="text-center">
+                <button type="button" class="btn btn-success btn-circle" ng-click="stop()"><i class="fa fa-stop"></i></button>
+                <button type="button" class="btn btn-success btn-circle" ng-click="start()"><i class="fa fa-play"></i></button>
+                <button type="button" class="btn btn-success btn-circle" ng-click="refresh()"><i class="fa fa-undo"></i></button>
+            </div>
+
+            <div class="hr-line-dashed"></div>
+
+            <!-- General settings -->
+            <!--<div class="form-group">-->
+                <!--<label>Sample Input</label> <input type="email" placeholder="Enter your email" class="form-control">-->
+            <!--</div>-->
+
+            <!-- Widget settings -->
+            <div ng-repeat="option in options">
+                <div class="form-group">
+                    <label>{{option.label}}</label>
+                    <div ng-switch on="option.type">
+                        <!--Text-->
+                        <input  ng-attr-tooltip-placement="{{ option.tip ? 'bottom' : null }}"
+                                ng-attr-tooltip="{{ option.tip ? option.tip : null }}"
+                                ng-switch-when="text" type="text"  placeholder="{{option.placeholder}}" class="form-control" ng-model="option.value">
+                        <select ng-attr-tooltip-placement="{{ option.tip ? 'bottom' : null }}"
+                                ng-attr-tooltip="{{ option.tip ? option.tip : null }}"
+                                ng-switch-when="select" 
+                                class="form-control m-b" 
+                                ng-model="option.value" 
+                                ng-options="opt as opt.label for opt in option.selectOptions">
+                            <option value="" ng-if="!option.required"></option>
+                        </select>
+                    </div>
+                    
+                </div>
+                {{form.options[option.id]}}
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-white" ng-click="cancel()">Close</button>
+            <button type="submit" class="btn btn-primary" >Save changes</button>
+        </div>
+
+    </form>
+</div>
+

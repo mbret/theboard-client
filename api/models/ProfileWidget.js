@@ -2,8 +2,9 @@
  * Created by Maxime on 12/23/2014.
  */
 var validator = require('validator');
+var path = require('path');
 
-module.exports = {
+module.exports = _.merge( _.cloneDeep( require(path.join(__dirname, '/bases/Model'))), {
 
     tableName: 'profile_widget',
     autoPK: true,
@@ -62,13 +63,15 @@ module.exports = {
                         .then(function(widget){
 
                             // Merge local widget with specific profile data
-                            var completeWidget = _.assign(widget, self);
+                            var completeWidget = _.merge(widget, self);
+                            // extend self with comlete object
+                            _.assign(self, completeWidget);
 
                             // We also set widget options specific for our user
                             //_.forEach(completeWidget.options, function(option, index){
                             //    option.value = profileWidget.getOptionValue(option.id);
                             //});
-                            resolve(completeWidget);
+                            resolve();
                         })
                         .catch(reject);
                 }
@@ -76,6 +79,17 @@ module.exports = {
                     return reject(new Error('ProfileWidget.loadCompleteObject not supported for remote widgets'));
                 }
             });
+        },
+
+        toJSON: function(){
+
+            // We need to clone it (problem with populate that will not show up on json)
+            var data = _.cloneDeep(this.toObject());
+
+            delete data.id;
+
+            return data;
+
         },
 
     },
@@ -88,12 +102,6 @@ module.exports = {
         //    return cb(error);
         //}
         return cb();
-    },
-
-    toView: function(object){
-        var data = _.cloneDeep(object);
-
-        return data;
     },
 
     /**
@@ -156,4 +164,5 @@ module.exports = {
             }
         });
     },
-};
+
+});
