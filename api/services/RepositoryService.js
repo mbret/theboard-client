@@ -92,9 +92,9 @@
                     widgets.forEach(function(widget){
                        if(widget.identity === widgetIdentity){
                            widgetToReturn = widget;
+                           widgetToReturn.options = {};
                        }
                     });
-                    widgetToReturn.options = {};
                     return widgetToReturn;
                 })
         },

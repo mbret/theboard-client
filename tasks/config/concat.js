@@ -23,6 +23,7 @@ module.exports = function(grunt) {
 		},
 		widgetsFramework: {
 			src: [
+                '.tmp/public/widgets-framework/lib/utils.js',
                 '.tmp/public/widgets-framework/lib/**/*.js',
                 '.tmp/public/widgets-framework/index.js'
             ],

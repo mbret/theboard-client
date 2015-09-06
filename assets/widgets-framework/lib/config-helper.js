@@ -10,7 +10,7 @@ console.log(providedWidgetConfig);
             // widgetConfiguration is an object that can be create by widget creator to
             // overwrite some settings
             // ===============
-            if( providedWidgetConfig && _.isObject(providedWidgetConfig) ){
+            if( providedWidgetConfig && typeof providedWidgetConfig === 'object'){
                 //console.log('Substitute configuration provided by user. Use it instead of default library configuration!');
                 if( providedWidgetConfig.widget && providedWidgetConfig.widget.configuration){
                     var testWidgetProvided = providedWidgetConfig.widget;
