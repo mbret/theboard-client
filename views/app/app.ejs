@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<!--<html ng-app="app">-->
 <html>
 <head>
 
     <title page-title><%= title %></title>
 
     <meta charset="utf-8">
-
-    <!-- Viewport mobile tag for sensible mobile support -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!--STYLES APP-->
     <link rel="stylesheet" href="/styles/importer-app.css">
@@ -16,6 +13,7 @@
 
 </head>
 
+<!--The body will take as class the name of the current view. ex: '.board', '.settings' ...-->
 
 <body ng-controller="MainController" class="{{$state.current.data.target}}" >
 
@@ -49,24 +47,26 @@
     <script src="<%= helper.getUrl(sails.config.urls.user) %>"></script>
 
     <!--SCRIPTS APP-->
-    <script src="/js/dependencies/sails.io.js"></script>
-    <script src="/js/dependencies/URI.js"></script>
-    <script src="/js/dependencies/dropzone.js"></script>
-    <script src="/js/dependencies/jquery-plugins/blueimp-gallery.min.js"></script>
-    <script src="/js/dependencies/jquery-plugins/jquery.backstretch.js"></script>
-    <script src="/js/dependencies/jquery-plugins/jquery.knob.js"></script>
-    <script src="/js/dependencies/jquery-plugins/metisMenu/jquery.metisMenu.js"></script>
-    <script src="/js/dependencies/angular/angular.js"></script>
-    <script src="/js/dependencies/angular/angular-animate.js"></script>
-    <script src="/js/dependencies/angular/angular-aria.js"></script>
-    <script src="/js/dependencies/angular/angular-route.js"></script>
-    <script src="/js/dependencies/angular/angular-ui-router.js"></script>
+    <script src="/vendors/pace/pace.js"></script>
+    <script src="/vendors/URIjs/URI.js"></script>
+    <script src="/vendors/lodash/lodash.js"></script>
+    <script src="/vendors/dropzone/dropzone.min.js"></script>
+    <script src="/vendors/jquery/jquery.js"></script>
+    <script src="/vendors/jquery-ui/jquery-ui.js"></script>
+    <script src="/vendors/bootstrap/bootstrap.js"></script>
+    <script src="/vendors/toastr/toastr.js"></script>
+    <script src="/vendors/metisMenu/metisMenu.js"></script>
+    <script src="/vendors/jquery-backstretch/jquery.backstretch.js"></script>
+    <script src="/vendors/jQuery-Knob/jquery.knob.min.js"></script>
+    <script src="/vendors/iCheck/icheck.js"></script>
+    <script src="/vendors/angular/angular.js"></script>
+    <script src="/vendors/angular-ui-router/angular-ui-router.js"></script>
     <script src="/js/dependencies/angular-plugins/angular-breadcrumb.min.js"></script>
     <script src="/js/dependencies/angular-plugins/angular-gridster.js"></script>
     <script src="/js/dependencies/angular-plugins/angular-hammer.js"></script>
     <script src="/js/dependencies/angular-plugins/angular-jwt/angular-jwt.min.js"></script>
-    <script src="/js/dependencies/angular-plugins/angular-local-storage.min.js"></script>
     <script src="/js/dependencies/angular-plugins/bootstrap/ui-bootstrap-tpls-0.12.0.min.js"></script>
+    <script src="/vendors/angular-local-storage/angular-local-storage.js"></script>
     <script src="/app/core/core.module.js"></script>
     <script src="/app/app.module.js"></script>
     <script src="/app/blocks/backstretch/backstretch.module.js"></script>
@@ -76,7 +76,7 @@
     <script src="/app/controllers/controllers.module.js"></script>
     <script src="/app/directives/directives.module.js"></script>
     <script src="/app/filters/filters.module.js"></script>
-    <script src="/app/providers/services.module.js"></script>
+    <script src="/app/services/services.module.js"></script>
     <script src="/app/blocks/backstretch/backstretch.directive.js"></script>
     <script src="/app/blocks/backstretch/backstretch.service.js"></script>
     <script src="/app/blocks/exception/exception-handler.provider.js"></script>
@@ -102,15 +102,16 @@
     <script src="/app/directives/sidebar.directive.js"></script>
     <script src="/app/directives/widget-iframe.directive.js"></script>
     <script src="/app/filters/smartname.filter.js"></script>
-    <script src="/app/providers/dataservice.service.js"></script>
-    <script src="/app/providers/fullscreen.service.js"></script>
-    <script src="/app/providers/geolocation.service.js"></script>
-    <script src="/app/providers/repository.service.js"></script>
-    <script src="/app/providers/services.js"></script>
-    <script src="/app/providers/sidebar.service.js"></script>
-    <script src="/app/providers/user.provider.js"></script>
-    <script src="/app/providers/widget-profile.service.js"></script>
-    <script src="/app/providers/widget.factory.js"></script>
+    <script src="/app/services/dataservice.service.js"></script>
+    <script src="/app/services/fullscreen.service.js"></script>
+    <script src="/app/services/geolocation.service.js"></script>
+    <script src="/app/services/repository.service.js"></script>
+    <script src="/app/services/services.js"></script>
+    <script src="/app/services/sidebar.service.js"></script>
+    <script src="/app/services/user.provider.js"></script>
+    <script src="/app/services/widget-profile.service.js"></script>
+    <script src="/app/services/widgets/object.factory.js"></script>
+    <script src="/app/services/widgets/service.factory.js"></script>
     <!--SCRIPTS APP END-->
     
     <script>

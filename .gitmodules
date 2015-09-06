@@ -1,0 +1,3 @@
+[submodule "tools/waterline-db-handler"]
+	path = tools/waterline-db-handler
+	url = https://github.com/mbret/waterline-db-handler.git

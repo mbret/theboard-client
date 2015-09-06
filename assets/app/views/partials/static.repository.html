@@ -4,8 +4,8 @@
             <div class="ibox-content">
                 <div class="file-manager">
                     <h5>Show:</h5>
-                    <a href="" class="file-control" ng-click="show('remote')" ng-class="{'active': shown === 'remote'}">Remote</a>
-                    <a href="" class="file-control" ng-click="show('local')" ng-class="{'active': shown === 'local'}">Local</a>
+                    <a href="" class="file-control" ng-click="browse('remote')" ng-class="{'active': locationSelected === 'remote'}">Remote</a>
+                    <a href="" class="file-control" ng-click="browse('local')" ng-class="{'active': locationSelected === 'local'}">Local</a>
                     <div class="clearfix"></div>
                 </div>
             </div>
@@ -17,7 +17,7 @@
                 <div class="col-lg-6" ng-repeat="widget in data.widgets">
                     <div class="file-box repository-widget-box" ng-class="{'active': widget.activated }">
                         <div class="file">
-                            <a href="" ng-click="activate(widget)">
+                            <a href="" ng-click="toggleWidgetActivation(widget)">
                                 <span class="corner"></span>
                                 <div class="icon">
                                     <i class="fa fa-file"></i>

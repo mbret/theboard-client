@@ -4,5 +4,9 @@
  */
 module.exports.repository = {
     
-    localPath: require('path').join(__dirname, '..', 'assets', 'widgets')
+    localPath: require('path').join(process.cwd(), 'data/statics/repository'),
+    localUri: '/repository',
+
+    remoteUrl: '...'
+
 };

@@ -33,18 +33,19 @@ module.exports = {
          *                                                                          *
          ***************************************************************************/
 
-        'get /api/users/'               : 'ProfileController.find',
-        'get /api/users/profiles'       : 'ProfileController.findAll',
-        'get /api/users/profiles/:id'   : 'ProfileController.find',
-        'put /api/users/profiles'       : 'ProfileController.updateAll',
-        'post /api/users/profiles'       : 'ProfileController.create',
-        'put /api/users/profiles/:id'   : 'ProfileController.update',
-        'post /api/users/backgroudimages': 'AccountController.uploadBackgroundImage',
-        'get /api/users/widgets': 'WidgetController.findAll', // default activated profile
-        'put /api/users/widgets/:id': 'WidgetController.updateProfileWidget', // update for default profile
-        'get /api/users/profiles/:profileid/widgets': 'WidgetController.findAll', // specific profile
+        'get /api/users/'                   : 'ProfileController.find',
+        'get /api/users/profiles'           : 'ProfileController.findAll',
+        'get /api/users/profiles/:id'       : 'ProfileController.find',
+        'put /api/users/profiles'           : 'ProfileController.updateAll',
+        'post /api/users/profiles'          : 'ProfileController.create',
+        'put /api/users/profiles/:id'       : 'ProfileController.update',
+        'post /api/users/backgroudimages'   : 'AccountController.uploadBackgroundImage',
+        'put /api/users/widgets/:id'        : 'WidgetController.updateProfileWidget', // update for default profile
         'put /api/users/profiles/:profileid/widgets/:id': 'WidgetController.updateProfileWidget', // update for given profile
-        'post /api/profiles/:profileid/widgets': 'WidgetController.addProfileWidget',
+
+        'get /api/widgets'                  : 'WidgetController.findAll', // get all widgets
+        'post /api/widgets'                 : 'WidgetController.addWidgetToProfile',
+        'delete /api/profiles/:profile/widgets/:widget': 'WidgetController.removeWidgetFromProfile',
 
         'put /api/account': 'AccountController.update',
 

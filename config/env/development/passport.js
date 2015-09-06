@@ -3,6 +3,6 @@
  */
 module.exports.passport = {
 
-    autoLogin: false,
+    autoLogin: true,
     autoLoginEmail: 'bret.maxime@gmail.com',
 };

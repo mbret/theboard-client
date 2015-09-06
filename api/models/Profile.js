@@ -8,10 +8,15 @@ var Profile = {
     schema: true,
     
     attributes: {
+
         user        : { model: 'user' },
+
         name        : { type: 'string',  unique: true, required: true },
-        description : { type: 'text', length: 300, unique: false, required: false },
+
+        description : { type: 'text', size: 300, unique: false, required: false },
+
         default     : { type: 'boolean', unique: false, required: false, defaultsTo: true },
+
         widgets     : { collection: 'profileWidget', via: 'profile' },
 
         toView: function(){
@@ -26,32 +31,6 @@ var Profile = {
             return data;
 
         },
-        
-        /**
-         * Register a new widget
-         * This method use a queue so you NEED to call user.save in order to save these change
-         * @param widget
-         */
-        registerWidget: function(widget, options){
-            if( typeof options === "undefined" ){
-                options = {};
-            }
-            
-            var registered = {
-                sizeX: options.sizeX || widget.sizeX,
-                sizeY: options.sizeY || widget.sizeY,
-                row: options.row || widget.row,
-                col: options.col || widget.col,
-                widget: widget.id
-            };
-            // fill options
-            var widgetOptions = {};
-            _.forEach(widget.options, function(option, index){
-                widgetOptions[option.id] = (option.default) ?  option.default : null;
-            });
-            registered.options = options;
-            this.widgets.add(registered);
-        }
     },
 
     /**
@@ -61,7 +40,7 @@ var Profile = {
      * @returns {*}
      */
     beforeCreate: function(values, cb){
-        
+
         async.series([
             function checkUniqueDefault(cb){
                 if( values.user && values.default && values.default === true ){
@@ -93,7 +72,6 @@ var Profile = {
      * @returns {*}
      */
     beforeUpdate: function(values, cb){
-
         async.series([
             function checkUniqueDefault(cb){
                 if( values.user && values.default && values.default === true ){
@@ -104,6 +82,7 @@ var Profile = {
                                 profile.default = false;
                                 return profile.save(cb);
                             }
+
                             return cb();
                         }).catch(cb);
                 }

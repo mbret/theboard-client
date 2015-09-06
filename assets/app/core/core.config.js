@@ -52,9 +52,9 @@
 
     function configureLocalStorage(localStorageServiceProvider){
         localStorageServiceProvider
-            .setPrefix('app')
+            .setPrefix('app.')
             .setStorageType('localStorage')
-            .setNotify(true, true); // setItem, removeItem
+            .setNotify(true, true);
     }
 
     /**
@@ -68,7 +68,7 @@
         // The local save contain element like current active profile, etc
         userProvider.setData(USER);
     }
-    configureUser.$inject = ['APP_CONFIG', 'userProvider', '$provide'];
+    configureUser.$inject = ['USER', 'userProvider', '$provide'];
 
     /**
      * config get injected by 'app' as a constant when config is retrieved from server
@@ -118,12 +118,15 @@
      * @param APP_CONFIG
      * @param user
      */
-    function run($rootScope, $state, $http, $log, notifService, userService, APP_CONFIG, user, $timeout, USER, localStorageService){
+    function run($rootScope, $state, $http, $log, notifService, userService, APP_CONFIG, user, $timeout, USER, localStorageService, $modal){
 
         $log.info('APP_CONFIG', APP_CONFIG);
         $log.info('USER', USER);
         $log.info('app user', user);
-        //$rootScope.$state = $state;
+
+        // We pass $state to the view because $state object seems not to be accessible otherwise
+        // This is used for example in app.ejs to ste current target as style=""
+        $rootScope.$state = $state;
 
         // Listen for localStorage change
         $rootScope.$on('LocalStorageModule.notification.setitem', function(e, object){
@@ -140,8 +143,22 @@
             // Wait 1 second more to be sure pace disappeared
             $timeout(function(){
 
-                if(!user.profile){
-                    //alert('You do not have any profile set yet');
+                // Check for active profile for user.
+                // If no profile is set yet, tell to user that we use default profile.
+                if(localStorageService.get('noPreviousActiveProfile') === true){
+                    localStorageService.remove('noPreviousActiveProfile');
+                    $modal.open({
+                        templateUrl: APP_CONFIG.routes.templates + '/modals/default-profile-selected.html',
+                        controller: function ($scope, $modalInstance) {
+                            $scope.ok = function () {
+                                $modalInstance.close($scope);
+                            };
+                        }
+                    });
+                }
+
+                if(!"sandbox" in document.createElement("iframe")){
+                    alert("We are sorry but your browser is too old and unsafe. Your widgets will not be loaded in order to protect you.");
                 }
 
                 notifService.watchForServerFlashMessage();

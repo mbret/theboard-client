@@ -8,15 +8,23 @@
 
         /**
          * Return widgets of logged user.
+         * - Use req.profile if specified or default user profile
          * @param req
          * @param res
          */
         findAll: function(req, res){
             var user = req.user;
-            var profileId = req.param('profileid', null);
+
+            // get possible specific profile
+            var profileId = req.param('profile', null);
+            if(profileId !== null && !validator.isNumeric(profileId)){
+                return res.badRequest(null, null, 'The profile id is invalid');
+            }
+
             var query = { user: user.id };
             var data = [];
 
+            // Use default profile or specific one
             if( profileId === null ){
                 query.default = true;
             }
@@ -24,36 +32,26 @@
                 query.id = profileId;
             }
 
-            // get activated profile
-            Profile.findOne(query).populate('widgets').then(function(profile){
-                if(!profile){
-                    return res.notFound();
-                }
+            Profile
+                // Get profile with widgets populated
+                .findOne(query).populate('widgets')
+                // load complete data about widgets
+                .then(function(profile){
 
-                var profileWidgets = profile.widgets;
+                    if(!profile) return res.notFound();
 
-                // load all widgets
-                return Promise.map(profileWidgets, function(profileWidget){
-                    return Widget.findOne(profileWidget.widget).then(function(widget){
-                        // We create a widget from default widget
-                        // And we overwrite with the user widget settings
-                        var widgetForView = _.assign(widget, {
-                            sizeX: profileWidget.sizeX,
-                            sizeY: profileWidget.sizeY,
-                            row: profileWidget.row,
-                            col: profileWidget.col
-                        });
-                        // We also set widget options specific for our user
-                        _.forEach(widgetForView.options, function(option, index){
-                            option.value = profileWidget.getOptionValue(option.id);
-                        });
-                        data.push(widgetForView);
-                        return widget;
+                    return Promise.map(profile.widgets, function(profileWidget){
+                        return profileWidget
+                            .loadCompleteObject()
+                            .then(function(completeWidget){
+                                data.push(ProfileWidget.toView(completeWidget));
+                            });
                     });
-                }).then(function(widgets){
+                })
+                .then(function(){
                     return res.ok(data);
-                });
-            }).catch(res.serverError);
+                })
+                .catch(res.serverError);
 
         },
 
@@ -63,39 +61,87 @@
          * @param req
          * @param res
          */
-        addProfileWidget: function(req, res){
-            var profileId       = req.param('profileid', null);
+        addWidgetToProfile: function(req, res){
+            var profileId       = req.param('profile', null);
             var widgetIdentity  = req.param('widget', null);
             var location        = req.param('location', 'remote');
 
             // Validation
             if( ['local', 'remote'].indexOf(location) === -1 ){
-                return res.badRequest('bad location');
+                return res.badRequest(null,  null, 'bad location');
             }
 
             if(!validator.isInt(profileId)){
-                return res.badRequest('bad profile id');
+                return res.badRequest(null,  null, 'bad profile id');
             }
 
             if(validator.isNull(widgetIdentity)){
-                return res.badRequest('bad widget identity');
+                return res.badRequest(null,  null, 'bad widget identity');
             }
 
-            // Add widget to profile
-            ProfileWidget
-                .addToProfile(widgetIdentity, location)
-                .then(function(widget){
-                    return res.ok(widget);
-                })
-                .catch(function(err){
-                    // Unable to add this widget because he is invalid
-                    // Something went wrong with widget validation
-                    if(err.code === 'WIDGET_INVALID'){
-                        return res.badRequest('Widget invalid');
-                    }
-                    return res.serverError(err);
-                });
+            // Load profile for current user
+            Profile.findOne({user: req.user.id, id: profileId})
+                .then(function(profile){
 
+                    if(!profile){
+                        return res.badRequest(null, null, "This profile doesn't exist");
+                    }
+
+                    // Add widget to the list of widgets
+                    return ProfileWidget.createWithRepo(widgetIdentity, location, profile.id)
+                        .then(function(widget){
+                            return res.ok(widget);
+                        })
+                        .catch(function(err){
+                            // Unable to load this widget because he is invalid
+                            // Something went wrong with widget validation
+                            if(err.code === 'WIDGET_INVALID'){
+                                return res.badRequest(null, null, 'Widget invalid');
+                            }
+                            throw err;
+                        });
+
+                })
+                .catch(res.serverError);
+
+        },
+
+        removeWidgetFromProfile: function(req, res){
+            var profileId       = req.param('profile', null);
+            var widgetIdentity  = req.param('widget', null);
+            var location        = req.param('location', 'remote');
+
+            // Validation
+            if( ['local', 'remote'].indexOf(location) === -1 ){
+                return res.badRequest(null,  null, 'bad location');
+            }
+
+            if(!validator.isInt(profileId)){
+                return res.badRequest(null,  null, 'bad profile id');
+            }
+
+            if(validator.isNull(widgetIdentity)){
+                return res.badRequest(null,  null, 'bad widget identity');
+            }
+
+            // Load profile for current user
+            Profile.findOne({user: req.user.id, id: profileId})
+                .then(function(profile){
+
+                    if(!profile){
+                        return res.badRequest(null, null, "This profile doesn't exist");
+                    }
+
+                    return ProfileWidget.destroy({
+                        profile: profile.id,
+                        widget: widgetIdentity
+                    })
+                        .then(function(){
+                           return res.ok();
+                        });
+
+                })
+                .catch(res.serverError);
         },
 
         /**

@@ -11,7 +11,9 @@ var User = {
 
         firstName: { type: 'string' },
         lastName: { type: 'string' },
-        backgroundImages: { type: 'array', required: false, defaultsTo: [] },
+
+        //backgroundImages: { type: 'array', required: false, defaultsTo: [] }, mettre dans les settings
+
         locale: { type:'string', defaultTo: 'en_US' },
         avatar: { type: 'string', required: false },
         banner: { type: 'string', required: false },
@@ -74,6 +76,11 @@ var User = {
             });
             data.settings = userSettings;
 
+            data.profiles.forEach(function(profile){
+               if(profile.default === true){
+                   data.defaultProfile = profile.id;
+               }
+            });
             // @todo check how to only retrieve list of profile id instead of having this because of populate
             data.profiles = _.map(data.profiles, 'id');
 
@@ -102,7 +109,7 @@ var User = {
      * @todo transactions , promises
      * @param data
      */
-    createAndInit: function( data , cb ){
+    createAndInit: function(data, cb){
         // create user
         sails.models.user.create(data, function(err, user){
             if(err){

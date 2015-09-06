@@ -4,7 +4,6 @@
     /**
      * Created by Maxime on 1/15/2015.
      */
-
     var fs          = require('fs');
     var path        = require('path');
     var validator   = require('validator');
@@ -41,7 +40,13 @@
             var self    = this;
             var widgets = [];
             return new Promise(function(resolve, reject){
-                var paths = fs.readdirSync(sails.config.repository.localPath);
+                try{
+                    var paths = fs.readdirSync(sails.config.repository.localPath);
+                }
+                catch(err){
+                    sails.log.warn('Try to access widgets local path %s that doesnt exist', sails.config.repository.localPath);
+                    return resolve([]);
+                }
                 paths.forEach(function(widgetPath){
                     try{
                         var widgetPackage = JSON.parse(fs.readFileSync(path.join(sails.config.repository.localPath, widgetPath, 'package.json'), 'utf-8'));
@@ -76,6 +81,7 @@
                            widgetToReturn = widget;
                        }
                     });
+                    widgetToReturn.options = {};
                     return widgetToReturn;
                 })
         },

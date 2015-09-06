@@ -25,7 +25,7 @@
 
                         scope.close = function(){
                             sidebarService.close();
-                        }
+                        };
 
                         // scope.logout = function(){
                         //     delete $window.localStorage.token;
@@ -45,7 +45,6 @@
                         var stateWhoWhantSidebarClosed = attrs.sidebarClose;
 
                         // Reset sidebar when the route is changed
-                        //
                         $rootScope.$on('$stateChangeStart',function(event, toState, toParams, fromState, fromParams){
                             if(toState.name == stateWhoWhantSidebarClosed){
                                 sidebarService.close();

@@ -20,12 +20,17 @@ module.exports = {
     /**
      * Generate the public configuration for web app.
      * Use the server config and mix/drop/add some values.
+     * Take advantage of programmatic code in order to add config already set in /config and doesn't belong to /config/view
      * @param user
      * @returns {*}
      */
-    generateConfiguration: function(){
+    generateConfiguration: function(user){
         //var user = req.user;
         var config = _.assign(sails.config.views.configToInject, {
+
+            repositoryLocalUri: sails.config.repository.localUri,
+            repositoryRemoteUri: sails.config.repository.remoteUri,
+
             // user logged
             // user: user.toView()
             user: {

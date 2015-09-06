@@ -18,6 +18,7 @@
     function configureRoutes($urlRouterProvider, $stateProvider, APP_CONFIG) {
         $urlRouterProvider.otherwise("/");
         $stateProvider
+
             // Board layout
             .state('board', {
                 abstract: true,
@@ -27,16 +28,7 @@
                     label: 'Board'
                 }
             })
-            // Static sidebar layout
-            .state('static', {
-                abstract: true,
-                templateUrl: APP_CONFIG.routes.partials + '/static.html',
-                controller: 'StaticController',
-                ncyBreadcrumb: {
-                    label: 'Board',
-                    breadcrumbProxy: 'board.index'
-                }
-            })
+
             // Home state
             .state('board.index', {
                 url: '/',
@@ -46,11 +38,23 @@
                     target: 'board'
                 },
                 pageTitle: 'Board',
+                //ncyBreadcrumb: {
+                //    label: 'Board'
+                //}
+            })
+
+            // Static sidebar layout
+            // Used as parent for views that need static layout
+            .state('static', {
+                abstract: true,
+                templateUrl: APP_CONFIG.routes.partials + '/static.html',
+                controller: 'StaticController',
                 ncyBreadcrumb: {
-                    label: 'Board'
-                    //skip: true
+                    label: 'Board',
+                    breadcrumbProxy: 'board.index'
                 }
             })
+
             .state('static.repository', {
                 url: '/repository',
                 templateUrl: APP_CONFIG.routes.partials + '/static.repository.html',

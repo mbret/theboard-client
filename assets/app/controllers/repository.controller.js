@@ -13,18 +13,16 @@
     function RepositoryController($rootScope, $scope, $http, $state, user, widgetProfilesService, $animate, widgetService, $q, RepositoryService, APP_CONFIG){
 
         $scope.parent.title = 'Repository'
-        $scope.shown = 'local';
+        $scope.locationSelected = 'local';
         $scope.data = {};
         $scope.data.widgets = [];
-
-        console.log(user);
 
         /**
          * Update location filters for repository display
          * @param label
          */
-        $scope.show = function(label){
-            $scope.shown = label;
+        $scope.browse = function(label){
+            $scope.locationSelected = label;
             retrieveWidgetsFromRepository(label);
         };
 
@@ -32,35 +30,36 @@
          * Update widgets belonging to the profile
          * @param widget
          */
-        $scope.activate = function(widget){
+        $scope.toggleWidgetActivation = function(widget){
             if(widget.activated){
                 widgetService
-                    .removeFromProfile(widget.identity, user.profile, $scope.shown)
+                    .remove(widget.identity, user.profile, $scope.locationSelected)
                     .then(function(){
                         widget.activated = false;
-                    })
+                    });
             }
             else{
                 widgetService
-                    .addToProfile(widget.identity, user.profile, $scope.shown)
+                    .add(widget.identity, user.profile, $scope.locationSelected)
                     .then(function(){
                         widget.activated = true;
-                    })
+                    });
             }
         };
-
-        $scope.show($scope.shown);
 
         function retrieveWidgetsFromRepository(label){
             return $q
                 .all([
                     // get repository first time
-                    RepositoryService.browse($scope.shown),
+                    RepositoryService.browse($scope.locationSelected),
                     // get actives widgets
-                    widgetService.getAll()
+                    widgetService.getAll(user.profile)
                 ])
                 .then(function(responses){
-                    //$scope.data.widgets = responses[0];
+
+                    // responses[0] contain an array of widgets information
+                    // responses[1] contain an array of widgets active for this user
+
                     $scope.data.widgets = responses[0];
                     var widgetsFromProfile = responses[1];
 
@@ -74,6 +73,9 @@
                     });
                 });
         }
+
+        $scope.browse($scope.locationSelected);
+
     };
 
 })();

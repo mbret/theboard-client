@@ -15,7 +15,7 @@
  * ```
  */
 
-module.exports = function badRequest(data, options) {
+module.exports = function badRequest(data, code, message, options) {
 
   // Get access to `req`, `res`, & `sails`
   var req = this.req;
@@ -27,10 +27,10 @@ module.exports = function badRequest(data, options) {
 
   // Log error to console
   if (data !== undefined) {
-    sails.log.verbose('Sending 400 ("Bad Request") response: \n',data);
+    sails.log.info('Sending 400 ("Bad Request") response: \n',data);
   }
   else{
-    sails.log.verbose('Sending 400 ("Bad Request") response');
+    sails.log.info('Sending 400 ("Bad Request") response');
   }
 
   // Only include errors in response if application environment
@@ -40,9 +40,15 @@ module.exports = function badRequest(data, options) {
     data = undefined;
   }
 
+  var response = {
+    code: code || 'E_BAD_REQUEST',
+    message: message || 'The request cannot be fulfilled due to bad syntax',
+    data: data || {}
+  };
+
   // If the user-agent wants JSON, always respond with JSON
   if (req.wantsJSON) {
-    return res.jsonx(data);
+    return res.jsonx(response);
   }
 
   // If second argument is a string, we take that to mean it refers to a view.

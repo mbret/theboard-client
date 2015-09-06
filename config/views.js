@@ -65,13 +65,13 @@ module.exports.views = {
                     create: '/api/users/profiles'
                 },
                 widgets: {
-                    getByProfile: '/api/users/profiles/:id/widgets', // get
                     get: '/api/users/widgets/:id', // get
-                    getAll: '/api/users/widgets',
+                    getAll: '/api/widgets',
                     updateAll: '/api/users/widgets', // put,
                     update: '/api/users/widgets/:id',
                     updateByProfile: '/api/users/profiles/:profileid/widgets/:id',
-                    addToProfile: '/api/profiles/:profileid/widgets'
+                    addToProfile: '/api/widgets',
+                    removeFromProfile: '/api/profiles/:profile/widgets/:widget'
                 },
                 account: {
                     get: '/api/account', // get
@@ -82,6 +82,45 @@ module.exports.views = {
                         getAll: '/api/repository/widgets'
                     }
                 }
+            }
+        },
+
+        messages: {
+            errors: {
+                unableToUpdate: 'Sorry but we were unable to update',
+                unableToLoad: 'Sorry but we were unable to load',
+                geolocation: {
+                    unsupportedBrowser:'Browser does not support location services',
+                    permissionDenied:'You have rejected access to your location',
+                    positionUnavailable:'Unable to determine your location',
+                    timeout:'Service timeout has been reached'
+                },
+                widgets: {
+                    unableToUpdate: 'Sorry but we were unable to save your new widget organization!',
+                    unableToLoad: 'Sorry but we were unable to load your widgets!'
+                }
+            },
+            success: {
+                form:{
+                    updated: 'Update completed successfully!'
+                },
+                widget: {
+                    updated: 'Widget updated!'
+                },
+                deleted: 'Deleted with success!'
+            },
+            form: {
+                invalid: 'Your form contain some errors, please check it before submit!',
+                updated: 'Update completed successfully!',
+            },
+            nochange: 'No change',
+            profile:{
+                activated: 'New profile activated!',
+                updated: 'Profile updated',
+                created: 'Profile created'
+            },
+            widgets: {
+                updated: 'Widgets updated!'
             }
         }
     }

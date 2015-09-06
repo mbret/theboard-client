@@ -15,8 +15,7 @@ module.exports = {
         
         profile: {model: 'profile', required: true},
 
-        //widget: {model:'widget', required: true},
-        widget: {type:'string', required: true},
+        widget: {type:'string', required: true, unique: true},
 
         location: {
             type: 'string',
@@ -31,10 +30,10 @@ module.exports = {
         options: {type:'json', defaultsTo: {}},
         
         // widget position
-        sizeX: {type:'integer', required:true},
-        sizeY: {type:'integer', required:true},
-        row: {type:'integer', required:true},
-        col: {type:'integer', required:true},
+        sizeX: {type:'integer', required:false},
+        sizeY: {type:'integer', required:false},
+        row: {type:'integer', required:false},
+        col: {type:'integer', required:false},
 
         setOptionValue: function(id, value){
             this.options[id] = value;
@@ -48,7 +47,37 @@ module.exports = {
             else{
                 return null;
             }
-        }
+        },
+
+        /**
+         * Load the complete widget with all its information.
+         * ex author, creation date, etc.
+         * The widget will merge local profile data and general data.
+         */
+        loadCompleteObject: function(){
+            var self = this;
+            return new Promise(function(resolve, reject){
+                if(self.location === 'local'){
+                    RepositoryService.loadLocal(self.widget)
+                        .then(function(widget){
+
+                            // Merge local widget with specific profile data
+                            var completeWidget = _.assign(widget, self);
+
+                            // We also set widget options specific for our user
+                            //_.forEach(completeWidget.options, function(option, index){
+                            //    option.value = profileWidget.getOptionValue(option.id);
+                            //});
+                            resolve(completeWidget);
+                        })
+                        .catch(reject);
+                }
+                else{
+                    return reject(new Error('ProfileWidget.loadCompleteObject not supported for remote widgets'));
+                }
+            });
+        },
+
     },
     
     beforeCreate: function(values, cb){
@@ -61,24 +90,64 @@ module.exports = {
         return cb();
     },
 
+    toView: function(object){
+        var data = _.cloneDeep(object);
+
+        return data;
+    },
+
     /**
-     * Add a widget to a profile
+     * Register a new widget
+     * This method use a queue so you NEED to call user.save in order to save these change
      * @param identity The widget indentity
      * @param location
      * @return Promise (Error with code WIDGET_INVALID if widget doesn't exist or anything else invalid)
      */
-    addToProfile: function(identity, location){
+    createWithRepo: function(identity, location, profile, data){
+        if( typeof data === "undefined" ){
+            data = {};
+        }
+
+        var self = this;
+
+        // Load widget
         return new Promise(function(resolve, reject){
+
+            // load by local
             if(location === 'local'){
+
                 RepositoryService
                     .loadLocal(identity)
                     .then(function(widget){
+
                         if(!widget){
                             var err = new Error();
                             err.code = 'WIDGET_INVALID';
                             reject(err);
                         }
-                        resolve();
+
+                        var registered = {
+                            sizeX: data.sizeX || 1,
+                            sizeY: data.sizeY || 1,
+                            row: data.row || 0,
+                            col: data.col || 0,
+                            options: data.options || {},
+                            widget: identity,
+                            location: location,
+                            profile: profile
+                        };
+
+                        // fill options
+                        //var widgetOptions = {};
+                        //_.forEach(widget.options, function(option, index){
+                        //    widgetOptions[option.id] = (option.default) ?  option.default : null;
+                        //});
+                        //
+                        //registered.options = options;
+
+                        return ProfileWidget.create(registered)
+                            .then(resolve)
+                            .catch(reject);
                     })
                     .catch(reject);
             }
@@ -86,5 +155,5 @@ module.exports = {
                 reject(new Error('not supported yet'));
             }
         });
-    }
+    },
 };

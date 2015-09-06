@@ -41,30 +41,33 @@ var jsFilesToInjectApp = [
     
     // Load sails.io before everything else
     'js/dependencies/**/sails.io.js',
-    'js/dependencies/pace/pace.min.js',
-    'js/dependencies/URI.js',
-    'js/dependencies/lodash.js',
+    'vendors/pace/pace.js',
+    'vendors/URIjs/URI.js',
+    'vendors/lodash/lodash.js',
     'js/dependencies/moment.min.js',
     'js/dependencies/hammer.js',
     'js/dependencies/detect-element-resize.js',
-    'js/dependencies/dropzone.js',
+    'vendors/dropzone/dropzone.min.js',
     
     // Jquery
-    'js/dependencies/jquery/jquery-2.1.1.min.js',
-    'js/dependencies/jquery/jquery-ui.min.js',
+    'vendors/jquery/jquery.js',
+    'vendors/jquery-ui/jquery-ui.js',
     
     // Bootstrap
-    'js/dependencies/bootstrap/bootstrap.min.js',
+    'vendors/bootstrap/bootstrap.js',
 
     // Jquery plugins
-    'js/dependencies/jquery-plugins/**/*.js',
+    'vendors/toastr/toastr.js',
+    'vendors/metisMenu/metisMenu.js',
+    'vendors/jquery-backstretch/jquery.backstretch.js',
+    'vendors/jQuery-Knob/jquery.knob.min.js',
+    'vendors/iCheck/icheck.js',
 
-    // Angular
-    'js/dependencies/angular/angular.js',
-    'js/dependencies/angular/**/*.js',
-    
-    // Angular plugins
+    // Angular + plugins
+    'vendors/angular/angular.js',
+    'vendors/angular-ui-router/angular-ui-router.js',
     'js/dependencies/angular-plugins/**/*.js',
+    'vendors/angular-local-storage/angular-local-storage.js',
 
     // App
     // we need to load all modules

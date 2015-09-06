@@ -1,6 +1,25 @@
+@import "../../vendors/bootstrap/bootstrap.css";
+@import "../../vendors/font-awesome/css/font-awesome.min.css";
+@import "../../vendors/iCheck/skins/square/green.css";
+@import "../../vendors/toastr/toastr.css";
+@import "../../vendors/animate.css/animate.css";
+@import "../../vendors/angular-gridster/angular-gridster.min.css";
+@import "../../vendors/dropzone/dropzone.min.css";
+@import "../../vendors/blueimp-gallery/blueimp-gallery.css";
+
+// Theme style. Must overridden classic plugins
+// But must be overridden by our style
 @import "../theme/style.less";
+
 @import "variables.less";
-@import "repository/style.less";
+
+// Custom style that override vendors libraries
+@import "vendors/dropzone/dropzone.less";
+@import "vendors/pace/pace.less";
+
+// App relative styles
+@import "repository.less";
+
 
 .avatar_48{
   width: 48px;
@@ -150,15 +169,10 @@
         Sidebar
         http://tympanus.net/Development/SidebarTransitions/#
 =================================*/
-.sidebar{
+.board .sidebar{
   //    min-height: 1200px;
   background-color: #2f4050;
   height: 100%;
-}
-.board .sidebar.sidebar-open {
-  visibility: visible;
-  -webkit-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
 }
 .board .sidebar {
   position: absolute;
@@ -177,6 +191,11 @@
 }
 .board .pace-done .sidebar .nav-header {
   transition: none;
+}
+.board .sidebar.sidebar-open {
+  visibility: visible;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
 }
 .sidebar-backdrop{
   background-color: rgba(0,0,0,0.4);
@@ -218,18 +237,9 @@ and the rest of routes. There is no glitch with wrapper and menu then */
   min-height: initial;
 }
 
-
-
 .fluid{
   float: left;
   
-}
-
-.dropzone {
-  position: relative;
-  border: 2px dashed #0087F7;
-  border-radius: 5px;
-  background: white;
 }
 
 .wrapper-content{

@@ -2,7 +2,7 @@
 *.iml
 .tmp
 bower_components
-data
+data/statics
 config/local.js
 
 ### Windows template

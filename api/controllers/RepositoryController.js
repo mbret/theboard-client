@@ -1,9 +1,8 @@
 (function(){
     'use strict';
 
-    var Promise = require('bluebird');
     var validator = require('validator');
-    
+
     module.exports = {
 
         /**

@@ -12,7 +12,6 @@
         .constant('toastr', window.toastr)
         .constant('blueimp', window.blueimp)
         .constant('Dropzone', window.Dropzone)
-        .constant('_', window._);
-
-
+        .constant('_', window._)
+        .constant('URI', URI);
 })();

@@ -68,11 +68,11 @@ var AuthController = {
             if (err) {
                 if (err.code === 'E_VALIDATION') {
                     if (err.invalidAttributes.email) {
-                        // This error could be something else but as we validate before we should only get an error because emeail already taken here
+                        // This error could be something else but as we validate before we should only get an error because email already taken here
                         return res.badRequest('Email already taken');
                     }
                     else {
-                        return send( 'This user exist' );
+                        return res.badRequest(err);
                     }
                 }
                 return res.serverError(err);

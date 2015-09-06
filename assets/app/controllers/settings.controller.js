@@ -117,8 +117,7 @@
             backgroundDefault: user.getSetting( user.SETTING_BACKGROUND_USE_DEFAULT, true )
         };
         
-        console.log(self.settings);
-        
+
         $scope.knobOptions = {
             min: 5,
             max: 60
@@ -169,7 +168,6 @@
         
         self.backgroundFormSubmit = function(){
             if($scope.widgetsForm.$valid){
-                console.log(self.settings.backgroundImageInterval);
                 user.setSetting( user.SETTING_BACKGROUND_USE_DEFAULT, self.settings.backgroundDefault );
                 user.setSetting( user.SETTING_BACKGROUND_IMAGES_INTERVAL, self.settings.backgroundImageInterval * 1000);
                 user.save()

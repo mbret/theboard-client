@@ -47,7 +47,6 @@
                 maxWidth = window.screen.width,
                 curHeight = window.innerHeight,
                 curWidth = window.innerWidth;
-            console.log('a');
             if (maxWidth == curWidth && maxHeight == curHeight) {
                 $scope.hideButtonsBar = true;
             }
@@ -103,12 +102,11 @@
          * - Transform the permissions array into filled object
          *
          */
-        if(!"sandbox" in document.createElement("iframe")){
-            alert("We are sorry but your browser is too old and unsafe. Your widgets will not be loaded in order to protect you.");
-        }
-        else{
-            widgetService.getAll(user.getProfile()).then(function(widgetsFromServer){
+        widgetService
+            .getAll(user.getProfile())
+            .then(function(widgetsFromServer){
 
+                // keep data locally
                 widgets = widgetsFromServer;
                 $scope.widgets = widgets;
 
@@ -175,18 +173,19 @@
                                     }
                                     return deferred2.promise;
 
-                                })().then(function(){
-                                    // attach permissions to widget
-                                    widget.permissions = permissions; // @todo maybe not useful anymore
-                                    widget.buildIframeURL();
-                                    widget.isReady = true;
-                                    // This method will load the widget iframe
-                                    widgetService.load(widget);
-                                    return deferred.resolve();
-                                }).catch(function(err){
-
-                                    return deferred.reject(err);
-                                });
+                                })()
+                                    .then(function(){
+                                        // attach permissions to widget
+                                        widget.permissions = permissions; // @todo maybe not useful anymore
+                                        widget.buildIframeURL();
+                                        widget.isReady = true;
+                                        // This method will load the widget iframe
+                                        widgetService.load(widget);
+                                        return deferred.resolve();
+                                    })
+                                    .catch(function(err){
+                                        return deferred.reject(err);
+                                    });
 
                                 return deferred.promise;
                             }
@@ -202,13 +201,12 @@
                         });
                     }
                 })();
-
-            }).catch(function(error){
-                // This catch handle error from all subsequent code
-                // If error happens when set permission or promises loop for example
-                modalService.simpleError(error.message);
-            });
-        }
+            })
+            .catch(function(error){
+            // This catch handle error from all subsequent code
+            // If error happens when set permission or promises loop for example
+            modalService.simpleError(error.message);
+        });
 
 
         /*
