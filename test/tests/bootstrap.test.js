@@ -1,7 +1,12 @@
 var Sails = require('sails');
+var path = require('path');
 var sails;
 
+process.env.LIB_PATH   = path.join(__dirname, '../lib');
+process.env.CONFIG_PATH   = path.join(__dirname, '..');
+
 before(function(done) {
+
     Sails.lift({
         
         log:{
