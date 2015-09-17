@@ -22,15 +22,6 @@ module.exports = function(grunt) {
 				ext: '.css'
 			}]
 		},
-		widgetsFramework: {
-			files: [{
-				expand: true,
-				cwd: 'assets/widgets-framework/',
-				src: ['style.less'],
-				dest: '.tmp/public/widgets-framework/',
-				ext: '.css'
-			}]
-		}
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-less');

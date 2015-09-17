@@ -28,18 +28,11 @@
             <ul  ng-class="{'widget-lock': widgetsLocked}">
                 <li gridster-item="widget"
                     ng-repeat="widget in widgets">
-                    <!-- ng-controller="WidgetController"-->
-
-                    <!--
-                        widgetIfram directive:
-                        handle the UI control of the widget
-                    -->
                     <widget-iframe
                             id="{{widget.identityHTML}}-container"
                             class="widget-iframe-container yellow-bg"
                             widget="widget"
                             ng-class="{'with-border': widgetsBorders}" >
-
                     </widget-iframe><!-- end: widget container -->
                 </li>
             </ul>

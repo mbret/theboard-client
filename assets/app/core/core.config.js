@@ -91,7 +91,7 @@
                 outerMargin: true, // whether margins apply to outer edges of the grid,
                 floating: true, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
                 resizable: {
-                    enabled: false,
+                    enabled: true,
                     handles: ['n', 'e', 's', 'w', 'ne', 'se', 'sw', 'nw'],
                     start: function(event, $element, widget) {}, // optional callback fired when resize is started,
                     resize: function(event, $element, widget) {}, // optional callback fired when item is resized,

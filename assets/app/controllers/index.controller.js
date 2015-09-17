@@ -172,6 +172,7 @@
 
         });
 
+        console.log(gridsterConfig);
         // Watch item changes
         // @todo this event is triggered at startup, I suspect its due to the page building which make gridster change during process
         // @todo maybe use a queue here to store change and call server less times

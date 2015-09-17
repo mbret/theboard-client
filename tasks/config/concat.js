@@ -21,14 +21,6 @@ module.exports = function(grunt) {
 			src: require('../pipeline').cssFilesToInject,
 			dest: '.tmp/public/concat/production.css'
 		},
-		widgetsFramework: {
-			src: [
-                '.tmp/public/widgets-framework/lib/utils.js',
-                '.tmp/public/widgets-framework/lib/**/*.js',
-                '.tmp/public/widgets-framework/index.js'
-            ],
-			dest: '.tmp/public/widgets-framework/production.js'
-		}
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-concat');

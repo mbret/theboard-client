@@ -4,7 +4,6 @@ module.exports = function (grunt) {
 		'bower:install',
 		'jst:dev',
 		'less:dev',
-		'less:widgetsFramework',
 		'copy:dev',
 		'coffee:dev'
 	]);
