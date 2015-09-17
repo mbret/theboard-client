@@ -4,3 +4,6 @@
 [submodule "data/statics/repository/theboard-widget-dailyWord"]
 	path = data/statics/repository/theboard-widget-dailyWord
 	url = https://github.com/mbret/theboard-widget-dailyWord.git
+[submodule "data/statics/repository/theboard-widget-base"]
+	path = data/statics/repository/theboard-widget-base
+	url = https://github.com/mbret/theboard-widget-base.git

@@ -1,12 +1,10 @@
 var request = require('supertest');
-var conf = require('../../config');
-var utils   = require(conf.path.tools + '/logger.js');
+var conf = require(process.env.CONFIG_PATH + '/config');
+var utils   = require(process.env.LIB_PATH + '/logger.js');
 var agent;
 var app;
 
 describe('AuthController', function() {
-
-
 
     before(function(done) {
         app = sails.hooks.http.app;
