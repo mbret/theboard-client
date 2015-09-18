@@ -1,7 +1,6 @@
 (function(){
     'use strict';
 
-    var Promise = require('bluebird');
     var validator = require('validator');
     var util = require('util');
 

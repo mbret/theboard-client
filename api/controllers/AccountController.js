@@ -1,5 +1,4 @@
 (function(){
-    var Promise = require('bluebird');
     var path = require('path');
     
     module.exports = {

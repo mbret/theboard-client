@@ -1,26 +1,19 @@
 var fse = require('fs-extra');
 
 var User = {
-    // Enforce model schema in the case of schemaless databases
     schema: true,
 
     attributes: {
         email       : { type: 'email',  unique: true },
         passports   : { collection: 'Passport', via: 'user' },
-        //token       : { type: 'string' },
-
-        firstName: { type: 'string' },
-        lastName: { type: 'string' },
-
-        //backgroundImages: { type: 'array', required: false, defaultsTo: [] }, mettre dans les settings
-
-        locale: { type:'string', defaultTo: 'en_US' },
-        avatar: { type: 'string', required: false },
-        banner: { type: 'string', required: false },
-        address: { type: 'string', required: false },
-
-        settings: { collection:'userSetting', via: 'user' },
-        profiles: { collection: 'profile', via: 'user' },
+        firstName   : { type: 'string' },
+        lastName    : { type: 'string' },
+        locale      : { type:'string', defaultTo: 'en_US' },
+        avatar      : { type: 'string', required: false },
+        banner      : { type: 'string', required: false },
+        address     : { type: 'string', required: false },
+        settings    : { collection:'userSetting', via: 'user' },
+        profiles    : { collection: 'profile', via: 'user' },
 
         /**
          * Return the value of the asked settings
@@ -70,11 +63,11 @@ var User = {
             // Loop over all supposed settings
             // Fill setting with user value
             // In that way the settings array returned to app contain all settings (with possible default values)
-            var userSettings = {};
-            _.forEach(sails.config.user.settings, function(setting, key){
-                userSettings[key] =  that.getSettingValue(key);
-            });
-            data.settings = userSettings;
+            //var userSettings = {};
+            //sails.config.user.settings.forEach(function(setting, key){
+            //    userSettings[key] =  that.getSettingValue(key);
+            //});
+            //data.settings = userSettings;
 
             data.profiles.forEach(function(profile){
                if(profile.default === true){
@@ -92,11 +85,12 @@ var User = {
     },
 
     beforeCreate: function(values, cb){
-        // if(!values.profiles){
-        //     console.log('add default profile');
-        //     values.profiles = [];
-        //     values.profiles.push({ name: 'Default', description: 'This is your first and default profile. You can add your own profile or edit / remove this profile.', default: true })
-        // }
+        if(!values.avatar){
+            values.avatar = sails.config.users.defaultAttributes.avatar;
+        }
+        if(!values.banner){
+            values.banner = sails.config.users.defaultAttributes.banner;
+        }
         return cb();
     },
 

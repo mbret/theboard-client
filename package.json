@@ -2,7 +2,6 @@
   "dependencies": {
     "async": "^0.9.0",
     "bcryptjs": "^2.2.1",
-    "bluebird": "^2.9.13",
     "ejs": "^0.8.8",
     "express": "^4.13.3",
     "fs-extra": "^0.16.4",
@@ -35,26 +34,26 @@
     "request": "^2.53.0",
     "sails": "^0.12.0-rc3",
     "sails-disk": "~0.10.0",
-    "sails-hook-dev": "^1.0.0",
     "sails-mysql": "^0.10.11",
-    "supertest": "^0.15.0",
     "validator": "^3.43.0"
   },
-  "name": "p",
-  "private": true,
-  "version": "0.0.0",
-  "description": "a Sails application",
+  "name": "theboard",
+  "version": "1.0",
+  "description": "theboard web app",
   "keywords": [],
   "scripts": {
-    "start": "node app.js",
-    "debug": "node debug app.js",
-    "test" : "mocha"
+    "start": "sails lift",
+    "test": "mocha"
   },
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/maxime/p.git"
+    "url": "https://github.com/mbret/theboard-client"
   },
   "author": "maxime",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "sails-hook-dev": "^1.0.0",
+    "supertest": "^0.15.0"
+  }
 }

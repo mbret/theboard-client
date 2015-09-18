@@ -2,7 +2,6 @@
 //var async = require('async');
 
 (function(){
-    var Promise = require('bluebird');
 
     module.exports = {
 

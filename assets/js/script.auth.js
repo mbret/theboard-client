@@ -54,12 +54,11 @@
                     email: $("#form-register input[name='email']").val(),
                     password: $("#form-register input[name='password']").val()
                 };
-                $.post( APP_CONFIG.routes.api.auth.signup, data)
+                $.post(APP_CONFIG.routes.api.auth.signup, data)
                     .done(function(data, textStatus, jqXHR){
                         //localStorage.token = data.token;
-                        var redirectURL = data.redirect;
                         //$.cookie('SID', data.token, 'localhost');
-                        window.location.replace(redirectURL);
+                        window.location.replace(APP_CONFIG.routes.app);
                     })
                     .fail(function(jqXHR, textStatus, errorThrown) {
                         switch(jqXHR.status){
@@ -98,9 +97,8 @@
                 $.post( APP_CONFIG.routes.api.auth.signin, data)
                     .done(function(data, textStatus, jqXHR){
                         //localStorage.token = data.token;
-                        var redirectURL = data.redirect;
                         //$.cookie('SID', data.token, 'localhost');
-                        window.location.replace(redirectURL);
+                        window.location.replace(APP_CONFIG.routes.app);
                     })
                     .fail(function(jqXHR, textStatus, errorThrown) {
                         switch(jqXHR.status){

@@ -30,9 +30,9 @@ var AuthController = {
                 req.flash('success', 'Success.Auth.Login');
                 var token = sails.services.auth.generateToken(user);
                 return res.ok({
-                    token: token,
-                    user: user.toView(),
-                    redirect: sails.config.urls.app
+                    token: token
+                    //user: user.toView(),
+                    //redirect: sails.config.urls.app
                 });
             });
         })(req, res);

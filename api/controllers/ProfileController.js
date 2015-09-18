@@ -1,5 +1,4 @@
 (function(){
-    var Promise = require('bluebird');
     var validator = require('validator');
     
     module.exports = {
