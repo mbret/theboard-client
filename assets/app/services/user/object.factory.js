@@ -6,47 +6,17 @@
      */
     angular
         .module('app.services')
-        .provider('user', userProvider)
-        .factory('userService', userService);
-    
-    function userProvider(){
-        
-        var userData;
-        
-        return {
-            setData: setData,
-            $get: userFactory
-        };
 
-        /**
-         * Set the data that will be used to build the user.
-         * Typically it comes from server
-         * @param data
-         */
-        function setData( data ){
-            userData = data;
-        }
+        // "User" is the base object used to instantiate "user".
+        .factory('User', UserFactory);
 
-        /**
-         * Build a user object that come will useful method.
-         * This object represent logged user so there is only one.
-         * SINGLETON
-         */
-        function userFactory(userService) {
-            return new userService( userData );
-        }
-        userFactory.$inject = ['userService'];
+    /**
+     *
+     * @param data User data that come from server
+     * @constructor
+     */
+    function UserFactory(localStorageService){
 
-    }
-
-    userService.$inject = ['localStorageService', 'dataservice', 'APP_CONFIG'];
-    function userService(localStorageService, dataservice, APP_CONFIG){
-
-        /**
-         *
-         * @param data User data that come from server
-         * @constructor
-         */
         var User = function( data ){
 
             var self = this;
@@ -102,7 +72,7 @@
             User.prototype.SETTING_WIDGETS_BORDERS = 'widgetsBorders';
             User.prototype.SETTING_BACKGROUND_IMAGES_INTERVAL = 'backgroundImagesInterval';
             User.prototype.SETTING_BACKGROUND_USE_DEFAULT = 'useDefaultBackground';
-            
+
             User.prototype.addBackgroundImage = function( key ){
                 self.backgroundImages.push(key);
             };

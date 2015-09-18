@@ -13,15 +13,15 @@ module.exports.users = {
     defaultSettings: {
         widgetsBorders: {
             type: 'boolean',
-            valueBoolean: false
+            value: false
         },
         backgroundImagesInterval: {
             type: 'integer',
-            valueNumber: 5000
+            value: 5000
         },
         backgroundImages: {
             type: 'array',
-            valueArray: ['bg-sample (1).jpg', 'bg-sample (2).jpg', 'bg-sample (3).jpg']
+            value: ['bg-sample (1).jpg', 'bg-sample (2).jpg', 'bg-sample (3).jpg']
         }
     }
 };

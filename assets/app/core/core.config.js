@@ -63,13 +63,11 @@
      * The user object come from server and correspond to the logged user.
      * This value is set now but can change anytime during process and is share accross modules.
      */
-    function configureUser(USER, userProvider, $provide){
-        // Inject data from server to the user factory
-        // The app user will be build with data from server and merged with local save
-        // The local save contain element like current active profile, etc
-        userProvider.setData(USER);
+    function configureUser(USER, $provide){
+        $provide.factory('user', function(User){
+           return new User(USER);
+        });
     }
-    configureUser.$inject = ['USER', 'userProvider', '$provide'];
 
     /**
      * config get injected by 'app' as a constant when config is retrieved from server
@@ -123,7 +121,7 @@
      * @param APP_CONFIG
      * @param user
      */
-    function run($rootScope, $state, $http, $log, notifService, userService, APP_CONFIG, user, $timeout, USER, localStorageService, $modal){
+    function run($rootScope, $state, $http, $log, notifService, APP_CONFIG, $timeout, USER, localStorageService, $modal, user){
 
         $log.info('APP_CONFIG', APP_CONFIG);
         $log.info('USER', USER);

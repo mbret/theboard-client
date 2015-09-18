@@ -33,21 +33,21 @@ var User = {
          * @param settingName
          * @param value
          */
-        setSettingValueOrCreate: function(key, value){
-            var setting = _.find(this.settings, function(obj){
-                return obj.name === key;
-            });
-            // No setting yet
-            // Add the setting only if it's a possible setting
-            if(_.isUndefined(setting)){
-                var newSetting = UserSetting.buildNewSetting(key, value);
-                this.settings.add(newSetting);
-            }
-            // setting found
-            else{
-                setting.setValue(value);
-            }
-        },
+        //setSettingValueOrCreate: function(key, value){
+        //    var setting = _.find(this.settings, function(obj){
+        //        return obj.name === key;
+        //    });
+        //    // No setting yet
+        //    // Add the setting only if it's a possible setting
+        //    if(_.isUndefined(setting)){
+        //        var newSetting = UserSetting.buildNewSetting(key, value);
+        //        this.settings.add(newSetting);
+        //    }
+        //    // setting found
+        //    else{
+        //        setting.setValue(value);
+        //    }
+        //},
 
         /**
          * Return a user object for the view
@@ -59,21 +59,12 @@ var User = {
             var data = _.cloneDeep(this.toObject());
             var that = this;
 
-            console.log(data);
-            // Loop over all supposed settings
-            // Fill setting with user value
-            // In that way the settings array returned to app contain all settings (with possible default values)
-            //var userSettings = {};
-            //sails.config.user.settings.forEach(function(setting, key){
-            //    userSettings[key] =  that.getSettingValue(key);
-            //});
-            //data.settings = userSettings;
-
             data.profiles.forEach(function(profile){
                if(profile.default === true){
                    data.defaultProfile = profile.id;
                }
             });
+
             // @todo check how to only retrieve list of profile id instead of having this because of populate
             data.profiles = _.map(data.profiles, 'id');
 
@@ -103,18 +94,25 @@ var User = {
      * @todo transactions , promises
      * @param data
      */
-    createAndInit: function(data, cb){
-        // create user
-        sails.models.user.create(data, function(err, user){
-            if(err){
-                return cb(err);
-            }
+    createAndInit: function(data){
 
-            user.profiles.add( { name: 'Default', description: 'This is your first and default profile. You can add your own profile or edit / remove this profile.', default: true });
-            user.save(function(err, user){
-                return cb(err, user);
+        // create user
+        return sails.models.user.create(data)
+            .then(function(user){
+
+                // Create default profile
+                user.profiles.add( { name: 'Default', description: 'This is your first and default profile. You can add your own profile or edit / remove this profile.', default: true });
+                return user.save();
+
+            })
+            .then(function(user){
+
+                // add default settings
+                return sails.models.usersetting.createDefaultSettingsForUser(user.id, user.profiles[0])
+                    .then(function(){
+                        return user;
+                    })
             });
-        });
     }
 
 };

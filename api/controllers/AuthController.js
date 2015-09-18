@@ -64,8 +64,39 @@ var AuthController = {
         };
 
         // Create the user and init everything necessary for application
-        User.createAndInit(values, function (err, user) {
-            if (err) {
+        User.createAndInit(values)
+            .then(function(user){
+
+                Passport.create({
+                    protocol : 'local',
+                    password : password,
+                    user     : user.id
+                }, function (err, passport) {
+                    if (err) {
+                        // It could be invalid password here but we check before with validator
+                        return user.destroy(function (destroyErr) {
+                            if(destroyErr){
+                                sails.log.error(err);
+                            }
+                            return res.serverError(err);
+                        });
+                    }
+
+                    req.login(user, function(err){
+                        if(err){
+                            return res.serverError(err);
+                        }
+                        req.flash('success', 'Success.Auth.Register');
+                        var token = sails.services.auth.generateToken(user);
+                        return res.ok({
+                            token: token,
+                            user: user.toView(),
+                            redirect: sails.config.urls.app
+                        });
+                    });
+                });
+            })
+            .catch(function(err){
                 if (err.code === 'E_VALIDATION') {
                     if (err.invalidAttributes.email) {
                         // This error could be something else but as we validate before we should only get an error because email already taken here
@@ -76,36 +107,7 @@ var AuthController = {
                     }
                 }
                 return res.serverError(err);
-            }
-            Passport.create({
-                protocol : 'local',
-                password : password,
-                user     : user.id
-            }, function (err, passport) {
-                if (err) {
-                    // It could be invalid password here but we check before with validator
-                    return user.destroy(function (destroyErr) {
-                        if(destroyErr){
-                            sails.log.error(err);
-                        }
-                        return res.serverError(err);
-                    });
-                }
-
-                req.login(user, function(err){
-                    if(err){
-                        return res.serverError(err);
-                    }
-                    req.flash('success', 'Success.Auth.Register');
-                    var token = sails.services.auth.generateToken(user);
-                    return res.ok({
-                        token: token,
-                        user: user.toView(),
-                        redirect: sails.config.urls.app
-                    });
-                });
-            });
-        });
+            })
     },
 
     /**
