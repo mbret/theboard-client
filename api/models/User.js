@@ -68,6 +68,11 @@ var User = {
             // @todo check how to only retrieve list of profile id instead of having this because of populate
             data.profiles = _.map(data.profiles, 'id');
 
+            data.settings = [];
+            this.settings.forEach(function(setting){
+                data.settings.push(setting.toView());
+            });
+
             console.log(data);
             return data;
 

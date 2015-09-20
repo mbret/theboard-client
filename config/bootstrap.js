@@ -36,31 +36,6 @@ module.exports.bootstrap = function(cb) {
             //FileService.createDataDir(cb);
         },
 
-        // Init database
-        // For some dev reason we need to init and feel database sometimes
-        function(cb){
-            if( sails.config.fillDb === true ){
-                switch(sails.config.environment){
-                    //case 'production':
-                    //    DbService.init('production')
-                    //    .then(function(){ cb(); })
-                    //    .catch(cb);
-                    //    break;
-                    case 'development':
-                        DbService.init('development')
-                        .then(function(){ cb(); })
-                        .catch(cb);
-                        break;
-                    default:
-                        cb();
-                }
-
-            }
-            else{
-                return cb();
-            }
-        }
-
     ], function(error){
         return cb(error);
     });

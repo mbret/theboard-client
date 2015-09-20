@@ -29,6 +29,24 @@ var UserSetting = {
         //setValue: function(value){
         //    this[UserSetting.getValueKey(this.type)] = UserSetting._convertValue(this.type, value);
         //}
+
+        toView: function(){
+            var data = this.toObject();
+            data.value = JSON.parse(data.value);
+            return data;
+        }
+    },
+
+    beforeValidate: function(values, cb){
+        return cb();
+    },
+
+    beforeCreate: function(values, cb){
+        //switch(values.type){
+        //    case 'array':
+        //        values.value = JSON.parse(values.value);
+        //}
+        return cb();
     },
 
     //buildNewSetting: function(name, value){
@@ -60,16 +78,16 @@ var UserSetting = {
     //    }
     //},
 
-    //_convertValue: function(type, value){
-    //    switch (type){
-    //        case 'boolean':
-    //            return value == 'true';
-    //        case 'integer':
-    //            return parseInt(value);
-    //        default:
-    //            return value;
-    //    }
-    //},
+    getValue: function(setting){
+        switch (type){
+            case 'boolean':
+                return value == 'true';
+            case 'integer':
+                return parseInt(value);
+            default:
+                return value;
+        }
+    },
 
     /**
      * Create the default settings for a user's profile.
@@ -86,7 +104,7 @@ var UserSetting = {
                 profile : profile,
                 name    : key,
                 type    : setting.type,
-                value   : setting.value
+                value   : JSON.stringify(setting.value)
             }))
         });
 

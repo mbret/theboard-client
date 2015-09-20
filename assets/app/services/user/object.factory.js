@@ -10,34 +10,32 @@
         // "User" is the base object used to instantiate "user".
         .factory('User', UserFactory);
 
-    /**
-     *
-     * @param data User data that come from server
-     * @constructor
-     */
-    function UserFactory(localStorageService){
-
-        var User = function( data ){
-
+    function UserFactory(localStorageService, APP_CONFIG){
+        /**
+         *
+         * @param data
+         * @constructor
+         */
+        function User(data){
             var self = this;
 
             // Copy data from server USER to the app user
             //self.profiles   = angular.copy(data.profiles);
-            self.settings   = angular.copy(data.settings);
+            var settings   = angular.copy(data.settings);
             self.id         = data.id;
             self.email      = data.email;
-            self.backgroundImages = [];
-            self.avatar     = data.avatar;
-            self.banner     = data.banner;
+            //self.backgroundImages = [];
+            var avatar     = data.avatar;
+            var banner     = data.banner;
             self.profile    = data.profile;
             self.firstName  = data.firstName;
             self.lastName   = data.lastName;
             self.job        = 'Developer';
             self.phone      = '(+33) 6 06 65 87 55';
 
-            if(data.backgroundImages && Array.isArray(data.backgroundImages)){
-                self.backgroundImages = angular.copy(data.backgroundImages);
-            }
+            //if(data.backgroundImages && Array.isArray(data.backgroundImages)){
+            //    self.backgroundImages = angular.copy(data.backgroundImages);
+            //}
 
             // ----------------------------------------
             //
@@ -69,19 +67,20 @@
              * constants are here to reduce the use of potentially future changed strings.
              * Use them inside controller etc and change only here when server changed.
              */
-            User.prototype.SETTING_WIDGETS_BORDERS = 'widgetsBorders';
-            User.prototype.SETTING_BACKGROUND_IMAGES_INTERVAL = 'backgroundImagesInterval';
-            User.prototype.SETTING_BACKGROUND_USE_DEFAULT = 'useDefaultBackground';
+            User.prototype.SETTING_WIDGETS_BORDERS              = 'widgetsBorders';
+            User.prototype.SETTING_BACKGROUND_IMAGES_INTERVAL   = 'backgroundImagesInterval';
+            User.prototype.SETTING_BACKGROUND_IMAGES            = 'backgroundImages';
+            User.prototype.SETTING_BACKGROUND_USE_DEFAULT       = 'useDefaultBackground';
 
-            User.prototype.addBackgroundImage = function( key ){
-                self.backgroundImages.push(key);
-            };
+            //User.prototype.addBackgroundImage = function( key ){
+            //    self.backgroundImages.push(key);
+            //};
 
-            User.prototype.removeBackgroundImage = function( key ){
-                self.backgroundImages = _.remove(self.backgroundImages, function(n) {
-                    return key !== n;
-                });
-            };
+            //User.prototype.removeBackgroundImage = function( key ){
+            //    self.backgroundImages = _.remove(self.backgroundImages, function(n) {
+            //        return key !== n;
+            //    });
+            //};
 
             /**
              * Use this function to set new active profile as local.
@@ -108,25 +107,28 @@
              * @param id
              * @returns {*}
              */
-            User.prototype.getSetting = function( id, defaultOtherwise ){
-                var setting = self.settings[id];
-                if( typeof setting !== 'undefined' && setting !== null ){
-                    return self.settings[id];
-                }
-                else if (defaultOtherwise){
+            this.getSetting = function( resource, defaultValue ){
+                // search for setting
+                var settingFound = _.find(settings, 'name', resource);
+                if(_.isUndefined(settingFound)){
                     return APP_CONFIG.user.default.settings[id];
                 }
-                else{
-                    return null;
+                else {
+                    return settingFound.value;
                 }
+                //else{
+                //    return null;
+                //}
             };
+
+            // user.backgroundImages.length > 0) ? user.backgroundImages : APP_CONFIG.user.default.backgroundImages;
 
             this.save = function(){
                 var data = {
                     firstName: user.firstName,
                     lastName: user.lastName,
                     settings: user.settings,
-                    backgroundImages: user.backgroundImages
+                    //backgroundImages: user.backgroundImages
                 };
                 return dataservice.updateAccount(data).then(function(user){
                     saveUserToLocalStorage();
@@ -157,17 +159,19 @@
                     _.assign(self, localData);
                 }
             }
-        };
 
-        User.find = function(){
+            this.getAvatar = function(){
+                return APP_CONFIG.baseUrls.images + '/' + (avatar || APP_CONFIG.user.default.avatar);
+            };
 
-        };
-
-        User.findOne = function(){
-
-        };
-
+            this.getBanner = function(){
+                return APP_CONFIG.baseUrls.images + '/' + banner || APP_CONFIG.user.default.banner;
+            };
+        }
         return User;
     }
+
+
+
 
 })();

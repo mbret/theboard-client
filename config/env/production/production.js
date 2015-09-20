@@ -16,8 +16,6 @@ module.exports = {
 
     autoLogin: false,
 
-    fillDb: true,
-
     log: {
         level: "info"
     },

@@ -39,16 +39,20 @@
 
                     if(!profile) return res.notFound();
 
-                    return Promise.map(profile.widgets, function(profileWidget){
+                    var promises = [];
+                    profile.widgets.forEach(function(profileWidget){
 
                         // load complete data about widgets
                         // db is not enough, we need information about package
-                        return profileWidget
-                            .loadCompleteObject()
-                            .then(function(){
-                                data.push(profileWidget.toJSON());
-                            });
+                        promises.push(
+                            profileWidget
+                                .loadCompleteObject()
+                                .then(function(){
+                                    data.push(profileWidget.toJSON());
+                                })
+                        );
                     });
+                    return Promise.all(promises);
                 })
                 .then(function(){
                     return res.ok(data);

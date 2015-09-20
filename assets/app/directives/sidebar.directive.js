@@ -33,7 +33,7 @@
                         // }
 
                         scope.user = {
-                            avatar: user.avatar || APP_CONFIG.user.default.avatar,
+                            avatar: user.getAvatar(),
                             email: user.email,
                             firstName: user.firstName,
                             lastName: user.lastName,

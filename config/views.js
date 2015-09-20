@@ -122,6 +122,11 @@ module.exports.views = {
             widgets: {
                 updated: 'Widgets updated!'
             }
+        },
+
+        baseUrls: {
+            backgroundImages: '/images/board-bg-sample',
+            images: '/images',
         }
     }
 };

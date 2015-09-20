@@ -28,11 +28,11 @@
 
         // backstretch take an array of url so we take settings
         // and create an array with image and url
-        var urls = [];
-        var bgImages = (user.backgroundImages.length > 0) ? user.backgroundImages : APP_CONFIG.user.default.backgroundImages;
-        angular.forEach(bgImages, function(image){
-            urls.push(image);
+        var bgImages = user.getSetting( user.SETTING_BACKGROUND_IMAGES );
+        var urls = bgImages.map(function(image){
+            return APP_CONFIG.baseUrls.backgroundImages + '/' + image;
         });
+
         $scope.backstretch = {
             duration: user.getSetting(user.SETTING_BACKGROUND_IMAGES_INTERVAL, true),
             images: urls

@@ -34,8 +34,6 @@ before(function(done) {
             autoLogin: false
         },
 
-        fillDb: true,
-        
         // user credentials
         user: {
             email: 'user@gmail.com',

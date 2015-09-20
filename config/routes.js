@@ -91,9 +91,9 @@ module.exports = {
         signup: '/signup',
         app: '/',
         data: 'public',
-        userBackgroundImages: '/public/users/backgrounds',
-        images: 'images',
+        backgroundImages: '/images/board-bg-sample',
+        images: '/images',
         configuration: '/helpers/configuration.js',
-        user: '/helpers/user.js'
+        user: '/helpers/user.js',
     }
 };
