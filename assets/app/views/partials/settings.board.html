@@ -10,8 +10,8 @@
                     <form class="form-horizontal" name="widgetsForm" ng-submit="settingsBoardCtl.widgetsFormSubmit()">
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Borders on widgets</label>
-                            <div class="col-sm-5">
+                            <label class="col-sm-5 control-label">Borders on widgets</label>
+                            <div class="col-sm-7">
                                 <label class="checkbox-inline">
                                     <input icheck type="checkbox" ng-model="settingsBoardCtl.widgets.borders">
                                 </label>
@@ -52,79 +52,85 @@
     </div>
     
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>Background</h5>
                 </div>
                 <div class="ibox-content">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <h2>Background images</h2>
-                            <p>
-                                Here is the list of your personal images for board background.
-                            </p>
+                    <form class="form-horizontal" name="widgetsForm" ng-submit="settingsBoardCtl.backgroundFormSubmit()">
 
-                            <form action="" class="dropzone" id="my-awesome-dropzone" dropzone dropzone-config="settingsBoardCtl.dropzone.config" ></form>
-                            <div class="m-t"></div>
-                            <div class="lightBoxGallery bg-gallery" id="test" >
-                                <span ng-repeat="image in settingsBoardCtl.settings.backgroundImages">
-                                    <div class="item" ng-mouseenter="hover(image)" ng-mouseleave="hover(image)">
-                                        <button class="btn btn-warning btn-circle" type="button" ng-show="image.showDelete" ng-click="delete(image)" ng-confirm-click="Are you sure?">
-                                            <i class="fa fa-times"></i>
-                                        </button>
-                                        <a ng-href="{{image.src}}" title="{{image.title}}" blueimp data-gallery="" >
-                                            <img style="max-width:150px;max-height: 150px;margin:3px;" ng-src="{{image.src}}" />
-                                        </a>
+                            <div class="form-group">
+                                <label class="col-sm-3 col-lg-3 control-label">Background</label>
+                                <div class="col-sm-9 col-lg-9">
+                                    <div>
+                                        <label> <input icheck type="radio" name="radioTest" value="colors"
+                                                        ng-model="settings.background"> Use color background {{settings.background.colors}}</label>
                                     </div>
-                                </span>
-
-                                <!-- The Gallery as lightbox dialog, should be a child element of the document body -->
-                                <div id="blueimp-gallery" class="blueimp-gallery">
-                                    <div class="slides"></div>
-                                    <h3 class="title"></h3>
-                                    <a class="prev">‹</a>
-                                    <a class="next">›</a>
-                                    <a class="close">×</a>
-                                    <a class="play-pause"></a>
-                                    <ol class="indicator"></ol>
+                                    <div>
+                                        <label> <input icheck type="radio" name="radioTest" value="images"
+                                                        ng-model="settings.background"> Use background images </label>
+                                    </div>
                                 </div>
-
                             </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <form class="form-horizontal" name="widgetsForm" ng-submit="settingsBoardCtl.backgroundFormSubmit()">
 
-                                <div class="form-group" >
-                                    <label class="col-sm-5 control-label">Use default background</label>
-                                    <div class="col-sm-3">
-                                        <div class="checkbox">
-                                            <input icheck type="checkbox" ng-model="settingsBoardCtl.settings.backgroundDefault">
+                            <div class="form-group">
+                                <label class="col-sm-3 col-lg-3 control-label">Background images interval (seconds)</label>
+                                <div class="col-sm-9 col-lg-9">
+                                    <knob knob-data="settingsBoardCtl.settings.backgroundImageInterval" knob-options="{min: 5,max: 60}" class="m-r-sm" data-fgColor="#ED5565" data-width="70" data-height="70" data-cursor=true data-thickness=.3></knob>
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+
+                            <!--Dropzone-->
+                            <div class="">
+                                <label class="control-label">Background images</label>
+                                <div ng-if="useDefaultBackgroundImage" class="help-block">You are using default background images, feel free to add your own image. Once you add an image you will no longer have default images</div>
+                                <div ng-class="{'m-t-sm': 'useDefaultBackgroundImage'}">
+
+                                    <!--Dropzone plugin-->
+                                    <div class="dropzone" id="my-awesome-dropzone" dropzone dropzone-config="settingsBoardCtl.dropzone.config" ></div>
+
+                                    {{$scope.settings.backgroundImages}}
+                                    <!--Display uploaded pictures-->
+                                    <div class="m-t"></div>
+                                    <div class="lightBoxGallery bg-gallery" id="test" >
+                                            <span ng-repeat="image in settings.backgroundImages">
+                                                <div class="item" ng-mouseenter="hover(image)" ng-mouseleave="hover(image)">
+                                                    <button class="btn btn-warning btn-circle" type="button" ng-show="image.showDelete" ng-click="delete(image)" ng-confirm-click="Are you sure?">
+                                                        <i class="fa fa-times"></i>
+                                                    </button>
+                                                    <a ng-href="{{image.src}}" title="{{image.title}}" blueimp data-gallery="" >
+                                                        <img style="max-width:150px;max-height: 150px;margin:3px;" ng-src="{{image.src}}" />
+                                                    </a>
+                                                </div>
+                                            </span>
+
+                                        <!-- The Gallery as lightbox dialog, should be a child element of the document body -->
+                                        <div id="blueimp-gallery" class="blueimp-gallery">
+                                            <div class="slides"></div>
+                                            <h3 class="title"></h3>
+                                            <a class="prev">‹</a>
+                                            <a class="next">›</a>
+                                            <a class="close">×</a>
+                                            <a class="play-pause"></a>
+                                            <ol class="indicator"></ol>
                                         </div>
-                                        <span class="help-block m-b-none">By using this option, your backgrounds images will be deactivated.</span>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        
+
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="form-group">
-                                    <label class="col-sm-5 control-label">Background images interval (seconds)</label>
-                                    <div class="col-sm-5">
-                                        <knob knob-data="settingsBoardCtl.settings.backgroundImageInterval" knob-options="knobOptions" class="m-r-sm" data-fgColor="#ED5565" data-width="70" data-height="70" data-cursor=true data-thickness=.3></knob>
-                                    </div>
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-primary" type="submit" >Save changes</button>
                                 </div>
+                            </div>
 
-                                <div class="hr-line-dashed"></div>
-
-                                <div class="form-group">
-                                    <div class="col-sm-4 col-sm-offset-2">
-                                        <button class="btn btn-primary" type="submit" >Save changes</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                        </form>
                 </div>
             </div>
         </div>

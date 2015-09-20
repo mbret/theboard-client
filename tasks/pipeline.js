@@ -48,7 +48,7 @@ var jsFilesToInjectApp = [
     'js/dependencies/hammer.js',
     'js/dependencies/detect-element-resize.js',
     'vendors/dropzone/dropzone.min.js',
-    
+
     // Jquery
     'vendors/jquery/jquery.js',
     'vendors/jquery-ui/jquery-ui.js',
@@ -62,6 +62,8 @@ var jsFilesToInjectApp = [
     'vendors/jquery-backstretch/jquery.backstretch.js',
     'vendors/jQuery-Knob/jquery.knob.min.js',
     'vendors/iCheck/icheck.js',
+    'vendors/blueimp-gallery/blueimp-gallery.js',
+
 
     // Angular + plugins
     'vendors/angular/angular.js',

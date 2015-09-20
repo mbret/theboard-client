@@ -11,27 +11,37 @@
     backstretch.$inject = ['$http', 'APP_CONFIG', 'logger'];
 
     function backstretch($http, APP_CONFIG, logger) {
-        return {
-            status: null,
-            delay: null,
-            pause: function(){
-                this.status = 'pause';
-            },
-            resume: function( delay ) {
-                this.status = 'resume';
-                this.delay = delay;
-            },
-            toggle: function(){
-                if(this.status === 'resume'){
-                    this.status = 'pause';
+
+        return new function() {
+
+            var self    = this;
+
+            // Connected to directive API
+            this.status = null;
+            this.delay  = null;
+
+            this.pause = function(){
+                self.status = 'pause';
+            };
+
+            this.resume =  function( newDelay ) {
+                self.status = 'resume';
+                self.delay = newDelay;
+            };
+
+            this.toggle =  function(){
+                if(status === 'resume'){
+                    self.status = 'pause';
                 }
                 else{
-                    this.status = 'resume';
+                    self.status = 'resume';
                 }
-            },
-            destroy: function(){
-                this.status = 'destroy';
-            }
+            };
+
+            this.destroy =  function(){
+                self.status = 'destroy';
+            };
+
         }
     }
 

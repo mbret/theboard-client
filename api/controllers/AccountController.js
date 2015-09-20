@@ -1,9 +1,8 @@
 (function(){
-    var path = require('path');
-    
+    var path        = require('path');
+    var validator   = require('validator');
+
     module.exports = {
-
-
 
         update: function(req, res){
             var user = req.user;
@@ -48,14 +47,26 @@
             });
         },
 
+        /**
+         *
+         * @param req
+         * @param res
+         */
         uploadBackgroundImage: function(req, res){
+
+            var profile = req.param('profile', null);
+
+            if(!validator.isNumeric(profile)){
+                return res.badRequest('Profile is missing');
+            }
+
             req.file('uploadfile').upload({
+
                 dirname: sails.config.paths.publicData,
                 // don't allow the total upload size to exceed ~10MB
                 maxBytes: 10000000
-            }, whenDone);
 
-            function whenDone(err, files){
+            }, function (err, files){
                 if(err){
                     return res.serverError(err);
                 }
@@ -68,19 +79,49 @@
                 var file = files[0];
                 var fdSplitted = file.fd.split(path.sep); // split with platform-specific separator
                 var filename = fdSplitted[fdSplitted.length-1];
-                var url = require('util').format('%s/%s', '/' + sails.config.urls.data, filename);
-                console.log(sails.config.urls.data);
-                console.log(url);
-                console.log(sails.config.paths.publicData);
-                req.user.backgroundImages.push(url);
-                req.user.save(function(err, user){
-                    if(err){
-                        return res.serverError(err);
-                    }
-                    return res.ok(url);
-                });
+                var url = filename;
 
-            }
+                // Get already set background images
+                sails.models.usersetting.findOrCreate(
+                    // search
+                    {
+                        user: req.user.id,
+                        name: 'backgroundImages',
+                        profile: profile
+                    },
+                    // record
+                    {
+                        user: req.user.id,
+                        name: 'backgroundImages',
+                        profile: profile,
+                        type: 'array',
+                        value: JSON.stringify([url])
+                    })
+                    .then(function(setting){
+
+                        var urls = JSON.parse(setting.value);
+
+                        // Has been created
+                        if(urls.indexOf(url) !== -1){
+                            return Promise.resolve(setting);
+                        }
+                        // We need to update
+                        else{
+                            urls.push(url);
+                            setting.value = JSON.stringify(urls);
+                            return setting.save();
+                        }
+                    })
+                    .then(function(setting){
+                        return res.ok(setting.toView());
+                    })
+                    .catch(function(err){
+                        // @todo supprimer les images envoyés sur ce stream si une erreur survient
+
+                        return res.serverError(err);
+                    });
+
+            });
         }
     };
 })();

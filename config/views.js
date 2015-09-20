@@ -127,6 +127,7 @@ module.exports.views = {
         baseUrls: {
             backgroundImages: '/images/board-bg-sample',
             images: '/images',
+            public: '/public'
         }
     }
 };

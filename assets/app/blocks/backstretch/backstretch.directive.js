@@ -70,7 +70,7 @@
                 }
 
                 function pause(){
-                    logger.info('backstretch: pause()');
+                    //logger.info('backstretch: pause()');
                     // If backstretch was resuming, prevent it to put in pause (again)
                     // With that if user throw multiple pause / resume, it will no resume multiple time and let a latence to user
                     cancelResume();
@@ -83,7 +83,7 @@
                  * Resume after initial duration (otherwise its directly change the image ugly)
                  */
                 function resume(){
-                    logger.info('backstretch: resume()');
+                    //logger.info('backstretch: resume()');
                     var delay = backstretch.delay;
                     backstretch.delay = null;
                     
@@ -109,7 +109,7 @@
                 }
                 
                 function destroy(){
-                    logger.info('backstretch: destroy()');
+                    //logger.info('backstretch: destroy()');
                     cancelResume();
                     if( instance !== null && instance !== undefined ){
                         backstretchContainer.backstretch("destroy", false /*preserveBackground*/);

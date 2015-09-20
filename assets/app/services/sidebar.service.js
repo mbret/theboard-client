@@ -16,6 +16,13 @@
 
         var service = {
 
+            EVENTS: {
+                OPEN: 'sidebar.open',
+                OPENED: 'sidebar.opened',
+                CLOSE: 'sidebar.close',
+                CLOSED: 'sidebar.closed'
+            },
+
             close: close,
 
             open: open,

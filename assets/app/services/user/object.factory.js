@@ -70,7 +70,7 @@
             User.prototype.SETTING_WIDGETS_BORDERS              = 'widgetsBorders';
             User.prototype.SETTING_BACKGROUND_IMAGES_INTERVAL   = 'backgroundImagesInterval';
             User.prototype.SETTING_BACKGROUND_IMAGES            = 'backgroundImages';
-            User.prototype.SETTING_BACKGROUND_USE_DEFAULT       = 'useDefaultBackground';
+            User.prototype.SETTING_BACKGROUND                   = 'background';
 
             //User.prototype.addBackgroundImage = function( key ){
             //    self.backgroundImages.push(key);
@@ -98,28 +98,71 @@
              * @param id
              * @param value
              */
-            this.setSetting = function( id, value ){
-                self.settings[id] = value;
-            };
+            //this.setSetting = function( id, value ){
+            //    self.settings[id] = value;
+            //};
 
             /**
              * @todo depend of the type we should return specific value here
              * @param id
              * @returns {*}
              */
-            this.getSetting = function( resource, defaultValue ){
+            this.getSettingValue = function( resource, defaultValue ){
+
                 // search for setting
-                var settingFound = _.find(settings, 'name', resource);
-                if(_.isUndefined(settingFound)){
-                    return APP_CONFIG.user.default.settings[id];
+                var settingFound = _getSetting(resource);
+
+                // If setting is not found fallback to default one
+                if(settingFound === null){
+                    settingFound = _getDefaultSetting(resource);
                 }
-                else {
-                    return settingFound.value;
-                }
-                //else{
-                //    return null;
-                //}
+
+                console.log('setting:', resource, settingFound);
+                return settingFound.value;
+
             };
+
+            this.hasSetting = function(resource){
+                return _getSetting(resource) !== null;
+            };
+
+            /**
+             * Will replace (or create) a complete setting.
+             * @param resource
+             * @param setting
+             */
+            this.setSetting = function(resource, setting){
+                if(!setting.name || !setting.value || !setting.type || !setting.profile){
+                    throw new Error('Invalid setting trying to be set to user :' + JSON.stringify(setting));
+                }
+
+                // Check if setting exist
+                var settingFound = _getSetting(resource);
+
+                // If exist only update value
+                if(settingFound !== null){
+                    settingFound.value = setting.value;
+                }
+                // Otherwise add the setting to user
+                else{
+                    settings.push({
+                        name: setting.name,
+                        value: setting.value,
+                        profile: setting.profile.id || setting.profile,
+                        type: setting.type
+                    });
+                }
+            };
+            //this.setSettingValue = function(resource, value){
+            //
+            //    // Get setting first
+            //    var setting = _getSetting(resource);
+            //
+            //    // Not set yet, we have to create it
+            //    if(setting === null){
+            //
+            //    }
+            //};
 
             // user.backgroundImages.length > 0) ? user.backgroundImages : APP_CONFIG.user.default.backgroundImages;
 
@@ -134,6 +177,16 @@
                     saveUserToLocalStorage();
                     return user;
                 });
+            };
+
+
+
+            this.getAvatar = function(){
+                return APP_CONFIG.baseUrls.images + '/' + (avatar || APP_CONFIG.user.default.avatar);
+            };
+
+            this.getBanner = function(){
+                return APP_CONFIG.baseUrls.images + '/' + banner || APP_CONFIG.user.default.banner;
             };
 
             /**
@@ -160,13 +213,32 @@
                 }
             }
 
-            this.getAvatar = function(){
-                return APP_CONFIG.baseUrls.images + '/' + (avatar || APP_CONFIG.user.default.avatar);
-            };
+            /**
+             * Retrieve default user setting.
+             * The setting must exist
+             * @param resource
+             * @returns {*}
+             * @private
+             */
+            function _getDefaultSetting(resource){
 
-            this.getBanner = function(){
-                return APP_CONFIG.baseUrls.images + '/' + banner || APP_CONFIG.user.default.banner;
-            };
+                // search for setting
+                var found = _.find(APP_CONFIG.defaultUserSettings, 'name', resource);
+                if(_.isUndefined(found)){
+                    throw new Error('No default setting found for ' + resource);
+                }
+                return found;
+
+            }
+
+            function _getSetting(resource){
+                // search for setting
+                var settingFound = _.find(settings, 'name', resource);
+                if(_.isUndefined(settingFound)){
+                    return null;
+                }
+                return settingFound;
+            }
         }
         return User;
     }

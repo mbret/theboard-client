@@ -98,16 +98,15 @@ var UserSetting = {
     createDefaultSettingsForUser: function(user, profile){
 
         var promises = [];
-        _.forEach(sails.config.users.defaultSettings, function(setting, key){
-            promises.push(sails.models.usersetting.create({
-                user    : user,
-                profile : profile,
-                name    : key,
-                type    : setting.type,
-                value   : JSON.stringify(setting.value)
-            }))
-        });
-
+        //_.forEach(sails.config.users.defaultSettings, function(setting){
+        //    promises.push(sails.models.usersetting.create({
+        //        user    : user,
+        //        profile : profile,
+        //        name    : setting.name,
+        //        type    : setting.type,
+        //        value   : JSON.stringify(setting.value)
+        //    }))
+        //});
         return Promise.all(promises);
     }
 };

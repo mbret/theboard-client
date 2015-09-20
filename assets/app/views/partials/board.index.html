@@ -1,9 +1,7 @@
-<div >
-    <div class="row ng-hide" ng-hide="hideButtonsBar">
+<div theboard-fullscreen="onFullscreen" theboard-fullscreen-use-window="true">
+
+    <div class="row action-button" ng-class="{fullscreen: isFullscreen}">
         <button class="navbar-minimalize minimalize-styl-2 btn btn-primary " ng-click="toggleMenu()"><i class="fa fa-bars"></i></button>
-        <button class="navbar-minimalize minimalize-styl-2 btn btn-success btn-circle" ng-click="stopWidgets()"><i class="fa fa-stop"></i></button>
-        <button class="navbar-minimalize minimalize-styl-2 btn btn-success btn-circle  " ng-click="startWidgets()"><i class="fa fa-play"></i></button>
-        <button class="navbar-minimalize minimalize-styl-2 btn btn-success btn-circle " ng-click="refreshWidgets()"><i class="fa fa-undo"></i></button>
         <button class="navbar-minimalize minimalize-styl-2 btn btn-warning btn-circle " ng-click="reloadWidgets()"><i class="fa fa-undo"></i></button>
         <button class="navbar-minimalize minimalize-styl-2 btn btn-warning btn-circle " ng-click="lockOrUnlock()">
 			<span ng-switch on="widgetsLocked">
