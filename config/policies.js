@@ -30,7 +30,7 @@ module.exports.policies = {
     '*': false,
 
     // Views are accessible but some part are revoked when logged or not
-    'view': {
+    'app': {
         'index'         : ['sessionAuthOrRedirect'],
         'configuration' : true, // true is needed because configuration is accessible even for signin / signup
         'user'          : ['sessionAuth'],
@@ -38,11 +38,16 @@ module.exports.policies = {
         'signin'        : ['notAuthenticated'],
         'signup'        : ['notAuthenticated'],
     },
-    
-    //
+
+    "helper": {
+        "configuration": true
+    },
+
     'auth': {
         'signin': true,
         'signup': true,
+        "signinProceed": true,
+        "signupProceed": true,
         'provider': true,
         'callback': true,
         'logout': ['sessionAuthOrRedirect']

@@ -23,16 +23,6 @@ module.exports = {
 
     routes: {
 
-        /***************************************************************************
-         *                                                                          *
-         * Make the view located at `views/homepage.ejs` (or `views/homepage.jade`, *
-         * etc. depending on your default view engine) your home page.              *
-         *                                                                          *
-         * (Alternatively, remove this and add an `index.html` file in your         *
-         * `assets` directory)                                                      *
-         *                                                                          *
-         ***************************************************************************/
-
         'get /api/users/'                   : 'ProfileController.find',
         'get /api/users/profiles'           : 'ProfileController.findAll',
         'get /api/users/profiles/:id'       : 'ProfileController.find',
@@ -56,8 +46,7 @@ module.exports = {
         // Auth part
         // ==============
         // Views
-        'get /signin': 'ViewController.signin',
-        'get /signup': 'ViewController.signup',
+
 
         'get /auth/logout': 'AuthController.logout',
         // local auth
@@ -76,12 +65,18 @@ module.exports = {
         // They are used as helper. They are not relevant for api.
         //
         // ------------------------------------------------------------------
-        'get /helpers/cor/:url'             : 'ViewController.pipeCOR', // act as proxy for any request out of this domain
-        'get /helpers/configuration.json'   : 'ViewController.configuration', // return app settings
-        'get /helpers/configuration.js'     : 'ViewController.configuration', // return app settings
-        'get /helpers/user.js'              : 'ViewController.user', // return the user object
-        'get /helpers/flash'                : 'ViewController.flash',
-        'get /'                             : 'ViewController.index', // Home (start point of front end app)
+        'get /helpers/cor/:url'             : 'HelperController.pipeCOR', // act as proxy for any request out of this domain
+        'get /helpers/configuration.json'   : 'HelperController.configuration', // return app settings
+        'get /helpers/configuration.js'     : 'HelperController.configuration', // return app settings
+        'get /helpers/user.js'              : 'HelperController.user', // return the user object
+        'get /helpers/flash'                : 'HelperController.flash',
+
+
+        'get /signin'   : 'AuthController.signin',
+        'post /signin'  : 'AuthController.signinProceed',
+        'get /signup'   : 'AuthController.signup',
+        'post /signup'  : 'AuthController.signupProceed',
+        'get /'         : 'ViewController.index', // Home (start point of front end app)
     },
 
     // Server urls

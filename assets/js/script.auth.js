@@ -54,7 +54,7 @@
                     email: $("#form-register input[name='email']").val(),
                     password: $("#form-register input[name='password']").val()
                 };
-                $.post(APP_CONFIG.routes.api.auth.signup, data)
+                $.post(APP_CONFIG.routes.signup, data)
                     .done(function(data, textStatus, jqXHR){
                         //localStorage.token = data.token;
                         //$.cookie('SID', data.token, 'localhost');
@@ -94,7 +94,7 @@
                     email: $("#form-login input[name='email']").val(),
                     password: $("#form-login input[name='password']").val()
                 };
-                $.post( APP_CONFIG.routes.api.auth.signin, data)
+                $.post( APP_CONFIG.routes.signin, data)
                     .done(function(data, textStatus, jqXHR){
                         //localStorage.token = data.token;
                         //$.cookie('SID', data.token, 'localhost');

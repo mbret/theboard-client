@@ -49,10 +49,10 @@ module.exports.views = {
             signup: '/signup',
             logout: '/auth/logout',
             api: {
-                auth: {
-                    signin: '/auth/signin',
-                    signup: '/auth/signup'
-                },
+                //auth: {
+                //    signin: '/auth/signin',
+                //    signup: '/auth/signup'
+                //},
                 me: '/api/account',
                 user: {
 
