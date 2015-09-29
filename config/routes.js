@@ -48,7 +48,6 @@ module.exports = {
         // Views
 
 
-        'get /auth/logout': 'AuthController.logout',
         // local auth
         'get  /auth/token/refresh'   : 'AuthController.issueToken',
         'post /auth/signin'         : 'AuthController.signin',
@@ -76,6 +75,7 @@ module.exports = {
         'post /signin'  : 'AuthController.signinProceed',
         'get /signup'   : 'AuthController.signup',
         'post /signup'  : 'AuthController.signupProceed',
+        'get /logout'   : 'AuthController.logout',
         'get /'         : 'ViewController.index', // Home (start point of front end app)
     },
 

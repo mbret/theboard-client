@@ -28,6 +28,7 @@ var ApiMock = {
         return cb(null, {statusCode: 200}, {
             token: 'XXXXXXXXXX',
             user: {
+                "id": 1,
                 "email": email,
                 "password": password
             }

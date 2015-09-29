@@ -1,21 +1,16 @@
 var request = require('supertest');
 //var conf    = require(process.env.CONFIG_PATH + '/config');
 //var utils   = require(process.env.LIB_PATH + '/logger.js');
+var should = require('should');
 var agent;
 var app;
 
+// https://github.com/visionmedia/superagent/blob/master/test/node/agency.js
 describe('integration.controllers.auth', function() {
 
     before(function(done) {
         app = sails.hooks.http.app;
-
-        // We use more low lvl superagent to keep cookies http://stackoverflow.com/questions/14001183/how-to-authenticate-supertest-requests-with-passport
-        // So we keep reference of the same agent
-        // This agent is logged at this point
-        //agent = request.agent(app);
         done();
-        //utils.login(agent, done);
-        
     });
 
     /**
@@ -40,12 +35,17 @@ describe('integration.controllers.auth', function() {
         it('should log', function(done){
             agent.post('/signin')
                 .send({})
-                .expect(200, done);
+                .expect(200)
+                .end(function(err, res) {
+                    should.not.exist(err);
+                    should.exist(res.headers['set-cookie']);
+                    done();
+                });
         });
 
         it('should get redirected because already logged', function(done){
             agent.get('/signin')
-                .expect(301, done);
+                .expect(302, done);
         });
     });
     
@@ -90,23 +90,24 @@ describe('integration.controllers.auth', function() {
      * Logout function
      * /logout
      */
-    describe('logout()', function() {
+    describe('signout', function() {
 
-        // Test if logout redirect well after logout
-        //it('should logout and redirect to /signin (logged) ', function (done){
-        //    agent
-        //        .get('/auth/logout')
-        //        .expect(302)
-        //        .expect('location','/signin', done);
-        //});
+        var agent;
 
-        // Test if we were correctly logged and if redirection is okay
-        //it('should redirect to /signin (not logged) ', function (done){
-        //    agent
-        //        .get('/auth/logout')
-        //        .expect(302)
-        //        .expect('location','/signin', done);
-        //});
+        before(function(done) {
+            app = sails.hooks.http.app;
+            agent = request.agent(sails.hooks.http.app);
+            agent.post('/signin')
+                .send({})
+                .end(done);
+        });
+
+        it('should be redirected as we are not logged', function(done){
+            request(app).get('/logout')
+                .expect(302)
+                .expect('location', '/signin', done);
+        });
+
     });
 
 

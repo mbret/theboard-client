@@ -44,10 +44,7 @@ module.exports.policies = {
     },
 
     'auth': {
-        'signin': ['notAuthenticated'],
-        'signup': true,
-        "signinProceed": true,
-        "signupProceed": true,
+        '*': ['notAuthenticated'],
         'provider': true,
         'callback': true,
         'logout': ['sessionAuthOrRedirect']

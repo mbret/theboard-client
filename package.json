@@ -54,6 +54,7 @@
   "license": "",
   "devDependencies": {
     "sails-hook-dev": "^1.0.0",
-    "supertest": "^1.1.0"
+    "supertest": "^1.1.0",
+    "should": "^7.1.0"
   }
 }
