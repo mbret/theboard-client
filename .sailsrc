@@ -1,6 +1,11 @@
 {
-  "generators": {
-    "modules": {}
-  },
-  "dontFlattenConfig": false
+    "generators": {
+        "modules": {}
+    },
+    "dontFlattenConfig": false,
+    "hooks": {
+        "orm": false,
+        "pubsub": false,
+        "blueprints": false
+    }
 }

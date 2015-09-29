@@ -108,22 +108,22 @@ module.exports.http = {
                 // Create a session with this user id if auto login is set to true for this env
                 // This user will be load by passport then
                 // No action is needed to be logged with that method
-                function autoLogUser(cb){
-                    if(sails.config.passport.autoLogin && !req.isAuthenticated() && !req.session.passport.user ){
-                        User.findOne({email:sails.config.passport.autoLoginEmail}).exec(function(err, user){
-                            if(err) return cb(err);
-                            if(!user){
-                                return cb();
-                            }
-                            req.login(user, function (err) {
-                                if (err) return cb(err);
-                                sails.log.debug('User autologged by middleware!');
-                                return cb();
-                            });
-                        });
-                    }
-                    else return cb();
-                },
+                //function autoLogUser(cb){
+                //    if(sails.config.passport.autoLogin && !req.isAuthenticated() && !req.session.passport.user ){
+                //        User.findOne({email:sails.config.passport.autoLoginEmail}).exec(function(err, user){
+                //            if(err) return cb(err);
+                //            if(!user){
+                //                return cb();
+                //            }
+                //            req.login(user, function (err) {
+                //                if (err) return cb(err);
+                //                sails.log.debug('User autologged by middleware!');
+                //                return cb();
+                //            });
+                //        });
+                //    }
+                //    else return cb();
+                //},
 
                 // This module of passport is in charge of loading the user in session
                 // the session only contain an id and is then completely loaded for app

@@ -4,6 +4,11 @@ var request = require('request');
 
 module.exports = {
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     signin: function (req, res) {
         var strategies = sails.config.passport.strategies;
         var providers  = {};
@@ -40,28 +45,22 @@ module.exports = {
     },
 
     signinProceed: function(req, res){
-        request
-            .post('http://localhost:1337/auth/signin', {
-                form: {
-                    "email": req.param('email', null),
-                    "password": req.param('password', null)
-                }
-            }, function(err, response, body){
-                if(err){
-                    return res.serverError(err);
-                }
-                if(response.statusCode !== 200){
-                    return res.negociateApi(response);
-                }
-                req.login(body.user, function (err) {
-                    if (err){
-                        return res.serverError(err);
-                    }
-                    req.session.token = body.token;
-                    req.flash('success', 'Success.Auth.Login');
-                    return res.ok();
-                });
+        ApiService.signin(req.param('email', null), req.param('password', null), function(err, response, body){
+
+            if(err){
+                return res.serverError(err);
+            }
+
+            if(response.statusCode !== 200){
+                return res.negociateApi(response);
+            }
+
+            req.login(body.user, function (err) {
+                req.session.token = body.token;
+                req.flash('success', 'Success.Auth.Login');
+                return res.ok();
             });
+        });
     },
 
     signupProceed: function(req, res){

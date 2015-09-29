@@ -44,7 +44,7 @@ module.exports.policies = {
     },
 
     'auth': {
-        'signin': true,
+        'signin': ['notAuthenticated'],
         'signup': true,
         "signinProceed": true,
         "signupProceed": true,

@@ -42,7 +42,7 @@
   "description": "theboard web app",
   "keywords": [],
   "scripts": {
-    "start": "sails lift",
+    "start": "node app",
     "test": "mocha"
   },
   "main": "app.js",
@@ -54,6 +54,6 @@
   "license": "",
   "devDependencies": {
     "sails-hook-dev": "^1.0.0",
-    "supertest": "^0.15.0"
+    "supertest": "^1.1.0"
   }
 }

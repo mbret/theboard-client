@@ -1,5 +1,10 @@
+'use strict';
+
+process.env.NODE_ENV = 'testing';
+
 var Sails = require('sails');
 var path = require('path');
+var rc = require('rc');
 var sails;
 
 process.env.LIB_PATH   = path.join(__dirname, '../lib');
@@ -7,40 +12,7 @@ process.env.CONFIG_PATH   = path.join(__dirname, '..');
 
 before(function(done) {
 
-    Sails.lift({
-        
-        log:{
-            level: "error"
-        },
-        
-        connections: {
-            test: {
-                adapter: 'sails-mysql',
-                host: 'localhost',
-                user: 'root',
-                password: 'root',
-                database: 'theboard_test'
-            }
-        },
-        
-        models: {
-            connection: 'test',
-            migrate: 'drop' // erase database before each launch
-        },
-        
-        environment: 'development',
-        
-        passport: {
-            autoLogin: false
-        },
-
-        // user credentials
-        user: {
-            email: 'user@gmail.com',
-            password: 'password'
-        }
-
-    }, function(err, server){
+    Sails.lift(rc('sails'), function(err, server){
         console.log(err);
 
         if (err) return done(err);
