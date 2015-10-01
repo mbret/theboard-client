@@ -38,6 +38,21 @@
             toastr[$(this).data('type')]( $(this).text() );
         });
 
+        function onSignSuccess(data, textStatus, jqXHR){
+            window.location.replace(APP_CONFIG.routes.app);
+        }
+
+        function onSignError(action, jqXHR, textStatus, errorThrown){
+            switch(jqXHR.status){
+                case 400:
+                    toastr.error(action === "login" ? APP_CONFIG.messages.ERROR_400_LOGIN : APP_CONFIG.messages.ERROR_400_REGISTER);
+                    break;
+                default:
+                    toastr.error(APP_CONFIG.messages.ERROR_500);
+                    break;
+            }
+        }
+
         // Form register
         $("#form-register").validate({
             rules: {
@@ -55,27 +70,8 @@
                     password: $("#form-register input[name='password']").val()
                 };
                 $.post(APP_CONFIG.routes.signup, data)
-                    .done(function(data, textStatus, jqXHR){
-                        //localStorage.token = data.token;
-                        //$.cookie('SID', data.token, 'localhost');
-                        window.location.replace(APP_CONFIG.routes.app);
-                    })
-                    .fail(function(jqXHR, textStatus, errorThrown) {
-                        switch(jqXHR.status){
-                            case 400:
-                                var message = (jqXHR.responseText) ? jqXHR.responseText : 'Invalid credentials';
-                                toastr.error( message );
-                                break;
-                            default:
-                                toastr.error( 'An error occured' );
-                                console.error(jqXHR, textStatus);
-                                break;
-                        }
-                    })
-                    .always(function(data_or_jqXHR, textStatus, jqXHR_or_errorThrown) {
-
-                    });
-
+                    .done(onSignSuccess)
+                    .fail(onSignError.bind(this, "login"));
             }
         });
 
@@ -95,26 +91,8 @@
                     password: $("#form-login input[name='password']").val()
                 };
                 $.post( APP_CONFIG.routes.signin, data)
-                    .done(function(data, textStatus, jqXHR){
-                        //localStorage.token = data.token;
-                        //$.cookie('SID', data.token, 'localhost');
-                        window.location.replace(APP_CONFIG.routes.app);
-                    })
-                    .fail(function(jqXHR, textStatus, errorThrown) {
-                        switch(jqXHR.status){
-                            case 400:
-                                toastr.error( 'Invalid credentials' );
-                                break;
-                            default:
-                                toastr.error( 'An error occured' );
-                                console.error(jqXHR, textStatus);
-                                break;
-                        }
-                    })
-                    .always(function(data_or_jqXHR, textStatus, jqXHR_or_errorThrown) {
-
-                    });
-
+                    .done(onSignSuccess)
+                    .fail(onSignError.bind(this, "register"));
             }
         });
 

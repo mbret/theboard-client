@@ -86,6 +86,9 @@ module.exports.views = {
         },
 
         messages: {
+            "ERROR_500": "Sorry but an unexpected error happened",
+            "ERROR_400_LOGIN": "Your credentials are invalid, please try again",
+            "ERROR_400_REGISTER": "The data you entered seems invalid, please review the form and try again",
             errors: {
                 unableToUpdate: 'Sorry but we were unable to update',
                 unableToLoad: 'Sorry but we were unable to load',

@@ -23,24 +23,24 @@ module.exports = {
 
     routes: {
 
-        'get /api/users/'                   : 'ProfileController.find',
-        'get /api/users/profiles'           : 'ProfileController.findAll',
-        'get /api/users/profiles/:id'       : 'ProfileController.find',
-        'put /api/users/profiles'           : 'ProfileController.updateAll',
-        'post /api/users/profiles'          : 'ProfileController.create',
-        'put /api/users/profiles/:id'       : 'ProfileController.update',
-        'post /api/users/backgroudimages'   : 'AccountController.uploadBackgroundImage',
-        'put /api/users/widgets/:id'        : 'WidgetController.updateProfileWidget', // update for default profile
-
-        'get /api/widgets'                  : 'WidgetController.findAll', // get all widgets
-        'post /api/widgets'                 : 'WidgetController.addWidgetToProfile',
-
-        'put /api/profiles/:profile/widgets/:widget'    : 'WidgetController.updateProfileWidget', // update for given profile
-        'delete /api/profiles/:profile/widgets/:widget' : 'WidgetController.removeWidgetFromProfile', // remove for given profile
-
-        'put /api/account': 'AccountController.update',
-
-        'get /api/repository/widgets': 'RepositoryController.findAll',
+        //'get /api/users/'                   : 'ProfileController.find',
+        //'get /api/users/profiles'           : 'ProfileController.findAll',
+        //'get /api/users/profiles/:id'       : 'ProfileController.find',
+        //'put /api/users/profiles'           : 'ProfileController.updateAll',
+        //'post /api/users/profiles'          : 'ProfileController.create',
+        //'put /api/users/profiles/:id'       : 'ProfileController.update',
+        //'post /api/users/backgroudimages'   : 'AccountController.uploadBackgroundImage',
+        //'put /api/users/widgets/:id'        : 'WidgetController.updateProfileWidget', // update for default profile
+        //
+        //'get /api/widgets'                  : 'WidgetController.findAll', // get all widgets
+        //'post /api/widgets'                 : 'WidgetController.addWidgetToProfile',
+        //
+        //'put /api/profiles/:profile/widgets/:widget'    : 'WidgetController.updateProfileWidget', // update for given profile
+        //'delete /api/profiles/:profile/widgets/:widget' : 'WidgetController.removeWidgetFromProfile', // remove for given profile
+        //
+        //'put /api/account': 'AccountController.update',
+        //
+        //'get /api/repository/widgets': 'RepositoryController.findAll',
 
         // ==============
         // Auth part
@@ -49,14 +49,14 @@ module.exports = {
 
 
         // local auth
-        'get  /auth/token/refresh'   : 'AuthController.issueToken',
-        'post /auth/signin'         : 'AuthController.signin',
-        'post /auth/signup'         : 'AuthController.signup',
+        //'get  /auth/token/refresh'   : 'AuthController.issueToken',
+        //'post /auth/signin'         : 'AuthController.signin',
+        //'post /auth/signup'         : 'AuthController.signup',
 
         // Providers auth
-        'get /auth/:provider': 'AuthController.provider',
-        'get /auth/:provider/callback': 'AuthController.callback',
-        'get /auth/:provider/:action': 'AuthController.callback',
+        //'get /auth/:provider': 'AuthController.provider',
+        //'get /auth/:provider/callback': 'AuthController.callback',
+        //'get /auth/:provider/:action': 'AuthController.callback',
 
         // ------------------------------------------------------------------
         //
@@ -68,7 +68,7 @@ module.exports = {
         'get /helpers/configuration.json'   : 'HelperController.configuration', // return app settings
         'get /helpers/configuration.js'     : 'HelperController.configuration', // return app settings
         'get /helpers/user.js'              : 'HelperController.user', // return the user object
-        'get /helpers/flash'                : 'HelperController.flash',
+        //'get /helpers/flash'                : 'HelperController.flash',
 
 
         'get /signin'   : 'AuthController.signin',

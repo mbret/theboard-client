@@ -49,18 +49,21 @@ module.exports.policies = {
         'callback': true,
         'logout': ['sessionAuthOrRedirect']
     },
-    
-    // Only available for logged user
-    'profile': {
-        '*': ['sessionAuth']
-    },
-    'widget': {
-        '*': ['sessionAuth']
-    },
-    'account': {
-        '*': ['sessionAuth']
-    },
-    'repository': {
-        '*': ['sessionAuth']
+
+    "view": {
+        "index": ['sessionAuthOrRedirect']
     }
+    // Only available for logged user
+    //'profile': {
+    //    '*': ['sessionAuth']
+    //},
+    //'widget': {
+    //    '*': ['sessionAuth']
+    //},
+    //'account': {
+    //    '*': ['sessionAuth']
+    //},
+    //'repository': {
+    //    '*': ['sessionAuth']
+    //}
 };

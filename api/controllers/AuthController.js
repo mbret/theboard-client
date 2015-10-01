@@ -26,12 +26,12 @@ module.exports = {
 
         // Render the `auth/login.ext` view
         res.ok({
-            title:  ViewsService.buildTitle(req.__('i18n_Login')),
-            layout: 'auth/layout-auth',
-            errors    : req.flash('error'),
-            successes : req.flash('success'),
-            copy: sails.config.views.copy,
-            providers: providers,
+            title       :  ViewsService.buildTitle(req.__('i18n_Login')),
+            layout      : 'auth/layout-auth',
+            errors      : req.flash('error'),
+            successes   : req.flash('success'),
+            copy        : sails.config.views.copy,
+            providers   : providers,
         }, 'auth/login');
     },
 

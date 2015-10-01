@@ -1,5 +1,5 @@
 var request = require('supertest');
-var conf = require(process.env.CONFIG_PATH + '/config');
+//var conf = require(process.env.CONFIG_PATH + '/config');
 var utils = require(process.env.LIB_PATH + '/logger.js');
 var app;
 var agent;

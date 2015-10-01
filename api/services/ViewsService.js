@@ -29,7 +29,7 @@ module.exports = {
         var config = _.assign(sails.config.views.configToInject, {
             repositoryLocalUri: sails.config.repository.localUri,
             repositoryRemoteUri: sails.config.repository.remoteUri,
-            defaultUserSettings: sails.config.users.defaultSettings
+            //defaultUserSettings: sails.config.users.defaultSettings
         });
 
         return config;
