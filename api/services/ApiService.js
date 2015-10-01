@@ -2,7 +2,14 @@
 
 var request = require('request');
 
-exports.signin = function(email, password, cb){
+/**
+ *
+ * @param email
+ * @param password
+ * @param cb
+ * @returns {*}
+ */
+exports.login = function(email, password, cb){
 
     // Mock Tests
     if(sails.config.environment === 'testing'){
@@ -19,7 +26,22 @@ exports.signin = function(email, password, cb){
             if(err){
                 return cb(err);
             }
-            return cb(null, response, body);
+            return cb(null, response, JSON.parse(body));
+        });
+};
+
+exports.register = function(email, password, cb){
+    request
+        .post('http://localhost:1337/auth/signup', {
+            form: {
+                "email": email,
+                "password": password
+            }
+        }, function(err, response, body){
+            if(err){
+                return cb(err);
+            }
+            return cb(null, response, JSON.parse(body));
         });
 };
 

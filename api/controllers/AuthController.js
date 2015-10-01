@@ -45,7 +45,7 @@ module.exports = {
     },
 
     signinProceed: function(req, res){
-        ApiService.signin(req.param('email', null), req.param('password', null), function(err, response, body){
+        ApiService.login(req.param('email', null), req.param('password', null), function(err, response, body){
 
             if(err){
                 return res.serverError(err);
@@ -56,40 +56,36 @@ module.exports = {
             }
 
             req.login(body.user, function (err) {
-                req.session.token = body.token;
+                if(err){
+                    return res.serverError(err);
+                }
                 req.flash('success', 'Success.Auth.Login');
+                req.session.token = body.token;
                 return res.ok();
             });
         });
     },
 
     signupProceed: function(req, res){
-        request
-            .post('http://localhost:1337/auth/signup', {
-                form: {
-                    "email": req.param('email', null),
-                    "password": req.param('password', null)
-                }
-            }, function(err, response, body){
+        ApiService.register(req.param('email', null), req.param('password', null), function(err, response, body){
+
+            if(err){
+                return res.serverError(err);
+            }
+
+            if(response.statusCode !== 201){
+                return res.negociateApi(response);
+            }
+
+            req.login(body.user, function(err){
                 if(err){
                     return res.serverError(err);
                 }
-                if(response.statusCode !== 200){
-                    return res.negociateApi(response);
-                }
-                req.login(user, function(err){
-                    if(err){
-                        return res.serverError(err);
-                    }
-                    req.flash('success', 'Success.Auth.Register');
-                    var token = sails.services.auth.generateToken(user);
-                    return res.ok({
-                        token: token,
-                        user: user.toView(),
-                        redirect: sails.config.urls.app
-                    });
-                });
+                req.flash('success', 'Success.Auth.Register');
+                req.session.token = body.token;
+                return res.created();
             });
+        });
     },
 
     /**
