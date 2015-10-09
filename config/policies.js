@@ -40,7 +40,8 @@ module.exports.policies = {
     },
 
     "helper": {
-        "configuration": true
+        "configuration": true,
+        "me": ['sessionAuth']
     },
 
     'auth': {

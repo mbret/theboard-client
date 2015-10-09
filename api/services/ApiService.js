@@ -11,11 +11,6 @@ var request = require('request');
  */
 exports.login = function(email, password, cb){
 
-    // Mock Tests
-    if(sails.config.environment === 'testing'){
-        return ApiMock.signin(email, password, cb);
-    }
-
     request
         .post('http://localhost:1337/auth/signin', {
             form: {
@@ -23,10 +18,16 @@ exports.login = function(email, password, cb){
                 "password": password
             }
         }, function(err, response, body){
+            console.log(err);
             if(err){
                 return cb(err);
             }
-            return cb(null, response, JSON.parse(body));
+
+            if(response.statusCode === 200){
+                response.body = JSON.parse(body);
+            }
+
+            return cb(null, response);
         });
 };
 
@@ -41,19 +42,22 @@ exports.register = function(email, password, cb){
             if(err){
                 return cb(err);
             }
-            return cb(null, response, JSON.parse(body));
+            if(response.statusCode === 200 && body){
+                body = JSON.parse(body);
+            }
+            return cb(null, response, body);
         });
 };
 
-var ApiMock = {
-    signin: function(email, password, cb){
-        return cb(null, {statusCode: 200}, {
-            token: 'XXXXXXXXXX',
-            user: {
-                "id": 1,
-                "email": email,
-                "password": password
+exports.user = function(id, cb){
+    request
+        .get({url: 'http://localhost:1337/users/:id'.replace(':id', id)}, function(err, response, body){
+            if(err){
+                return cb(err);
             }
+            if(response.statusCode === 200 && body){
+                body = JSON.parse(body);
+            }
+            return cb(null, response, body);
         });
-    }
 };

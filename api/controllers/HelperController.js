@@ -37,14 +37,27 @@
         },
 
         pipeCOR: function (req, res) {
-
             if(sails.config.environment === 'production'){
                 console.error('You must disable this route for production');
             }
 
             require('request').get(req.param('url')).pipe(res);
-
         },
+
+        /**
+         *
+         * @param req
+         * @param res
+         */
+        me: function(req, res){
+            ApiService.user(req.user, function(err, response, body){
+                if(err){ return res.serverError(err); }
+                if(response.statusCode !== 200){
+                    return res.negociateApi(response);
+                }
+                return res.ok(body);
+            });
+        }
     };
 
 })();

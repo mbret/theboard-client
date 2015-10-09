@@ -67,7 +67,7 @@ module.exports = {
         'get /helpers/cor/:url'             : 'HelperController.pipeCOR', // act as proxy for any request out of this domain
         'get /helpers/configuration.json'   : 'HelperController.configuration', // return app settings
         'get /helpers/configuration.js'     : 'HelperController.configuration', // return app settings
-        'get /helpers/user.js'              : 'HelperController.user', // return the user object
+        'get /helpers/me.js'                : 'HelperController.me', // return the user object
         //'get /helpers/flash'                : 'HelperController.flash',
 
 
@@ -89,6 +89,6 @@ module.exports = {
         backgroundImages: '/images/board-bg-sample',
         images: '/images',
         configuration: '/helpers/configuration.js',
-        user: '/helpers/user.js',
+        me: '/helpers/me.js',
     }
 };

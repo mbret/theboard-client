@@ -1,6 +1,3 @@
-[submodule "tools/waterline-db-handler"]
-	path = tools/waterline-db-handler
-	url = https://github.com/mbret/waterline-db-handler.git
 [submodule "data/statics/repository/theboard-widget-dailyWord"]
 	path = data/statics/repository/theboard-widget-dailyWord
 	url = https://github.com/mbret/theboard-widget-dailyWord.git
