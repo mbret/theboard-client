@@ -18,7 +18,6 @@ exports.login = function(email, password, cb){
                 "password": password
             }
         }, function(err, response, body){
-            console.log(err);
             if(err){
                 return cb(err);
             }
@@ -42,7 +41,7 @@ exports.register = function(email, password, cb){
             if(err){
                 return cb(err);
             }
-            if(response.statusCode === 200 && body){
+            if(response.statusCode === 200 || response.statusCode === 201 && body){
                 body = JSON.parse(body);
             }
             return cb(null, response, body);

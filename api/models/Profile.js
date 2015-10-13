@@ -46,7 +46,6 @@ var Profile = {
                 if( values.user && values.default && values.default === true ){
                     sails.models.profile.findOne().where({ user: values.user, default: true })
                         .then(function(profile){
-                            console.log(profile);
                             if(profile && profile.id !== values.id){
                                 profile.default = false;
                                 return profile.save(cb);
@@ -75,7 +74,6 @@ var Profile = {
         async.series([
             function checkUniqueDefault(cb){
                 if( values.user && values.default && values.default === true ){
-                    console.log({ user: values.user, default: true });
                     sails.models.profile.findOne().where({ user: values.user, default: true })
                         .then(function(profile){
                             if(profile && profile.id !== values.id){

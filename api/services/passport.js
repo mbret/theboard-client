@@ -305,8 +305,7 @@ passport.loadStrategies = function () {
             break;
         }
 
-        console.log(self.protocols.oauth);
-        
+
         // Merge the default options with any options defined in the config. All
         // defaults can be overridden, but I don't see a reason why you'd want to
         // do that.
@@ -346,7 +345,6 @@ passport.disconnect = function (req, res, next) {
 };
 
 passport.serializeUser(function (user, next) {
-    console.log(user);
     next(null, user.id);
 });
 

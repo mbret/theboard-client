@@ -179,14 +179,12 @@
                 });
             };
 
-
-
             this.getAvatar = function(){
-                return APP_CONFIG.baseUrls.images + '/' + (avatar || APP_CONFIG.user.default.avatar);
+                return APP_CONFIG.baseUrls.images + '/' + avatar;
             };
 
             this.getBanner = function(){
-                return APP_CONFIG.baseUrls.images + '/' + banner || APP_CONFIG.user.default.banner;
+                return APP_CONFIG.baseUrls.images + '/' + banner;
             };
 
             /**

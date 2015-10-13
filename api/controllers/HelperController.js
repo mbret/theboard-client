@@ -12,14 +12,14 @@
          * @param res
          * @returns {*}
          */
-        flash: function(req, res){
-            return res.ok({
-                errors    : req.flash('error'),
-                success : req.flash('success'),
-                warnings  : req.flash('warning'),
-                info: req.flash('info')
-            });
-        },
+        //flash: function(req, res){
+        //    return res.ok({
+        //        errors    : req.flash('error'),
+        //        success : req.flash('success'),
+        //        warnings  : req.flash('warning'),
+        //        info: req.flash('info')
+        //    });
+        //},
 
         /**
          * Return the configuration as .js.
@@ -28,12 +28,7 @@
          * @param res
          */
         configuration: function(req, res){
-            // @todo handle .json endpoint
-            res.setHeader('Content-Type', 'application/javascript');
-            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-            res.setHeader('Pragma', 'no-cache');
-            res.setHeader('Expires', 0);
-            res.send('window.APP_CONFIG = ' + JSON.stringify( ViewsService.generateConfiguration() ) + ';');
+            return res.jsonView('APP_CONFIG', ViewsService.generateConfiguration());
         },
 
         pipeCOR: function (req, res) {
@@ -52,10 +47,15 @@
         me: function(req, res){
             ApiService.user(req.user, function(err, response, body){
                 if(err){ return res.serverError(err); }
+
+                if(response.statusCode === 404){
+                    req.logout();
+                }
+
                 if(response.statusCode !== 200){
                     return res.negociateApi(response);
                 }
-                return res.ok(body);
+                return res.jsonView('USER', body);
             });
         }
     };

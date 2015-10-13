@@ -9,7 +9,7 @@
     /**
      *
      */
-    WidgetProfilesController.$inject = ['APP_CONFIG', '$modal', 'widgetProfilesService', 'notifService', 'user', '$state', 'userService'];
+    WidgetProfilesController.$inject = ['APP_CONFIG', '$uibModal', 'widgetProfilesService', 'notifService', 'user', '$state', 'userService'];
     function WidgetProfilesController(APP_CONFIG, $modal, widgetProfilesService, notifService, user, $state, userService){
 
         var that = this;

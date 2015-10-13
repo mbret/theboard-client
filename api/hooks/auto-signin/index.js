@@ -66,7 +66,7 @@ module.exports = function (sails) {
             }
 
             var config = sails.config[this.configKey];
-            ApiService.login(config.credentials.email, config.credentials.password, function(err, response, body){
+            ApiService.login(config.credentials.email, config.credentials.password, function(err, response){
 
                 if(err){
                     return next(new Error(err));
@@ -81,12 +81,12 @@ module.exports = function (sails) {
                     return next(new Error('Credentials for signin hook seems incorrect. StatusCode : ' + response.statusCode));
                 }
 
-                req.login(body.user, function (err) {
+                req.login(response.body.user, function (err) {
                     if(err){
                         return next(err);
                     }
                     sails.log.info('auto-signin hook: User auto signed by hook!');
-                    req.session.token = body.token;
+                    req.session.token = response.body.token;
                     return next();
                 });
             });

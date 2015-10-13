@@ -18,7 +18,6 @@ module.exports = {
      * Call .toJSON() to all model inside the given array and return it
      */
     toJSON: function( models ){
-        console.log(models);
         if(!models) return {};
         if(!util.isArray(models)){
             return models.toJSON();

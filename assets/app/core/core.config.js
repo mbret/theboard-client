@@ -121,7 +121,7 @@
      * @param APP_CONFIG
      * @param user
      */
-    function run($rootScope, $state, $http, $log, notifService, APP_CONFIG, $timeout, USER, localStorageService, $modal, user){
+    function run($rootScope, $state, $http, $log, notifService, APP_CONFIG, $timeout, USER, localStorageService, $uibModal, user){
 
         $log.info('APP_CONFIG', APP_CONFIG);
         $log.info('USER', USER);
@@ -150,7 +150,7 @@
                 // If no profile is set yet, tell to user that we use default profile.
                 if(localStorageService.get('noPreviousActiveProfile') === true){
                     localStorageService.remove('noPreviousActiveProfile');
-                    $modal.open({
+                    $uibModal.open({
                         templateUrl: APP_CONFIG.routes.templates + '/modals/default-profile-selected.html',
                         controller: function ($scope, $modalInstance) {
                             $scope.ok = function () {
@@ -164,8 +164,7 @@
                     alert("We are sorry but your browser is too old and unsafe. Your widgets will not be loaded in order to protect you.");
                 }
 
-                notifService.watchForServerFlashMessage();
-
+                //notifService.watchForServerFlashMessage();
 
             }, 1000);
 

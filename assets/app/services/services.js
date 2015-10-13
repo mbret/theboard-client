@@ -7,7 +7,7 @@ angular
 
     .factory('modalService', ['$rootScope', 'APP_CONFIG', '$injector', 'logger', function($rootScope, APP_CONFIG, $injector, logger){
 
-        var $modal = $injector.get('$modal');
+        var $modal = $injector.get('$uibModal');
         return {
 
             simpleError: function(message){
@@ -96,29 +96,29 @@ angular
              * Will try to get eventual flash message from server.
              * They are not sent automatically to app for now.
              */
-            watchForServerFlashMessage: function(){
-                var self = this;
-                // Check for flash message from server
-                // These message can come from login/logout/etc
-                // We display it after Pace is hidden.
-                $http.get(APP_CONFIG.routes.flash).then(function(data){
-                    $log.debug(data.data);
-                    var messages = data.data;
-
-                    if(messages.errors){
-                        self.error(messages.errors)
-                    }
-                    if(messages.warnings){
-                        self.warning(messages.warnings)
-                    }
-                    if(messages.success){
-                        self.success(messages.success)
-                    }
-                    if(messages.info){
-                        self.info(messages.info)
-                    }
-                });
-            }
+            //watchForServerFlashMessage: function(){
+            //    var self = this;
+            //    // Check for flash message from server
+            //    // These message can come from login/logout/etc
+            //    // We display it after Pace is hidden.
+            //    $http.get(APP_CONFIG.routes.flash).then(function(data){
+            //        $log.debug(data.data);
+            //        var messages = data.data;
+            //
+            //        if(messages.errors){
+            //            self.error(messages.errors)
+            //        }
+            //        if(messages.warnings){
+            //            self.warning(messages.warnings)
+            //        }
+            //        if(messages.success){
+            //            self.success(messages.success)
+            //        }
+            //        if(messages.info){
+            //            self.info(messages.info)
+            //        }
+            //    });
+            //}
         }
     })
 

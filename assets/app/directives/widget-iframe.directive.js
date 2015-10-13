@@ -115,7 +115,7 @@
             // It ran before compilation
             // http://jasonmore.net/angular-js-directives-difference-controller-link/
             // So we keep separation of concern (here is logic code)
-            controller: function($scope, $element, widgetService, $modal, backstretch){
+            controller: function($scope, $element, widgetService, $uibModal, backstretch){
 
                 var widget = $scope.widget; // We get widget as its a scoped var from html
 
@@ -124,7 +124,7 @@
                 // We pass our sub controller (as the sub controller is defined inside parent he can reach the same var)
                 $scope.showOptions = function($event) {
                     backstretch.pause();
-                    var modalInstance = $modal.open({
+                    var modalInstance = $uibModal.open({
                         templateUrl: APP_CONFIG.routes.templates + '/widget-iframe-options.tmpl.html',
                         controller: dialogController,
                         size: 'sm',

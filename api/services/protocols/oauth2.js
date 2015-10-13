@@ -20,7 +20,6 @@
  */
 module.exports = function (req, accessToken, refreshToken, profile, next) {
     
-    console.log('SALUT');
     var query    = {
         identifier : profile.id,
         protocol   : 'oauth2',

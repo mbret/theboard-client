@@ -68,7 +68,7 @@ var jsFilesToInjectApp = [
     // Angular + plugins
     'vendors/angular/angular.js',
     'vendors/angular-ui-router/angular-ui-router.js',
-    'vendors/angular-ui-bootstrap/angular-ui-bootstrap.js',
+    'vendors/angular-bootstrap/ui-bootstrap-tpls.js',
     'vendors/angular-gridster/angular-gridster.js',
     'js/dependencies/angular-plugins/**/*.js',
     'vendors/angular-local-storage/angular-local-storage.js',
